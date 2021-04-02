@@ -1,0 +1,16 @@
+.app__user {
+    position: fixed;
+    top: 50px;
+    width: 330px;
+}
+
+.user__avatar {
+    width: 65px;
+    height: 65px;
+}
+
+@media (max-width: 1000px) {
+    .app__user {
+        display: none;
+    }
+}
