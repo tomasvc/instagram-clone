@@ -7,11 +7,13 @@ export default function DisplayUser({ username, name }) {
         <div className="app__user">
             <Avatar
                     className="user__avatar"
-                    alt={username}
-                    src="./avatar.jpg"
+                    alt=""
+                    src="./img/avatar.jpg"
                 />
+            <div>
                 <h4 className="user__username">{username}</h4>
                 <h5 className="user__name">{name}</h5>
+            </div>
         </div>
     )
 }

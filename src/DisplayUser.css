@@ -1,15 +1,34 @@
 .app__user {
     position: fixed;
-    top: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    top: 106px;
+    right: 254px;
     width: 330px;
 }
 
 .user__avatar {
-    width: 65px;
-    height: 65px;
+    min-width: 55px;
+    min-height: 55px;
+    margin-right: 18px;
 }
 
-@media (max-width: 1000px) {
+.user__username, .user__name {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.user__username {
+    color: #262626;
+}
+
+.user__name {
+    font-weight: 400;
+    color: #777;
+}
+
+@media screen and (max-width: 1000px) {
     .app__user {
         display: none;
     }

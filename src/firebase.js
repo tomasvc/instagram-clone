@@ -1,7 +1,6 @@
-import firebase from "firebase"
+import firebase from "firebase";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyAG8EdlmeN-phVHYiKlQcAm5QLjd74xEQg",
     authDomain: "instagram-7664b.firebaseapp.com",
     projectId: "instagram-7664b",
@@ -9,12 +8,9 @@ const firebaseConfig = {
     messagingSenderId: "698410839849",
     appId: "1:698410839849:web:7470049fe022a7b3729138",
     measurementId: "G-ELVW7EG096"
-};
+});
 
-
-const firebaseApp = firebase.initializeApp(firebaseConfig)
-
-const db = firebase.firestore();
+const db = firebaseApp.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 

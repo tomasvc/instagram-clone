@@ -1,0 +1,22 @@
+.imageUpload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageUpload__progressBar {
+    position: relative;
+    top: -15px;
+    width: 464px;
+    margin-bottom: 20px;
+}
+
+.imageUpload__caption {
+    margin-top: 20px;
+}
+
+.imageUpload__file {
+    width: 40%;
+    margin: auto;
+}
