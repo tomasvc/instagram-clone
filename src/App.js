@@ -266,7 +266,7 @@ function App() {
 
         <div className="app__aside">
           { user?.displayUser ? (
-            <DisplayUser username={username} name={name} />
+            <DisplayUser user={user} name={name} />
           ) : (
             <DisplayUser username="Username" name="Name" />
           )

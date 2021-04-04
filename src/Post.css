@@ -65,10 +65,13 @@
     position: relative;
     margin-left: 15px;
     margin-top: 5px;
+    background-color: white;
 }
 
 .post__buttons > * {
     margin-right: 15px;
+    background-color: white;
+    touch-action: manipulation;
 }
 
 .post__buttons > *:hover {
@@ -77,24 +80,55 @@
 
 .like {
     fill: rgb(237, 73, 86);
-    animation: like 0.5s infinite;
+    animation: like 0.45s ease-in-out;
+}
+
+.unlike {
+    fill: #262626;
+    animation: like 0.45s ease-in-out;
 }
 
 @keyframes like {
     0% {
+        -webkit-transform: scale(1);
         transform: scale(1);
+    }
+
+    25% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
     }
 
     50% {
-        transform: scale(1.1);
-    }
-
-    75% {
-        transform: scale(0.9);
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
     }
 
     100% {
+        -webkit-transform: scale(1);
         transform: scale(1);
+    }
+}
+
+@keyframes like-heart-animation {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+    15% {
+        opacity: 0.9;
+        -webkit-transform: scale(0);
+        transform: scale(1.2);
+    }
+    30% {
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+    45%, 80% {
+        opacity: 0.9;
+        -webkit-transform: scale(0);
+        transform: scale(1.2);
     }
 }
 
