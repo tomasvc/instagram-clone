@@ -29,16 +29,6 @@ const useStyles = makeStyles((theme) => ({
     outline: 0,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-  },
-  mobile: {
-    position: 'absolute',
-    width: 200,
-    backgroundColor: theme.palette.background.paper,
-    border: 'none',
-    borderRadius: '12px',
-    outline: 0,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
   }
 }));
 

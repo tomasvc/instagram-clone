@@ -3,12 +3,42 @@ import './Post.css';
 import firebase from 'firebase';
 import { db } from './firebase';
 import Avatar from "@material-ui/core/Avatar";
+import Modal from "@material-ui/core/Modal";
+import { makeStyles } from '@material-ui/core/styles';
+
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+  
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`,
+    };
+  }
+  
+const useStyles = makeStyles((theme) => ({
+paper: {
+    position: 'absolute',
+    maxWidth: '80%',
+    backgroundColor: theme.palette.background.paper,
+    border: 'none',
+    borderRadius: '12px',
+    outline: 0,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+}
+}));
 
 export default function Post({ postId, user, username, caption, imageUrl }) {
+
+    const classes = useStyles();
+    const [modalStyle] = useState(getModalStyle);
 
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
     const [likes, setLikes] = useState([]);
+    const [openLikes, setOpenLikes] = useState(false);
 
     // useEffect(() => {
     //     setTimeout((postId) => {
@@ -65,8 +95,6 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         }
     }, [postId]);
 
-    console.log(likes.length)
-
     const postComment = (event) => {
         event.preventDefault();
 
@@ -76,9 +104,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
         setComment('');
-    }
-
-    
+    } 
 
     const showHeart = () => {
         document.getElementById(postId).childNodes[1].childNodes[1].classList.add('showHeart')  
@@ -151,18 +177,48 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
     
                 }
 
-                setLikes(snapshot.docs.map(doc => doc.data()))
+                setLikes(snapshot.docs.map(doc => ({
+                    username: doc.username,
+                    timestamp: doc.timestamp
+                })))
                 console.log(likes)
             })
 
         }
-
         
     }
+
+    const openLikesModal = e => {
+        setOpenLikes(true);
+        console.log(openLikes);
+    }
+
     
 
     return (
+        
         <div className="post" id={postId}>
+
+            <Modal 
+                className="app__modal"
+                open={openLikes}
+                onClose={() => setOpenLikes(false)}
+                >
+                <div style={modalStyle} className={classes.paper}>
+                    <center>
+                    <h4 className="app__modalLabel">Likes</h4>
+
+                        {likes.map(like => {
+                            return <p className="post__likesModal__user">{like.username}</p>
+                        })}
+
+                    </center>
+                </div>
+            </Modal>
+
+
+
+
             <div className="post__header">
                 <Avatar
                     className="post__avatar"
@@ -214,10 +270,10 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                 </svg>
             </div>
 
-            <h4 className="post__likesCount">{
+            <div className="post__likesCount" onClick={openLikesModal}>{
                 likes.length === 1 ? `${likes.length} like` :
                 likes.length > 1 ? `${likes.length} likes` : ''
-            }</h4>
+            }</div>
             
             <h4 className="post__text"><span className="post__username">{username}</span> {caption}</h4>
 
@@ -244,7 +300,6 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
             {user && (
                 <form className="post__commentBox" >
                 <input
-                    id="post__input"
                     className="post__input"
                     type="text"
                     placeholder="Add a comment..."
