@@ -71,7 +71,7 @@
 }
 
 .showHeart {
-    animation: like-heart-animation 1000ms ease-in-out;
+    animation: like-heart-animation 1s ease-in-out;
 }
 
 .post__text {
@@ -151,10 +151,20 @@
         -webkit-transform: scale(0.95);
         transform: scale(0.95);
     }
-    45%, 80% {
+    45% {
         opacity: 0.9;
         -webkit-transform: scale(1.2);
         transform: scale(1.2);
+    }
+    80% {
+        opacity: 0.9;
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        transform: scale(0);
     }
 }
 
