@@ -121,6 +121,10 @@ function App() {
     }
   }
 
+  const topFunction = () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
   return (
     <div className="app">
 
@@ -219,12 +223,13 @@ function App() {
             className="app__headerImage"
             src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
             alt=""
+            onClick={topFunction}
           />
           <input className="app__headerSearch" placeholder="Search"></input>
 
           <nav className="app__nav">
 
-            <svg id="navHomeBtn" className="app__navHomeBtn" fill="#262626" height="22" viewBox="0 0 48 48" width="22">
+            <svg id="navHomeBtn" className="app__navHomeBtn" fill="#262626" height="22" viewBox="0 0 48 48" width="22" onClick={topFunction}>
               <path d="M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 
               4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 
               0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 

@@ -4,6 +4,7 @@
 
 .app {
   background-color: #fafafa;
+  scroll-behavior: smooth;
 }
 
 .app__header {
