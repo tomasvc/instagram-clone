@@ -193,6 +193,10 @@
   width: calc(100% + 64px);
 }
 
+.app__signup__avatar {
+  margin-bottom: 10px;
+}
+
 .app__modalInput {
   width: 100%;
   margin-bottom: 15px;

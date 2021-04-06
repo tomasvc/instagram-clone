@@ -256,7 +256,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                     2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">
                     </path>
                 </svg>
-                <svg ariaLabel="comment" fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={() => document.getElementById(postId).lastChild.firstChild.focus()}>
+                <svg ariaLabel="comment" fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={() => user ? document.getElementById(postId).lastChild.firstChild.focus() : alert("You need to log in to comment")}>
                     <path d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 
                     24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 
                     10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 

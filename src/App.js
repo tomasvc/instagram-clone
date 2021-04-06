@@ -8,7 +8,6 @@ import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
 import { auth, db } from './firebase';
 import { Button, Input, Avatar } from '@material-ui/core';
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
 function getModalStyle() {
   const top = 50;
@@ -45,7 +44,6 @@ function App() {
   const [openAdd, setOpenAdd] = useState(false);
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -97,8 +95,7 @@ function App() {
     .then(() => {
       db.collection("users").add({
         username: username,
-        name: name,
-        avatar: avatar
+        name: name
       })
     })
     .catch((error) => alert(error.message))
@@ -225,7 +222,7 @@ function App() {
         open={openAdd}
         onClose={() => setOpenAdd(false)}
       >
-        <div style={modalStyle} className={window.innerWidth > 300 ? classes.paper : classes.mobile} >
+        <div style={modalStyle} className={classes.paper} >
           <center>
             <h4 className="app__modalLabel">Upload Image</h4>
 
@@ -270,8 +267,7 @@ function App() {
             <Avatar
               onClick={onOpenNavColumn}
               className="app__navAvatar"
-              alt={username}
-              src="src/avatar.jpg"
+              alt=""
             />
 
           <div id="navColumn" className="app__navColumn" style={{ display: "none" }}>
@@ -338,15 +334,6 @@ function App() {
         </div> 
 
       </div>
-
-
-
-    <BrowserRouter>
-      <Switch>
-          <Route path="/" exact component={DisplayUser} />
-          <Route path="/user" component={UserPage} />
-        </Switch>
-    </BrowserRouter>
       
 
 
