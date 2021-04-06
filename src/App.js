@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react'
 import Post from './Post';
 import DisplayUser from './DisplayUser';
 import ImageUpload from './ImageUpload';
+import UserPage from './UserPage';
 import Modal from '@material-ui/core/Modal';
 import { makeStyles } from '@material-ui/core/styles';
 import { auth, db } from './firebase';
 import { Button, Input, Avatar } from '@material-ui/core';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 
 function getModalStyle() {
   const top = 50;
@@ -22,7 +24,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
-    maxWidth: '80%',
+    minWidth: '200px',
     backgroundColor: theme.palette.background.paper,
     border: 'none',
     borderRadius: '12px',
@@ -43,11 +45,14 @@ function App() {
   const [openAdd, setOpenAdd] = useState(false);
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
-  // useEffect runs a piece of code based on a specific condition
+
+
+  // update posts on start
   useEffect(() => {
     db.collection('posts').onSnapshot(snapshot => {
       setPosts(snapshot.docs.map(doc => ({
@@ -57,6 +62,9 @@ function App() {
     })
   }, []);
 
+
+
+  // get auth state of user
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
@@ -74,6 +82,8 @@ function App() {
     }
   }, [user, username])
 
+
+
   const signUp = (event) => {
     event.preventDefault();
 
@@ -81,12 +91,20 @@ function App() {
     .createUserWithEmailAndPassword(email, password)
     .then(authUser => {
       return authUser.user.updateProfile({
-        displayName: username,
-        name: name
+        displayName: username
+      })
+    })
+    .then(() => {
+      db.collection("users").add({
+        username: username,
+        name: name,
+        avatar: avatar
       })
     })
     .catch((error) => alert(error.message))
   }
+
+
 
   const signIn = (event) => {
     event.preventDefault();
@@ -97,6 +115,8 @@ function App() {
 
     setOpenSignIn(false);
   }
+
+
 
   const onOpenNavColumn = () => {
     var column = document.getElementById("navColumn");
@@ -111,9 +131,13 @@ function App() {
     }
   }
 
+
+
   const topFunction = () => {
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
+
+
 
   return (
     <div className="app">
@@ -147,14 +171,19 @@ function App() {
       </div>
       </Modal>
 
+
+
       <Modal
+        className="app__modal"
         open={openSignUp}
         onClose={() => setOpenSignUp(false)}
       >
-      <div style={modalStyle} className={window.innerWidth > 300 ? classes.paper : classes.mobile}>
+      <div style={modalStyle} className={classes.paper}>
         <center>
         <h4 className="app__modalLabel">Sign Up</h4>
           <form className="app__signup">
+            <Avatar className="app__signup__avatar"></Avatar>
+            <input type="file" hidden />
             <Input
               className="app__modalInput"
               placeholder="Username"
@@ -189,7 +218,10 @@ function App() {
       </div>
       </Modal>
 
+
+
       <Modal 
+        className="app__modal"
         open={openAdd}
         onClose={() => setOpenAdd(false)}
       >
@@ -206,6 +238,8 @@ function App() {
           </center>
         </div>
       </Modal>
+
+
 
       <div className="app__header">
         <div className="app__headerWrapper">
@@ -240,12 +274,13 @@ function App() {
               src="src/avatar.jpg"
             />
 
-          <div id="navColumn" className="app__navColumn" styles={{ display: "none" }}>
+          <div id="navColumn" className="app__navColumn" style={{ display: "none" }}>
             <div className="app__navColumnArrow"></div>
               { user?.displayName ? 
               ( <button className="app__navBtn" onClick={() => auth.signOut()}>Logout</button> )
               :
               ( <div className="app__loginContainer">
+                  <button className="app__navBtn">Profile</button>
                   <button className="app__navBtn" onClick={() => setOpenSignIn(true)}>Login</button>
                   <button className="app__navBtn" onClick={() => setOpenSignUp(true)}>Sign Up</button>
                 </div> )
@@ -304,8 +339,18 @@ function App() {
 
       </div>
 
-    </div>
+
+
+    <BrowserRouter>
+      <Switch>
+          <Route path="/" exact component={DisplayUser} />
+          <Route path="/user" component={UserPage} />
+        </Switch>
+    </BrowserRouter>
       
+
+
+    </div>
   );
 }
 

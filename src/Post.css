@@ -184,9 +184,34 @@
     cursor: pointer;
 }
 
+@keyframes modal {
+    0% {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform:scale(1);
+    }
+}
+  
+.app__modal {
+    animation: modal .1s ease-out;
+}
+
 .post__likesModal__user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     width: 300px;
     text-align: left;
+    margin-bottom: 10px;
+}
+
+.post__likesModal__avatar {
+    max-width: 60px;
+    max-height: 60px;
+    margin-right: 10px;
 }
 
 .post__commentBox {

@@ -95,6 +95,8 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         }
     }, [postId]);
 
+
+
     const postComment = (event) => {
         event.preventDefault();
 
@@ -106,12 +108,16 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         setComment('');
     } 
 
+
+
     const showHeart = () => {
         document.getElementById(postId).childNodes[1].childNodes[1].classList.add('showHeart')  
         setTimeout(() => {
             document.getElementById(postId).childNodes[1].childNodes[1].classList.remove('showHeart')
         }, 1000)  
     }
+
+
 
     const likePost = () => {
 
@@ -179,22 +185,17 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
 
                 setLikes(snapshot.docs.map(doc => ({
                     username: doc.username,
+                    avatar: doc.avatar,
                     timestamp: doc.timestamp
                 })))
-                console.log(likes)
             })
 
         }
         
     }
 
-    const openLikesModal = e => {
-        setOpenLikes(true);
-        console.log(openLikes);
-    }
 
     
-
     return (
         
         <div className="post" id={postId}>
@@ -209,7 +210,14 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                     <h4 className="app__modalLabel">Likes</h4>
 
                         {likes.map(like => {
-                            return <p className="post__likesModal__user">{like.username}</p>
+                            return <div className="post__likesModal__user">
+                                        <Avatar
+                                            className="post__likesModal__avatar"
+                                            alt=""
+                                        />
+                                        <p className="post__likesModal__username">{like.username}</p>
+                                        <p className="post__likesModal__name">{like.name}</p>
+                                    </div>
                         })}
 
                     </center>
@@ -222,8 +230,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
             <div className="post__header">
                 <Avatar
                     className="post__avatar"
-                    alt={username}
-                    src="./avatar.jpg"
+                    alt=""
                 />
                 <h4 className="post__username">{username}</h4>
                 <svg className="post__more" ariaLabel="like" fill="#262626" height="16" viewBox="0 0 48 48" width="16">
@@ -256,7 +263,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                     0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z">
                     </path>
                 </svg>
-                <svg ariaLabel="share-post" fill="#262626" height="24" viewBox="0 0 48 48" width="24">
+                <svg ariaLabel="share-post" fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={() => alert("Share doesn't do anything but just pretend it does")}>
                     <path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 
                     5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 
                     6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">
@@ -270,7 +277,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                 </svg>
             </div>
 
-            <div className="post__likesCount" onClick={openLikesModal}>{
+            <div className="post__likesCount" onClick={() => setOpenLikes(true)}>{
                 likes.length === 1 ? `${likes.length} like` :
                 likes.length > 1 ? `${likes.length} likes` : ''
             }</div>

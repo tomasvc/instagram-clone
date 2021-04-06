@@ -30,7 +30,6 @@ export default function ImageUpload({ username, setOpenAdd }) {
                 setProgress(progress)
             },
             (error) => {
-                console.log(error);
                 alert(error.message);
             },
             () => {
