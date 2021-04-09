@@ -56,7 +56,7 @@
 }
 
 .post__imageHeart {
-    background-image: url("./img/images-sprite.png");
+    background-image: url("../img/images-sprite.png");
     background-position: 0 0;
     width: 128px;
     height: 128px;

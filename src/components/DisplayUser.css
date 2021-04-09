@@ -8,22 +8,22 @@
     width: 330px;
 }
 
-.user__avatar {
+.displayUser__avatar {
     min-width: 55px;
     min-height: 55px;
     margin-right: 18px;
 }
 
-.user__username, .user__name {
+.displayUser__username, .displayUser__name {
     font-weight: 500;
     font-size: 14px;
 }
 
-.user__username {
+.displayUser__username {
     color: #262626;
 }
 
-.user__name {
+.displayUser__name {
     font-weight: 400;
     color: #777;
 }

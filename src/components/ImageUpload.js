@@ -1,8 +1,8 @@
 import { Button, LinearProgress, Input } from '@material-ui/core';
 import React, { useState } from 'react';
 import firebase from 'firebase';
-import { storage, db } from './firebase';
-import './App.css';
+import { storage, db } from '../firebase';
+import '../App.css';
 import './ImageUpload.css';
 
 export default function ImageUpload({ username, setOpenAdd }) {
