@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Button} from "@material-ui/core";
+import {Avatar} from "@material-ui/core";
 import './UserPage.css';
 
 export default function UserPage({ user }) {

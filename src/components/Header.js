@@ -48,7 +48,6 @@ export default function Header({ user }) {
         <SignIn openSignIn={openSignIn} onClose={onSignInClose} />
         <SignUp openSignUp={openSignUp} onClose={onSignUpClose} />
         <AddPost openAdd={openAdd} onClose={onAddClose} user={user} />
-
         <div className="app__header">
         <div className="app__headerWrapper">
           <a href="/"><img
@@ -57,8 +56,12 @@ export default function Header({ user }) {
             alt=""
             onClick={topFunction}
           /></a>
-          <input className="app__headerSearch" placeholder="Search"></input>
 
+          <div className="app__searchContainer">
+            <span className="app__searchIcon"></span>
+            <input className="app__headerSearch" placeholder="Search"></input>
+          </div>
+          
           <nav className="app__nav">
 
             <a href="/"><svg id="navHomeBtn" className="app__navHomeBtn" fill="#262626" height="22" viewBox="0 0 48 48" width="22" onClick={topFunction}>

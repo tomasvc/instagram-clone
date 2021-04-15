@@ -58,7 +58,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
     //     }, 200)
     // }, [localStorage])
 
-
+    // add comments to post
     useEffect(() => {
         let unsubscribe;
         if (postId) {
@@ -77,6 +77,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         };
     }, [postId]);
 
+    // add likes to post
     useEffect(() => {
         let unsubscribe;
         if (postId) {

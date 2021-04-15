@@ -10,6 +10,7 @@ import { auth, db } from './firebase';
 function App() {
   
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
 
   // update posts on start
@@ -28,6 +29,13 @@ function App() {
       if (authUser) {
         // user has logged in
         setUser(authUser);
+        db.collection('users').doc(user.uid).onSnapshot(snapshot => {
+          setUserData(snapshot.map(data => ({
+            username: data.username,
+            name: data.name,
+            avatar: data.avatar
+          })))
+        })
       } else {
         // user has logged out
         setUser(null);
@@ -46,6 +54,7 @@ function App() {
     <div className="app">
 
       <Router>
+
         <Header user={user} />
 
         <Switch>
@@ -61,7 +70,7 @@ function App() {
           </Route>
 
           <Route exact path="/user">
-            <UserPage />
+            <UserPage user={user} />
           </Route>
           
         </Switch>

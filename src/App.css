@@ -36,6 +36,10 @@
   cursor: pointer;
 }
 
+.app__searchContainer {
+  position: relative;
+}
+
 .app__headerSearch {
   position: relative;
   display: inline;
@@ -65,6 +69,22 @@
 
 .app__headerSearch:focus::placeholder {
   left: 20px;
+}
+
+.app__searchIcon {
+  position: absolute;
+  top: 21.5px;
+  left: 57px;
+  background-image: url("./img/images-sprite.png");
+  background-position: -408px -328px;
+  background-size: 440px 411px;
+  width: 12px;
+  height: 12px;
+  z-index: 1;
+}
+
+.app__headerSearch:focus .app__searchIcon {
+  left: 0;
 }
 
 .app__nav {
