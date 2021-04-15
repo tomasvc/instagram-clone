@@ -5,13 +5,13 @@ import './DisplayUser.css';
 export default function DisplayUser({ user, name }) {
     return (
         <div className="app__user">
-            <Avatar
+            <a href="/user" ><Avatar
                     className="displayUser__avatar"
                     alt=""
                     src="./img/avatar.jpg"
-                />
+                /></a>
             <div>
-                <h4 className="displayUser__username">{user?.displayName}</h4>
+                <a href="/user" className="displayUser__username">{user?.displayName}</a>
                 <h5 className="displayUser__name">{name}</h5>
             </div>
         </div>

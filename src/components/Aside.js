@@ -4,7 +4,7 @@ import DisplayUser from './DisplayUser';
 export default function Aside({ user }) {
     return (
         <div className="app__aside">
-          { user?.displayUser ? (
+          { user ? (
             <DisplayUser user={user} />
           ) : (
             <DisplayUser username="Username" name="Name" />

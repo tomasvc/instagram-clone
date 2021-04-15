@@ -45,6 +45,8 @@ body {
     font-size: 13px;
     padding: 5px 8px;
     margin-left: 20px;
+    text-decoration: none;
+    color: #262626;
 }
 
 .user__editBtn:hover {

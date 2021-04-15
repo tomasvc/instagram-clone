@@ -1,0 +1,147 @@
+.userEdit__wrapper {
+    position: relative;
+    top: 85px;
+    background-color: white;
+    color: #262626;
+    display: flex;
+    border: 1px solid lightgrey;
+    width: 62%;
+    margin: auto;
+}
+
+.userEdit__left {
+    border-right: 1px solid lightgrey;
+    flex-basis: 236px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.left__nav {
+    padding: 0;
+}
+
+.left__navItem {
+    display: block;
+    list-style-type: none;
+    padding: 15px 32px;
+    width: auto;
+}
+
+.left__navItem:last-child {
+    color: #0095f6;
+    font-weight: 600;
+}
+
+.left__navItem:last-child:hover {
+    color: #0095f6;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.left__navItem:not(:last-child):hover {
+    cursor: pointer;
+    background-color: rgba(235, 235, 235, 0.753);
+    border-left: 2px solid rgba(199, 199, 199, 0.705);
+}
+
+.navItem__selected {
+    border-left: 2px solid #262626;
+    font-weight: 600;
+}
+
+.user__right {
+    flex: 1 1 400px;
+    color: #262626;
+}
+
+.right__top {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.right__top * div {
+    margin-right: 32px;
+    margin-left: 124px;
+}
+
+.right__username {
+    font-size: 20px;
+}
+
+.right__changeProfileBtn {
+    color: #0095f6;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.right__changeProfileBtn:hover {
+    cursor: pointer;
+}
+
+.userEdit__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form__item {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+}
+
+.item__aside {
+    flex-basis: 194px;
+    text-align: right;
+    padding-right: 32px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.item__aside label {
+    position: relative;
+    top: 3px;
+}
+
+.item__input {
+    flex-basis: 355px;
+    flex-direction: row;
+}
+
+.item__inputField {
+    width: 100%;
+    padding: 7px;
+    font-size: 16px;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+}
+
+.item__inputField::placeholder {
+    color: rgb(179, 179, 179);
+    font-weight: 100;
+}
+
+.item__note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.form__submitBtn {
+    width: 65px;
+    background-color: #0095f6;
+    color: white;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.form__submitBtn:hover {
+    cursor: pointer;
+}

@@ -11,7 +11,7 @@ export default function UserPage({ user }) {
                 <div className="user__topRight">
                     <div>
                         <span className="user__username">{user ? user.displayName : "Username"}</span>
-                        <button className="user__editBtn">Edit Profile</button>
+                        <a href="/user/edit" className="user__editBtn">Edit Profile</a>
                     </div>
                     <div className="user__topInfo">
                         <p className="user__info"><span className="user__infoNum">0</span> posts</p>

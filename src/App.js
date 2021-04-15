@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Aside from './components/Aside';
 import Posts from './components/Posts';
 import UserPage from './components/UserPage';
+import UserEdit from './components/UserEdit';
 import { auth, db } from './firebase';
 
 function App() {
@@ -29,13 +30,13 @@ function App() {
       if (authUser) {
         // user has logged in
         setUser(authUser);
-        db.collection('users').doc(user.uid).onSnapshot(snapshot => {
-          setUserData(snapshot.map(data => ({
-            username: data.username,
-            name: data.name,
-            avatar: data.avatar
-          })))
-        })
+        // db.collection('users').doc(user.uid).onSnapshot(snapshot => {
+        //   setUserData(snapshot.map(data => ({
+        //     username: data.username,
+        //     name: data.name,
+        //     avatar: data.avatar
+        //   })))
+        // })
       } else {
         // user has logged out
         setUser(null);
@@ -71,6 +72,10 @@ function App() {
 
           <Route exact path="/user">
             <UserPage user={user} />
+          </Route>
+
+          <Route exact path="/user/edit">
+            <UserEdit user={user} />
           </Route>
           
         </Switch>

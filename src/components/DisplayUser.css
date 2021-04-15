@@ -21,6 +21,7 @@
 
 .displayUser__username {
     color: #262626;
+    text-decoration: none;
 }
 
 .displayUser__name {
