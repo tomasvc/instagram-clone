@@ -234,11 +234,6 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                     alt=""
                 />
                 <h4 className="post__username">{username}</h4>
-                <svg className="post__more" ariaLabel="like" fill="#262626" height="16" viewBox="0 0 48 48" width="16">
-                    <circle clipRule="evenodd" cx="8" cy="24" fillRule="evenodd" r="4.5"></circle>
-                    <circle clipRule="evenodd" cx="8" cy="24" fillRule="evenodd" r="4.5"></circle>
-                    <circle clipRule="evenodd" cx="8" cy="24" fillRule="evenodd" r="4.5"></circle>
-                </svg>
             </div>
 
             <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}} >
