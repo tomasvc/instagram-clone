@@ -6,7 +6,7 @@ import Aside from './components/Aside';
 import Posts from './components/Posts';
 import UserPage from './components/UserPage';
 import UserEdit from './components/UserEdit';
-import { auth, db } from './firebase';
+import { auth, db } from './fbConfig';
 
 function App() {
   

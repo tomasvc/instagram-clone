@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Post.css';
 import firebase from 'firebase';
-import { db } from '../firebase';
+import { db } from '../fbConfig';
 import Avatar from "@material-ui/core/Avatar";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from '@material-ui/core/styles';

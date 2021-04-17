@@ -1,11 +1,15 @@
 import { Button, LinearProgress, Input } from '@material-ui/core';
 import React, { useState } from 'react';
-import firebase from 'firebase';
-import { storage, db } from '../firebase';
+import { connect, useDispatch } from 'react-redux';
+import firebase from 'firebase/app';
+import { storage, db } from '../fbConfig';
 import '../App.css';
 import './ImageUpload.css';
+import { addPost } from './store/actions/postActions';
 
-export default function ImageUpload({ username, setOpenAdd }) {
+export default function ImageUpload({ username, onClose }) {
+
+    const dispatch = useDispatch();
 
     const [caption, setCaption] = useState('')
     const [progress, setProgress] = useState(0)
@@ -17,7 +21,14 @@ export default function ImageUpload({ username, setOpenAdd }) {
         }
     }
 
+    var state = {
+        caption,
+        image,
+        username
+    }
+
     const handleUpload = () => {
+
         const uploadTask = storage.ref(`images/${image.name}`).put(image);
 
         uploadTask.on(
@@ -33,29 +44,50 @@ export default function ImageUpload({ username, setOpenAdd }) {
                 alert(error.message);
             },
             () => {
-                // complete function...
                 storage
                     .ref("images")
                     .child(image.name)
                     .getDownloadURL()
                     .then(url => {
-                        // post image inside db
-                        db.collection("posts").add({
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                            caption: caption,
-                            imageUrl: url,
-                            username: username
-                        });
-
-                        setOpenAdd(false);
-
-                        setProgress(0);
-                        setCaption('');
-                        setImage(null);
-
+                        setImage(url)
+                        console.log(image)
+                        dispatch(addPost({caption, url, username}))
                     })
+
+                    onClose()
+
+                    setProgress(0)
+                    setCaption('')
+                    setImage(null)
             }
         )
+
+
+        // 
+        //     () => {
+        //         // complete function...
+        //         storage
+        //             .ref("images")
+        //             .child(image.name)
+        //             .getDownloadURL()
+        //             .then(url => {
+        //                 // post image inside db
+        //                 db.collection("posts").add({
+        //                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        //                     caption: caption,
+        //                     imageUrl: url,
+        //                     username: username
+        //                 });
+
+        //                 setOpenAdd(false);
+
+        //                 setProgress(0);
+        //                 setCaption('');
+        //                 setImage(null);
+
+        //             })
+        //     }
+        // )
     }
 
 

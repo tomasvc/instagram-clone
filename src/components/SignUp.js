@@ -1,7 +1,7 @@
 import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Input, Modal, Avatar } from '@material-ui/core';
-import { auth, db } from '../firebase';
+import { auth, db } from '../fbConfig';
 import '../App.css';
 
 function getModalStyle() {

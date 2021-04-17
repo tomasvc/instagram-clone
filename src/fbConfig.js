@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase"
 
 const firebaseApp = firebase.initializeApp({
     apiKey: "AIzaSyAG8EdlmeN-phVHYiKlQcAm5QLjd74xEQg",
@@ -10,8 +10,11 @@ const firebaseApp = firebase.initializeApp({
     measurementId: "G-ELVW7EG096"
 });
 
+firebase.firestore().settings({ timestampsInSnapshots: true });
+
 const db = firebaseApp.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 
-export { db, auth, storage };
+export { db, auth, storage }
+export default firebase
