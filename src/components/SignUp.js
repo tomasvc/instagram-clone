@@ -2,6 +2,8 @@ import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Input, Modal, Avatar } from '@material-ui/core';
 import { auth, db } from '../fbConfig';
+import { useDispatch } from 'react-redux';
+import { createUser } from './store/actions/userActions';
 import '../App.css';
 
 function getModalStyle() {
@@ -30,6 +32,8 @@ function getModalStyle() {
 
 export default function SignUp({ openSignUp, onClose }) {
 
+    const dispatch = useDispatch();
+
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -38,20 +42,31 @@ export default function SignUp({ openSignUp, onClose }) {
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
 
+    let avatarUrl = ''
+    let website = ''
+    let bio = ''
+
     const signUp = (event) => {
         event.preventDefault();
     
         auth
         .createUserWithEmailAndPassword(email, password)
         .then(authUser => {
+          console.log(authUser)
+          //dispatch(createUser({ username, name, avatarUrl, website, bio }))
+          db.collection('users').doc(authUser.user.uid).set({
+            userId: authUser.user.uid,
+            username,
+            name,
+            email,
+            avatarUrl,
+            following: 0,
+            followers: 0,
+            posts: [],
+            dateCreated: Date.now()
+          })
           return authUser.user.updateProfile({
             displayName: username
-          })
-        })
-        .then(() => {
-          db.collection("users").add({
-            username: username,
-            name: name
           })
         })
         .catch((error) => alert(error.message))

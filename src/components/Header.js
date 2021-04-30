@@ -6,7 +6,7 @@ import SignUp from '../components/SignUp';
 import AddPost from './AddPost';
 import '../App.css';
 
-export default function Header({ user }) {
+export default function Header({ user, userData }) {
 
     const [openSignIn, setOpenSignIn] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -80,6 +80,7 @@ export default function Header({ user }) {
             <div id="navAvatarRing" className="app__navAvatarRing"></div>
             <Avatar
               onClick={onOpenNavColumn}
+              src={userData.avatarUrl}
               className="app__navAvatar"
               alt=""
             />
@@ -88,12 +89,11 @@ export default function Header({ user }) {
             <div className="app__navColumnArrow"></div>
               { user?.displayName ? 
               ( <div className="app__loginContainer">
-                  <a href="/user"><button className="app__navBtn">Profile</button></a>
+                  <a href={userData?.username}><button className="app__navBtn">Profile</button></a>
                   <button className="app__navBtn" onClick={() => auth.signOut()}>Logout</button> 
                 </div> )
               :
               ( <div className="app__loginContainer">
-                  <a href="/user"><button className="app__navBtn">Profile</button></a>
                   <button className="app__navBtn" onClick={() => setOpenSignIn(true)}>Login</button>
                   <button className="app__navBtn" onClick={() => setOpenSignUp(true)}>Sign Up</button>
                 </div> )

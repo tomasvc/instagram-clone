@@ -212,11 +212,15 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
 
                         {likes.map(like => {
                             return <div className="post__likesModal__user">
-                                        <Avatar
-                                            className="post__likesModal__avatar"
-                                            alt=""
-                                        />
-                                        <p className="post__likesModal__username">{like.username}</p>
+                                        <a href={'/' + like.username}>
+                                            <Avatar
+                                                className="post__likesModal__avatar"
+                                                alt=""
+                                            />
+                                        </a>
+                                        <a href={'/' + like.username}>
+                                            <p className="post__likesModal__username">{like.username}</p>
+                                        </a>
                                         <p className="post__likesModal__name">{like.name}</p>
                                     </div>
                         })}
@@ -229,11 +233,15 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
 
 
             <div className="post__header">
-                <Avatar
-                    className="post__avatar"
-                    alt=""
-                />
-                <h4 className="post__username">{username}</h4>
+                <a href={'/' + username}>
+                    <Avatar
+                        className="post__avatar"
+                        alt=""
+                    />
+                </a>
+                <a href={'/' + username}>
+                    <h4 className="post__username">{username}</h4>
+                </a>
             </div>
 
             <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}} >
@@ -278,13 +286,13 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                 likes.length > 1 ? `${likes.length} likes` : ''
             }</div>
             
-            <h4 className="post__text"><span className="post__username">{username}</span> {caption}</h4>
+            <h4 className="post__text"><a href={'/' + username}><span className="post__username">{username}</span></a> {caption}</h4>
 
             <div className="post__comments">
                 {comments.map((comment) => {
                     return (
                     <p className="post__comment">
-                        <strong>{comment.username}</strong> {comment.text}
+                        <a href={'/' + comment.username}><strong>{comment.username}</strong></a> {comment.text}
                         <svg className="comment__like" ariaLabel="like" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
                             <path id="comment__likePath" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 
                             41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 

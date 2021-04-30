@@ -45,7 +45,7 @@ export default function AddPost({ openAdd, onClose, user }) {
             <h4 className="app__modalLabel">Upload Image</h4>
 
             {user?.displayName ? (
-              <ImageUpload username={user.displayName} setOpenAdd={openAdd} onClose={onClose} />
+              <ImageUpload user={user} username={user.displayName} setOpenAdd={openAdd} onClose={onClose} />
             ):
               (<h4>You need to log in to upload</h4>)
             }

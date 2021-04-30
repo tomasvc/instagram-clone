@@ -168,7 +168,8 @@
   border-radius: 5px;
 }
 
-.app__loginContainer a {
+.app__loginContainer a,
+.app__loginContainer a:hover {
   text-decoration: none;
 }
 
@@ -253,6 +254,7 @@
 
 .app__postsWrapper {
   margin: auto;
+  margin-top: 10px;
 }
 
 .app__menu {

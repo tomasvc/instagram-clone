@@ -1,18 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { db } from '../fbConfig';
 import Avatar from "@material-ui/core/Avatar";
 import './DisplayUser.css';
 
-export default function DisplayUser({ user, name }) {
+export default function DisplayUser({ user }) {
+
+    const [userData, setUserData] = useState([]);
+
+    useEffect(() => {
+        if (user) {
+                db
+                .collection('users')
+                .doc(user.uid)
+                .get()
+                .then(doc => {
+                    setUserData(doc.data())
+                }) 
+        }
+    }, [user])
+
     return (
         <div className="app__user">
-            <a href="/user" ><Avatar
+            <a href={'/' + userData?.username} ><Avatar
                     className="displayUser__avatar"
                     alt=""
-                    src="./img/avatar.jpg"
+                    src={userData?.avatarUrl}
                 /></a>
             <div>
-                <a href="/user" className="displayUser__username">{user?.displayName}</a>
-                <h5 className="displayUser__name">{name}</h5>
+                <a href={'/' + userData?.username} className="displayUser__username">{user?.displayName}</a>
+                <h5 className="displayUser__name">{userData?.name}</h5>
             </div>
         </div>
     )

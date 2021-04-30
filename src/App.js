@@ -2,10 +2,12 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Aside from './components/Aside';
+import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
-import UserPage from './components/UserPage';
+import UserProfile from './components/UserProfile';
 import UserEdit from './components/UserEdit';
+import Profile from './components/Profile';
+import LoginPage from './components/LoginPage';
 import { auth, db } from './fbConfig';
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
+
 
   // update posts on start
   useEffect(() => {
@@ -24,19 +27,13 @@ function App() {
     })
   }, []);
 
+
   // get auth state of user
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         // user has logged in
         setUser(authUser);
-        // db.collection('users').doc(user.uid).onSnapshot(snapshot => {
-        //   setUserData(snapshot.map(data => ({
-        //     username: data.username,
-        //     name: data.name,
-        //     avatar: data.avatar
-        //   })))
-        // })
       } else {
         // user has logged out
         setUser(null);
@@ -50,32 +47,57 @@ function App() {
   }, [user])
 
 
+  // get current user data
+  useEffect(() => {
+    if (user) {
+            db
+            .collection('users')
+            .doc(user.uid)
+            .get()
+            .then(doc => {
+                setUserData(doc.data())
+            }) 
+    }
+  }, [user])
+
+
 
   return (
+
     <div className="app">
 
       <Router>
 
-        <Header user={user} />
+        <Header user={user} userData={userData} />
 
         <Switch>
 
           <Route exact path="/">
+
+            { user ? 
+            
             <div className="app__globalWrapper">
-              <Aside user={user} />
+              <Sidebar user={user} userData={userData} />
               <div className="app__contentWrapper">
-                <div className="app__stories"></div>
                 <Posts user={user} posts={posts} />
               </div> 
             </div>
+            
+            : <LoginPage /> }
+
+            
           </Route>
 
           <Route exact path="/user">
-            <UserPage user={user} />
+            <UserProfile user={user} />
           </Route>
 
-          <Route exact path="/user/edit">
+          <Route exact path="/:username/edit">
             <UserEdit user={user} />
+          </Route>
+
+          <Route path="/:username">
+            <Profile user={user} />
           </Route>
           
         </Switch>
@@ -83,6 +105,7 @@ function App() {
       </Router>
 
     </div>
+    
   );
 }
 

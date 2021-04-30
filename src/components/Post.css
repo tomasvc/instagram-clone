@@ -10,12 +10,30 @@
     border-radius: 3px;
 }
 
+a {
+    text-decoration: none;
+    color: #262626;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .post__header {
     display: flex;
     align-items: center;
     height: 30px;
     padding: 16px;
     border-bottom: 1px solid rgb(235, 235, 235);
+}
+
+.post__header a:last-child:hover {
+    color: #262626;
+    text-decoration: underline;
+}
+
+.post__header a {
+    text-decoration: none;
 }
 
 .post__username {

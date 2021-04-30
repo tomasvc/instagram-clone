@@ -1,6 +1,5 @@
 export const addPost = (post) => {
     return (dispatch, getState, { getFirestore }) => {
-        console.log('this works')
         const firestore = getFirestore();
         firestore.collection('posts').add({
             caption: post.caption,

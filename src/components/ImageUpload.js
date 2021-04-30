@@ -1,13 +1,12 @@
 import { Button, LinearProgress, Input } from '@material-ui/core';
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import firebase from 'firebase/app';
+import { useDispatch } from 'react-redux';
 import { storage, db } from '../fbConfig';
 import '../App.css';
 import './ImageUpload.css';
 import { addPost } from './store/actions/postActions';
 
-export default function ImageUpload({ username, onClose }) {
+export default function ImageUpload({ user, username, onClose }) {
 
     const dispatch = useDispatch();
 
@@ -19,12 +18,6 @@ export default function ImageUpload({ username, onClose }) {
         if (e.target.files[0]) {
             setImage(e.target.files[0])
         }
-    }
-
-    var state = {
-        caption,
-        image,
-        username
     }
 
     const handleUpload = () => {
@@ -50,7 +43,6 @@ export default function ImageUpload({ username, onClose }) {
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        console.log(image)
                         dispatch(addPost({caption, url, username}))
                     })
 
