@@ -6,7 +6,7 @@
     display: flex;
     border: 1px solid lightgrey;
     border-radius: 3px;
-    width: 62%;
+    max-width: 935px;
     margin: auto;
 }
 
@@ -55,7 +55,6 @@
 }
 
 .user__right {
-    flex: 1 1 400px;
     color: #262626;
 }
 
@@ -64,7 +63,7 @@
     flex-direction: row;
     justify-content: flex-start;
     margin-top: 30px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .right__top * div {
@@ -77,7 +76,8 @@
 }
 
 .right__username {
-    font-size: 20px;
+    font-size: 20px !important;
+    font-weight: 400 !important;
 }
 
 .right__changeProfileBtn {
@@ -107,6 +107,8 @@
     padding-right: 32px;
     font-size: 16px;
     font-weight: 600;
+    position: relative;
+    left: -30px;
 }
 
 .item__aside label {
@@ -117,6 +119,8 @@
 .item__input {
     flex-basis: 355px;
     flex-direction: row;
+    position: relative;
+    left: -30px;
 }
 
 .item__inputField {
@@ -205,4 +209,23 @@
     font-weight: 400 !important;
     border-bottom: none !important;
     color: #262626;
+}
+
+@media screen and (max-width: 768px) {
+
+    .userEdit__left {
+        display: none;
+        align-items: flex-start;
+    }
+
+    .userEdit__right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .right__top:first-child div {
+        margin-left: 20px;
+    }
+
 }

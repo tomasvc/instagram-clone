@@ -4,7 +4,6 @@ import { Avatar, Modal } from "@material-ui/core";
 import { useDispatch } from 'react-redux';
 import { storage, db } from '../fbConfig';
 import './UserEdit.css';
-import '../App.css';
 import { editUser } from './store/actions/userActions';
 
 function getModalStyle() {

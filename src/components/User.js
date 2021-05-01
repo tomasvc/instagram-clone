@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../fbConfig';
-import './Profile.css';
-import '../App.css';
+import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 function getModalStyle() {
@@ -73,15 +72,13 @@ export default function Profile({ user }) {
 
         setPosts(posts);
 
-        console.log(posts)
-
         if(document.querySelector('.user__posts').innerHTML === '') {
             for(let i = 0; i < posts.length; i++) {
                 document
                 .querySelector('.user__posts')
                 .innerHTML += `<div className="posts__post">
                                     <div id="post__shade"></div>
-                                    <img src=${posts[i].imageUrl} />
+                                    <img className="post__image" src=${posts[i].imageUrl} />
                                 </div>`
             }
         }
@@ -104,15 +101,17 @@ export default function Profile({ user }) {
                 </div>
             </Modal>
 
-            <div className="user__top">
-                <Avatar src={ userData?.avatarUrl } className="user__avatar"></Avatar>
-                <div className="user__topRight">
-                    <div className="user__topName">
-                        <span className="user__username">{ userData?.username }</span>
+            <div className="user__header">
+                <div className="header__left">
+                    <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar>
+                </div>
+                <div className="header__right">
+                    <div className="right__name">
+                        <span className="right__username">{ userData?.username }</span>
                         { userData?.username === user?.displayName ?
-                            <div className="user__config">
-                                <a href={userData?.username + '/edit'} className="user__editBtn">Edit Profile</a>
-                                <svg className="user__settingsBtn" height="24" viewBox="0 0 48 48" width="24">
+                            <div className="name__config">
+                                <a href={userData?.username + '/edit'} className="config__editBtn">Edit Profile</a>
+                                <svg className="config__settingsBtn" height="24" viewBox="0 0 48 48" width="24">
                                     <path d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 
                                     0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6
                                     0-1.1.3-1.3.8l-1.1 2.2c-.2.4-.5.7-1 .8-1.6.5-3.2 1.1-4.6 1.9-.4.2-.8.3-1.2.1l-2.3-.8c-.5-.2-1.1 0-1.5.4L5.9 8.8c-.4.4-.5 1-.4
@@ -125,29 +124,29 @@ export default function Profile({ user }) {
                                 </svg>
                             </div>
                         :
-                        ''
+                            <div>
+                                <button className="right__follow-btn" value="Follow">Follow</button>
+                            </div>
                         }
                         
                     </div>
-                    <div className="user__topInfo">
-                        <p className="user__info"><span className="user__infoNum">{ posts?.length }</span> posts</p>
-                        <p className="user__info"><span className="user__infoNum">{ userData?.followers }</span> followers</p>
-                        <p className="user__info"><span className="user__infoNum">{ userData?.following }</span> following</p>
+                    <div className="header__top-info">
+                        <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span> posts</p>
+                        <p className="top-info__info-item"><span className="info-item__info-num">{ userData?.followers }</span> followers</p>
+                        <p className="top-info__info-item"><span className="info-item__info-num">{ userData?.following }</span> following</p>
                     </div>
-                    <p className="user__name">{ userData?.name }</p>
-                    <p className="user__bio">{ userData?.bio }</p>
-                    <a href={ userData?.website } className="user__website">{ userData?.website }</a>
+                    <p className="header__name">{ userData?.name }</p>
+                    <p className="header__bio">{ userData?.bio }</p>
+                    <a href={ userData?.website } className="header__website">{ userData?.website }</a>
                 </div>
             </div>
 
-            <div className="user__bottom">
-                <nav className="user__nav">
-                    <a className="active" href=".">Posts</a>
-                    <a href={'/' + userData?.username}>IGTV</a>
-                    <a href={'/' + userData?.username}>Saved</a>
-                    <a href={'/' + userData?.username}>Tagged</a>
-                </nav>
-            </div>
+            <nav className="content__nav">
+                <a id="active" href=".">Posts</a>
+                <a href={'/' + userData?.username}>IGTV</a>
+                <a href={'/' + userData?.username}>Saved</a>
+                <a href={'/' + userData?.username}>Tagged</a>
+            </nav>
 
             <div className="user__posts">
             </div>

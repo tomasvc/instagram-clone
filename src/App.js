@@ -4,9 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Posts from './components/Posts';
-import UserProfile from './components/UserProfile';
 import UserEdit from './components/UserEdit';
-import Profile from './components/Profile';
+import User from './components/User';
 import LoginPage from './components/LoginPage';
 import { auth, db } from './fbConfig';
 
@@ -88,16 +87,12 @@ function App() {
             
           </Route>
 
-          <Route exact path="/user">
-            <UserProfile user={user} />
-          </Route>
-
-          <Route exact path="/:username/edit">
+          <Route path="/:username/edit">
             <UserEdit user={user} />
           </Route>
 
-          <Route path="/:username">
-            <Profile user={user} />
+          <Route exact path="/:username">
+            <User user={user} />
           </Route>
           
         </Switch>

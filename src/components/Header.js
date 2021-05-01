@@ -4,7 +4,7 @@ import { Avatar } from '@material-ui/core';
 import SignIn from '../components/SignIn';
 import SignUp from '../components/SignUp';
 import AddPost from './AddPost';
-import '../App.css';
+import './Header.css';
 
 export default function Header({ user, userData }) {
 
@@ -48,23 +48,23 @@ export default function Header({ user, userData }) {
         <SignIn openSignIn={openSignIn} onClose={onSignInClose} />
         <SignUp openSignUp={openSignUp} onClose={onSignUpClose} />
         <AddPost openAdd={openAdd} onClose={onAddClose} user={user} />
-        <div className="app__header">
-        <div className="app__headerWrapper">
+        <div className="header">
+        <div className="header__wrapper">
           <a href="/"><img
-            className="app__headerImage"
+            className="wrapper__logo"
             src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
             alt=""
             onClick={topFunction}
           /></a>
 
-          <div className="app__searchContainer">
-            <span className="app__searchIcon"></span>
-            <input className="app__headerSearch" placeholder="Search"></input>
+          <div className="wrapper__search-container">
+            <span className="search-container__icon"></span>
+            <input className="search-container__input" placeholder="Search"></input>
           </div>
           
-          <nav className="app__nav">
+          <nav className="wrapper__nav">
 
-            <a href="/"><svg id="navHomeBtn" className="app__navHomeBtn" fill="#262626" height="22" viewBox="0 0 48 48" width="22" onClick={topFunction}>
+            <a href="/"><svg id="navHomeBtn" className="nav__home-btn" fill="#262626" height="22" viewBox="0 0 48 48" width="22" onClick={topFunction}>
               <path d="M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 
               4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 
               0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 
@@ -72,30 +72,30 @@ export default function Header({ user, userData }) {
             </svg></a>
 
             { user?.displayName ?
-              ( <button className="app__navAddBtn" onClick={ () => setOpenAdd(true) }>+</button> 
+              ( <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>+</button> 
               ): ('')
             }
             
 
-            <div id="navAvatarRing" className="app__navAvatarRing"></div>
+            <div id="navAvatarRing" className="nav__avatar-ring"></div>
             <Avatar
               onClick={onOpenNavColumn}
               src={userData.avatarUrl}
-              className="app__navAvatar"
+              className="nav__avatar"
               alt=""
             />
 
-          <div id="navColumn" className="app__navColumn" style={{ display: "none" }}>
-            <div className="app__navColumnArrow"></div>
+          <div id="navColumn" className="nav__column" style={{ display: "none" }}>
+            <div className="column__arrow"></div>
               { user?.displayName ? 
-              ( <div className="app__loginContainer">
-                  <a href={userData?.username}><button className="app__navBtn">Profile</button></a>
-                  <button className="app__navBtn" onClick={() => auth.signOut()}>Logout</button> 
+              ( <div className="column__dropdown">
+                  <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                  <button id="nav-btn" className="dropdown__logout" onClick={() => auth.signOut()}>Logout</button> 
                 </div> )
               :
-              ( <div className="app__loginContainer">
-                  <button className="app__navBtn" onClick={() => setOpenSignIn(true)}>Login</button>
-                  <button className="app__navBtn" onClick={() => setOpenSignUp(true)}>Sign Up</button>
+              ( <div className="column__dropdown">
+                  <button id="nav-btn" className="dropdown__login" onClick={() => setOpenSignIn(true)}>Login</button>
+                  <button id="nav-btn" className="dropdown__signup" onClick={() => setOpenSignUp(true)}>Sign Up</button>
                 </div> )
               }
           </div>
