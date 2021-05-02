@@ -20,7 +20,7 @@ export default function LoginPage() {
     return (
         <div className="wrapper">
             <div className="login">
-                <img className="login__logo" src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="" />
+                <div className="login__logo"></div>
                 <form className="login__form">
                     <input
                     className="form__input"
@@ -43,24 +43,25 @@ export default function LoginPage() {
                 <p>Don't have an account?</p><span>Sign up</span>
             </div>
 
-            <nav className="nav">
-                <a href="/">About</a>
-                <a href="/">Blog</a>
-                <a href="/">Jobs</a>
-                <a href="/">Help</a>
-                <a href="/">API</a>
-                <a href="/">Privacy</a>
-                <a href="/">Terms</a>
-                <a href="/">Top Accounts</a>
-                <a href="/">Hashtags</a>
-                <a href="/">Locations</a>
-            </nav>
+            <footer>
+                <nav className="nav">
+                    <a href="/">About</a>
+                    <a href="/">Blog</a>
+                    <a href="/">Jobs</a>
+                    <a href="/">Help</a>
+                    <a href="/">API</a>
+                    <a href="/">Privacy</a>
+                    <a href="/">Terms</a>
+                    <a href="/">Top Accounts</a>
+                    <a href="/">Hashtags</a>
+                    <a href="/">Locations</a>
+                </nav>
 
-            <div className="copyright">
-                <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="http://github.com/tomasvc">tomasvc</a></p>
-            </div>
-
-
+                <div className="copyright">
+                    <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="http://github.com/tomasvc">tomasvc</a></p>
+                </div>
+            </footer>
+            
         </div>
     )
 }
