@@ -201,6 +201,17 @@
     cursor: pointer;
 }
 
+.editModal__uploadBtn:active,
+.editModal__removeBtn:active,
+.editModal__cancelBtn:active {
+    background-color: rgb(233, 233, 233);
+}
+
+.editModal__cancelBtn:active {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 .editModal__removeBtn {
     color: #ed4956;
 }

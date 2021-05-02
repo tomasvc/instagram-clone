@@ -67,7 +67,7 @@ function App() {
 
       <Router>
 
-        <Header user={user} userData={userData} />
+      { user ? <Header user={user} userData={userData} /> : '' }
 
         <Switch>
 

@@ -39,6 +39,7 @@ export default function Profile({ user }) {
     const { username } = useParams();
 
     const [openModal, setOpenModal] = useState(false);
+    const [unfollowModal, setUnfollowModal] = useState(false);
 
     useEffect(() => {
         if (!userData) {
@@ -84,6 +85,25 @@ export default function Profile({ user }) {
         }
     }
 
+    const onFollow = () => {
+        document.querySelector('.buttons__follow-btn').style.display = 'none';
+        document.querySelector('.right__buttons').innerHTML = `
+            <button id="message-btn" className="buttons__message-btn" value="Message">Message</button>
+            <button id="unfollow-btn" className="buttons__unfollow-btn"><span id="unfollow-icon"></span></button>
+            <button id="arrow-btn" className="buttons__arrow-btn">
+                <svg aria-label="Down Chevron Icon" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
+                    <path d="M40 33.5c-.4 0-.8-.1-1.1-.4L24 18.1l-14.9 
+                    15c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l16-16c.6-.6 
+                    1.5-.6 2.1 0l16 16c.6.6.6 1.5 0 2.1-.3.3-.7.4-1.1.4z">
+                    </path
+                </svg>
+            </button>
+            `
+        document.getElementById('unfollow-btn').addEventListener("click", () => {
+            setUnfollowModal(true)
+        })
+    }
+
     return (
 
         <div className="user__main">
@@ -97,6 +117,23 @@ export default function Profile({ user }) {
                     <center>
                         <div className="postModal__left"></div>
                         <div className="postModal__right"></div>
+                    </center>
+                </div>
+            </Modal>
+
+            <Modal
+                className="post__modal"
+                open={unfollowModal}
+                onClose={() => setUnfollowModal(false)}
+                >
+                <div style={modalStyle} className={classes.paper}>
+                    <center>
+                        <div className="unfollowModal__header">
+                            <Avatar src={ userData?.avatarUrl } className="unfollowModal__avatar"></Avatar>
+                            <p>Unfollow @{userData?.username}?</p>
+                        </div>
+                        <h5 className="modal__btn unfollowModal__unfollow-btn">Unfollow</h5>
+                        <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)}>Cancel</h5>
                     </center>
                 </div>
             </Modal>
@@ -124,8 +161,8 @@ export default function Profile({ user }) {
                                 </svg>
                             </div>
                         :
-                            <div>
-                                <button className="right__follow-btn" value="Follow">Follow</button>
+                            <div className="right__buttons">
+                                <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={onFollow}>Follow</button>
                             </div>
                         }
                         

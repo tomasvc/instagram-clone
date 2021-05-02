@@ -2,6 +2,51 @@ body {
     background-color: #fafafa;
 }
 
+@keyframes modal {
+    0% {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform:scale(1);
+    }
+  }
+  
+.post__modal {
+    animation: modal .1s ease-out;
+}
+
+.unfollowModal__header {
+    margin: 20px;
+    font-size: 14px;
+}
+
+.unfollowModal__avatar {
+    min-width: 50px;
+    min-height: 50px;
+}
+
+.modal__btn {
+    padding: 15px;
+    border-top: 1px solid lightgrey;
+    color: #262626;
+    width: calc(100% + 34px);
+    position: relative;
+    left: -32px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.modal__btn:hover {
+    cursor: pointer;
+}
+
+.unfollowModal__unfollow-btn {
+    font-weight: 700;
+    color: #ed4956;
+}
+
 .user__main {
     background-color: #fafafa;
     height: 100vh;
@@ -49,7 +94,7 @@ body {
     font-size: 28px !important;
 }
 
-.right__follow-btn {
+#follow-btn {
     background-color: #0095f6;
     color: white;
     font-weight: 600;
@@ -62,15 +107,15 @@ body {
     top: 6px;
 }
 
-.right__follow-btn:hover {
+.buttons__follow-btn:hover {
     cursor: pointer;
 }
 
-.right__follow-btn:focus {
+.buttons__follow-btn:focus {
     opacity: 0.7;
 }
 
-.config__editBtn {
+.config__editBtn, {
     display: inline;
     position: relative;
     top: -6px;
@@ -88,12 +133,62 @@ body {
     color: #262626;
 }
 
-.config__editBtn:hover {
+.config__editBtn:hover
+#message-btn:hover {
     text-decoration: none;
     cursor: pointer;
 }
 
 .config__editBtn:focus {
+    color: #2626269a;
+}
+#message-btn,
+#unfollow-btn,
+#arrow-btn {
+    display: inline;
+    position: relative;
+    top: 6px;
+    height: 30px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    text-transform: capitalize;
+    background: none;
+    outline: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
+    font-weight: 600;
+    font-size: 14px;
+    padding: 5px 9px 6px 9px;
+    margin-left: 20px;
+    text-decoration: none;
+    color: #262626;
+}
+
+#unfollow-btn,
+#arrow-btn {
+    margin-left: 2px;
+}
+
+.right__buttons button:hover {
+    cursor: pointer;
+}
+
+#unfollow-btn {
+    padding: 0 35px;
+    position: relative;
+    top: 0;
+}
+
+#unfollow-icon {
+    background-image: url("../img/images-sprite.png");
+    background-position: -492px -207px;
+    background-size: 544px 520px;
+    width: 20px;
+    height: 10px;
+}
+
+#message-btn:active,
+#unfollow-btn:active,
+#arrow-btn:active {
     color: #2626269a;
 }
 

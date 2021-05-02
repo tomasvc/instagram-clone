@@ -31,6 +31,10 @@
   .wrapper__logo:hover {
     cursor: pointer;
   }
+
+  .wrapper__logo:active {
+    opacity: 0.5;
+  }
   
   .wrapper__search-container {
     position: relative;
