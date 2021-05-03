@@ -228,7 +228,14 @@
   }
 
   @media (max-width: 768px) {
-    .wrapper__search-container {
-        display: none;
+    
+    
+
+    .header {
+      height: 50px;
     }
+
+    .wrapper__search-container {
+      display: none;
+  }
   }

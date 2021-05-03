@@ -291,24 +291,33 @@ a:hover {
 }
 
 @media screen and (max-width: 500px) {
+
     .post {
         width: 100vw;
         margin: 0;
+        padding-bottom: 20px;
         border: none;
     }
 
+    .post__header {
+        max-height: 25px;
+    }
+
     .post__avatar {
-        width: 20px;
-        height: 20px;
+        max-width: 30px;
+        max-height: 30px;
     }
 
     .post__commentBox {
         border: none;
         margin-bottom: 0;
+        margin-top: 5px;
     }
 
     .post__input, .post__button {
         font-size: 14px;
+        padding: 5px;
+        font-size: 13px;
     }
 
     .post__input {
@@ -316,6 +325,11 @@ a:hover {
     }
 
     .post__button {
-        margin-right: 0;
+        margin-right: 10px;
     }
+
+    .post__text {
+        margin: 0;
+    }
+
 }

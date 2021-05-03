@@ -7,6 +7,14 @@
   scroll-behavior: smooth;
 }
 
+@media screen and (max-width: 768px) {
+
+  .app {
+    background-color: white;
+  }
+
+}
+
 .app__header {
   position: fixed;
   top: 0;
@@ -299,11 +307,12 @@
 @media screen and (max-width: 500px) {
 
   body {
-    background-color: rgb(250, 250, 250);
+    background-color: white;
   }
 
   .app {
     width: 100vw;
+    background-color: white;
   }
 
   .app__header {
@@ -323,14 +332,8 @@
     margin: 0;
   }
 
-  .app__stories {
-    width: 100vw;
-    height: 100px;
+  .app__postsWrapper {
     margin: 0;
-    border: none;
-    background-color: rgb(250, 250, 250);
-    border-bottom: 1px solid rgb(235, 235, 235);
-    border-radius: 0;
   }
 
   .app__headerWrapper {

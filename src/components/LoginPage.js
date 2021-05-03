@@ -18,29 +18,36 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="wrapper">
-            <div className="login">
-                <div className="login__logo"></div>
-                <form className="login__form">
-                    <input
-                    className="form__input"
-                    placeholder="Email"
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                    className="form__input"
-                    placeholder="Password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button className="form__btn" type="submit" onClick={signIn}>Log In</button>
-                </form>
-            </div>
-            <div className="signup-link">
-                <p>Don't have an account?</p><span>Sign up</span>
+        <div>
+
+        
+            <div className="wrapper">
+                <div className="login">
+                    <div className="login__logo"></div>
+                    <form className="login__form">
+                        <input
+                        className="form__input"
+                        placeholder="Email"
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <input
+                        className="form__input"
+                        placeholder="Password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button className="form__btn" type="submit" onClick={signIn}>Log In</button>
+                    </form>
+                </div>
+                <div className="signup-link">
+                    <p>Don't have an account?</p><span>Sign up</span>
+                </div>
+
+                
+                
             </div>
 
             <footer>
@@ -61,7 +68,7 @@ export default function LoginPage() {
                     <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="http://github.com/tomasvc">tomasvc</a></p>
                 </div>
             </footer>
-            
+
         </div>
     )
 }
