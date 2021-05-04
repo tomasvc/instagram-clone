@@ -67,15 +67,22 @@ export default function Header({ user, userData }) {
               onClick={topFunction}
               /></a>
 
-              <div id="navAvatarRing" className="nav__avatar-ring"></div>
+              <div id="navAvatarRing" className="nav__avatar-ring" style={
+                  {width: '25px',
+                  height: '25px', 
+                  right: '17.5px', 
+                  top: '13.5px',
+                  border: '1px solid #262626'}
+                }></div>
               <Avatar
                 onClick={onOpenNavColumn}
                 src={userData.avatarUrl}
                 className="nav__avatar"
+                style={{maxWidth: '22px'}}
                 alt=""
               />
 
-              <div id="navColumn" className="nav__column" style={{ display: "none" }}>
+              <div id="navColumn" className="nav__column" style={{ display: "none", right: "-10px" }}>
                 <div className="column__arrow"></div>
                   { user?.displayName ? 
                   ( <div className="column__dropdown">

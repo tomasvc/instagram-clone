@@ -54,6 +54,8 @@ a:hover {
 
 .post__imageContainer {
     position: relative;
+    min-height: 400px;
+    max-height: 750px;
     width: 100%;
     touch-action: manipulation;
 }
@@ -61,8 +63,10 @@ a:hover {
 .post__image {
     position: relative;
     border-bottom: 1px solid rgb(235, 235, 235);
+    min-height: 400px;
+    max-height: 750px;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
     pointer-events: none;
     user-select: none;
     touch-action: manipulation;
@@ -96,19 +100,19 @@ a:hover {
     font-weight: normal;
     font-size: 14px;
     padding: 5px;
-    padding-left: 16px;
+    margin-left: 20px;  
 }
 
 .post__avatar {
     margin-right: 12px;
-    height: fit-content;
-    width: fit-content;
+    max-height: 32px;
+    max-width: 32px;
 }
 
 .post__buttons {
     position: relative;
     margin-left: 15px;
-    margin-top: 5px;
+    margin-top: 7px;
     background-color: white;
 }
 

@@ -7,6 +7,7 @@ import Posts from './components/Posts';
 import UserEdit from './components/UserEdit';
 import User from './components/User';
 import LoginPage from './components/LoginPage';
+import PostPage from './components/PostPage';
 import { auth, db } from './fbConfig';
 
 function App() {
@@ -14,7 +15,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
-
 
   // update posts on start
   useEffect(() => {
@@ -85,6 +85,10 @@ function App() {
             : <LoginPage /> }
 
             
+          </Route>
+
+          <Route path="/p/:postId">
+            <PostPage user={user} />
           </Route>
 
           <Route path="/:username/edit">

@@ -89,7 +89,7 @@ export default function UserEdit({ user }) {
                     .then(url => {
                         setAvatarUrl(url)
                         db.collection('users').doc(user.uid).update({
-                            avatarUrl
+                            avatarUrl: url
                         })
                     })
                 })
@@ -119,7 +119,7 @@ export default function UserEdit({ user }) {
             <Modal 
                 id="editModal"
                 className="app__modal" 
-                src={userData?.avatarUrl}
+                src={avatarUrl}
                 open={avatarModal}
                 onClose={() => setAvatarModal(false)}
                 >
