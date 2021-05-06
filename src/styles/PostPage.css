@@ -11,6 +11,59 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.main__small {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.main__commentBox {
+    display: flex;
+    align-items: center;
+    background: rgb(236, 236, 236);
+    padding: 8px 4px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.commentBox__avatar {
+    margin: 0 10px;
+    max-width: 32px;
+    max-height: 32px;
+}
+
+.commentBox__container {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.comment__inputSmall {
+    position: relative;
+    flex-grow: 1;
+    margin: 0 5px;
+    padding: 12px 15px;
+    border-radius: 50px;
+    border: 1px solid lightgrey;
+    outline: none;
+    -webkit-appearance: none;
+    font-size: 14px;
+}
+
+.comment__buttonSmall {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0095f6;
+}
+
+#content__userSmall {
+    padding: 20px 15px;
+}
+
 .main__left {
     display: flex;
     flex-basis: 450px;
@@ -28,47 +81,71 @@
 .main__right {
     display: flex;
     flex-direction: column;
-    flex-shrink: 1;
+    flex-grow: 1;
+    width: 100%;
     border-left: 1px solid rgb(235, 235, 235);
 }
 
 .right__header {
     display: flex;
     align-items: center;
-    width: 89.2%;
+    width: 92%;
     padding: 17px 15px;
     border-bottom: 1px solid rgb(235, 235, 235);
 }
 
-.header__avatar, .avatar__avatar {
+.header__avatar,
+.avatar__avatar,
+.comment__avatar {
     max-width: 32px;
     max-height: 32px;
 }
 
-.header__username, .caption__username {
+.header__username, 
+.caption__username, 
+.comment__username {
     font-size: 14px;
     font-weight: 600;
     margin-left: 15px;
 }
 
-.header__username:hover, .caption__username:hover {
+.header__username:hover, 
+.caption__username:hover, 
+.caption__username:hover, 
+.comment__username:hover {
     text-decoration: underline;
 }
 
-.caption__caption {
+.caption__caption, .comment__text {
     margin-left: 15px;
     font-size: 14px;
 }
 
 .right__content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-grow: 1;
     padding: 20px 15px;
 }
 
-.content__caption {
+.content__user {
+    display: flex;
+    align-items: center;
+}
+
+.user__caption {
     flex-grow: 1;
+}
+
+.content__comments {
+    display: flex;
+    flex-direction: column;
+}
+
+.comments__comment {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .right__bottom {
@@ -78,6 +155,7 @@
 
 .bottom__icons {
     position: relative;
+    margin-bottom: 6px;
 }
 
 .bottom__icons svg {

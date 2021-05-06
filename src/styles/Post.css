@@ -100,7 +100,7 @@ a:hover {
     font-weight: normal;
     font-size: 14px;
     padding: 5px;
-    margin-left: 20px;  
+    margin-left: 10px;  
 }
 
 .post__avatar {
@@ -217,29 +217,64 @@ a:hover {
     }
 }
   
-.app__modal {
+.post__modal {
     animation: modal .1s ease-out;
 }
 
-.post__likesModal__user {
+.modal__label {
+    position: relative;
+    top: -5px;
+    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    color: #262626;
+    border-bottom: 1px solid lightgrey;
+    width: calc(100% + 32px);
+    left: -16px;
+}
+
+.modal__user {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 300px;
     text-align: left;
     margin-bottom: 10px;
+    margin-top: 5px;
 }
 
-.post__likesModal__avatar {
-    max-width: 60px;
-    max-height: 60px;
+.modal__avatar {
+    max-width: 44px;
+    max-height: 44px;
     margin-right: 10px;
+}
+
+.modal__user div {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.modal__username {
+    font-weight: 600;
+    color: #262626;
+}
+
+.modal__username:hover {
+    text-decoration: underline;
+}
+
+.modal__name {
+    color: #8e8e8e;
 }
 
 .post__commentBox {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     display: flex;
+    align-items: center;
     margin-top: 20px;
+    padding-left: 15px;
     border-top: 1px solid rgb(235, 235, 235);
 }
 
@@ -252,6 +287,10 @@ a:hover {
     font-size: 14px;
     margin-left: 15px;
     margin-top: 5px;
+}
+
+.post__comment span {
+    margin: 0 5px;
 }
 
 .post__comment strong {
@@ -273,6 +312,8 @@ a:hover {
     border: none;
     outline: none;
     padding: 20px;
+    padding-left: 0;
+    margin-left: 15px;
 }
 
 .post__button {

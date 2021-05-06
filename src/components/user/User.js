@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
-import { db } from '../fbConfig';
-import './User.css';
+import { db } from '../../firebase/fbConfig';
+import '../../styles/User.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 function getModalStyle() {
@@ -42,48 +42,50 @@ export default function Profile({ user }) {
     const [unfollowModal, setUnfollowModal] = useState(false);
 
     useEffect(() => {
-        if (!userData) {
-            getUser()
+
+        async function getUser() {
+            const snapshot = await db.collection('users').where('username', '==', username).get();
+    
+            const user = snapshot.docs.map(item => ({
+                ...item.data(),
+                docId: item.id
+            }));
+    
+            setUserData(user[0])
+    
         }
 
-        if (!posts) {
-            getPosts()
-        }
-    }, [userData, posts])
+        async function getPosts() {
 
-    async function getUser() {
-        const snapshot = await db.collection('users').where('username', '==', username).get();
-
-        const user = snapshot.docs.map(item => ({
-            ...item.data(),
-            docId: item.id
-        }));
-
-        setUserData(user[0])
-
-    } 
-
-    async function getPosts() {
-
-        const snapshot = await db.collection('posts').where('username', '==', username).get();
-
-        const posts = snapshot.docs.map(item => ({ 
-            ...item.data()
-        }));
-
-        setPosts(posts);
-
-        if(document.querySelector('.user__posts').innerHTML === '') {
-            for(let i = 0; i < posts.length; i++) {
-                document
-                .querySelector('.user__posts')
-                .innerHTML += `<div className="posts__post">
-                                    <div id="post__shade"></div>
-                                    <img className="post__image" src=${posts[i].imageUrl} />
-                                </div>`
+            const snapshot = await db.collection('posts').where('username', '==', username).get();
+    
+            const posts = snapshot.docs.map(item => ({ 
+                ...item.data()
+            }));
+    
+            setPosts(posts);
+    
+            if(document.querySelector('.user__posts').innerHTML === '') {
+                for(let i = 0; i < posts.length; i++) {
+                    document
+                    .querySelector('.user__posts')
+                    .innerHTML += `<div className="posts__post">
+                                        <div id="post__shade"></div>
+                                        <img className="post__image" src=${posts[i].imageUrl} />
+                                    </div>`
+                }
             }
         }
-    }
+
+        getUser()
+
+        getPosts()
+
+    }, [])
+
+     
+
+    
 
     const onFollow = () => {
         document.querySelector('.buttons__follow-btn').style.display = 'none';
@@ -130,7 +132,7 @@ export default function Profile({ user }) {
                     <center>
                         <div className="unfollowModal__header">
                             <Avatar src={ userData?.avatarUrl } className="unfollowModal__avatar"></Avatar>
-                            <p>Unfollow @{userData?.username}?</p>
+                            <p>Unfollow @{username}?</p>
                         </div>
                         <h5 className="modal__btn unfollowModal__unfollow-btn">Unfollow</h5>
                         <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)}>Cancel</h5>
@@ -144,10 +146,10 @@ export default function Profile({ user }) {
                 </div>
                 <div className="header__right">
                     <div className="right__name">
-                        <span className="right__username">{ userData?.username }</span>
-                        { userData?.username === user?.displayName ?
+                        <span className="right__username">{ username }</span>
+                        { userData?.userId === user?.uid ?
                             <div className="name__config">
-                                <a href={userData?.username + '/edit'} className="config__editBtn">Edit Profile</a>
+                                <a href={user?.displayName + '/edit'} id="edit-btn" className="config__editBtn">Edit Profile</a>
                                 <svg className="config__settingsBtn" height="24" viewBox="0 0 48 48" width="24">
                                     <path d="M46.7 20.6l-2.1-1.1c-.4-.2-.7-.5-.8-1-.5-1.6-1.1-3.2-1.9-4.7-.2-.4-.3-.8-.1-1.2l.8-2.3c.2-.5 
                                     0-1.1-.4-1.5l-2.9-2.9c-.4-.4-1-.5-1.5-.4l-2.3.8c-.4.1-.8.1-1.2-.1-1.4-.8-3-1.5-4.6-1.9-.4-.1-.8-.4-1-.8l-1.1-2.2c-.3-.5-.8-.8-1.3-.8h-4.1c-.6

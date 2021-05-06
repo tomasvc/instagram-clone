@@ -1,29 +1,36 @@
 import React, { useState } from 'react';
-import { Button, Input } from '@material-ui/core';
-import { auth } from '../fbConfig';
-import './LoginPage.css';
+import { useHistory} from 'react-router-dom';
+import { auth } from '../../firebase/fbConfig';
+import '../../styles/LoginPage.css';
 
 export default function LoginPage() {
 
+    const history = useHistory();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const signIn = (event) => {
         event.preventDefault();
     
         auth
           .signInWithEmailAndPassword(email, password)
-          .catch(error => alert(error.message))
-    
+          .then(history.push("/"))
+          .catch(error => {
+              setError(error.message);
+              setEmail('');
+              setPassword('');
+            })
     }
 
     return (
         <div>
 
-        
             <div className="wrapper">
                 <div className="login">
                     <div className="login__logo"></div>
+                    <p className="login__error">{error}</p>
                     <form className="login__form">
                         <input
                         className="form__input"
@@ -45,8 +52,6 @@ export default function LoginPage() {
                 <div className="signup-link">
                     <p>Don't have an account?</p><span>Sign up</span>
                 </div>
-
-                
                 
             </div>
 

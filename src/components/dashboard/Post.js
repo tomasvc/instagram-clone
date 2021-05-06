@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './Post.css';
+import '../../styles/Post.css';
 import firebase from 'firebase';
-import { db } from '../fbConfig';
+import { db } from '../../firebase/fbConfig';
 import Avatar from "@material-ui/core/Avatar";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,19 +26,36 @@ paper: {
     borderRadius: '12px',
     outline: 0,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(2, 2, 3),
 }
 }));
 
-export default function Post({ postId, user, username, caption, imageUrl }) {
+export default function Post({ postId, user }) {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
+
+    const [post, setPost] = useState([]);
 
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
     const [likes, setLikes] = useState([]);
     const [openLikes, setOpenLikes] = useState(false);
+
+    useEffect(() => {
+
+        async function getPost() {
+
+            const snapshot = await db.collection('posts').doc(postId).get();
+    
+            setPost(snapshot.data())
+            console.log(post)
+    
+        }
+
+        getPost()
+
+    }, [])
 
     // add comments to post
     useEffect(() => {
@@ -78,6 +95,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         }
     }, [postId]);
 
+    
 
 
     const postComment = (event) => {
@@ -143,6 +161,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                                 // add user, post is liked
                                 db.collection("posts").doc(postId).collection("likes").add({
                                     username: user.displayName,
+                                    avatar: user.profileURL,
                                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                                 }); 
     
@@ -160,6 +179,7 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                     // add user, like post
                     db.collection("posts").doc(postId).collection("likes").add({
                         username: user.displayName,
+                        avatar: user.profileURL,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }); 
     
@@ -181,26 +201,29 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
         <div className="post" id={postId}>
 
             <Modal 
-                className="app__modal"
+                className="post__modal"
                 open={openLikes}
                 onClose={() => setOpenLikes(false)}
                 >
                 <div style={modalStyle} className={classes.paper}>
                     <center>
-                    <h4 className="app__modalLabel">Likes</h4>
+                    <h4 className="modal__label">Likes</h4>
 
                         {likes.map(like => {
-                            return <div className="post__likesModal__user">
+                            return <div className="modal__user">
                                         <a href={'/' + like.username}>
                                             <Avatar
-                                                className="post__likesModal__avatar"
+                                                className="modal__avatar"
+                                                src={like.avatar}
                                                 alt=""
                                             />
                                         </a>
-                                        <a href={'/' + like.username}>
-                                            <p className="post__likesModal__username">{like.username}</p>
-                                        </a>
-                                        <p className="post__likesModal__name">{like.name}</p>
+                                        <div>
+                                            <a href={'/' + like.username}>
+                                                <p className="modal__username">{like.username}</p>
+                                            </a>
+                                            <p className="modal__name">{like.name}</p>
+                                        </div>
                                     </div>
                         })}
 
@@ -212,19 +235,20 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
 
 
             <div className="post__header">
-                <a href={'/' + username}>
+                <a href={'/' + post.username}>
                     <Avatar
                         className="post__avatar"
+                        src={post.avatar}
                         alt=""
                     />
                 </a>
-                <a href={'/' + username}>
-                    <h4 className="post__username">{username}</h4>
+                <a href={'/' + post.username}>
+                    <h4 className="post__username">{post.username}</h4>
                 </a>
             </div>
 
             <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}} >
-                <img className="post__image" src={imageUrl} alt="" />
+                <img className="post__image" src={post.imageUrl} alt="" />
                 <div className="post__imageHeart" ></div>
             </div>
 
@@ -266,13 +290,13 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
                 likes.length > 1 ? `${likes.length} likes` : ''
             }</div>
             
-            <h4 className="post__text"><a href={'/' + username}><span className="post__username">{username}</span></a> {caption}</h4>
+            <h4 className="post__text"><a href={'/' + post.username}><span className="post__username">{post.username}</span></a> {post.caption}</h4>
 
             <div className="post__comments">
                 {comments.map((comment) => {
                     return (
                     <p className="post__comment">
-                        <a href={'/' + comment.username}><strong>{comment.username}</strong></a> {comment.text}
+                        <a href={'/' + comment.username}><strong>{comment.username}</strong></a> <span>{comment.text}</span>
                         <svg className="comment__like" ariaLabel="like" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
                             <path id="comment__likePath" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 
                             41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 
@@ -290,6 +314,12 @@ export default function Post({ postId, user, username, caption, imageUrl }) {
 
             {user && (
                 <form className="post__commentBox" >
+                <svg fill="#262626" height="24" width="24" viewBox="0 0 48 48">
+                            <path d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24zm0-45C12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21S35.6 3 24 3z"></path>
+                            <path d="M34.9 24c0-1.4-1.1-2.5-2.5-2.5s-2.5 1.1-2.5 2.5 1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5zm-21.8 0c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 
+                            2.5-2.5-1.1-2.5-2.5zM24 37.3c-5.2 0-8-3.5-8.2-3.7-.5-.6-.4-1.6.2-2.1.6-.5 1.6-.4 2.1.2.1.1 2.1 2.5 5.8 2.5 3.7 0 5.8-2.5 5.8-2.5.5-.6 1.5-.7 
+                            2.1-.2.6.5.7 1.5.2 2.1 0 .2-2.8 3.7-8 3.7z"></path>
+                        </svg>
                 <input
                     className="post__input"
                     type="text"

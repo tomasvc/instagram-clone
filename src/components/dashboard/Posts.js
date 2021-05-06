@@ -6,7 +6,7 @@ export default function Posts({ user, posts }) {
         <div className="app__postsWrapper">
           {
             posts.map(({id, post}) => {
-              return <Post key={id} postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+              return <Post key={id} postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl} avatar={post.avatar} />
             })
           }
           </div>

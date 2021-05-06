@@ -1,10 +1,9 @@
 import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Input, Modal, Avatar } from '@material-ui/core';
-import { auth, db } from '../fbConfig';
+import { auth, db } from '../../firebase/fbConfig';
 import { useDispatch } from 'react-redux';
-import { createUser } from './store/actions/userActions';
-import '../App.css';
+import '../../styles/App.css';
 
 function getModalStyle() {
     const top = 50;
@@ -43,8 +42,6 @@ export default function SignUp({ openSignUp, onClose }) {
     const [modalStyle] = useState(getModalStyle);
 
     let avatarUrl = ''
-    let website = ''
-    let bio = ''
 
     const signUp = (event) => {
         event.preventDefault();

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Modal } from "@material-ui/core";
 import { useDispatch } from 'react-redux';
-import { storage, db } from '../fbConfig';
-import './UserEdit.css';
-import { editUser } from './store/actions/userActions';
+import { storage, db } from '../../firebase/fbConfig';
+import '../../styles/UserEdit.css';
+import { editUser } from '../store/actions/userActions';
+import firebase from 'firebase';
 
 function getModalStyle() {
     const top = 50;
@@ -59,11 +60,32 @@ export default function UserEdit({ user }) {
             website,
             bio
         })
-        user.updateProfile({
-            displayName: username
-        })
+        .then((updatePosts(username)))
+        .then(
+            user.updateProfile({
+                displayName: username
+            })
+        )
+
     }
 
+    const updatePosts = username => {
+
+        db.collection('posts').where('username', '==', user.displayName).get().then(res => {
+
+            let batch = firebase.firestore().batch()
+
+            res.docs.forEach(doc => {
+                const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                batch.update(docRef, { username: username })
+            })
+            batch.commit()
+        }
+            
+        )
+    }
+
+    // get user data
     useEffect(() => {
         if (user) {
                 db
@@ -91,11 +113,28 @@ export default function UserEdit({ user }) {
                         db.collection('users').doc(user.uid).update({
                             avatarUrl: url
                         })
+                        user.updateProfile({
+                            photoURL: url
+                        })
                     })
+                    
+                    db.collection('posts').where('username', '==', user.displayName).get().then(res => {
+
+                        let batch = firebase.firestore().batch()
+            
+                        res.docs.forEach(doc => {
+                            const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                            batch.update(docRef, { avatar: user.photoURL })
+                        })
+                        batch.commit()
+                    }
+                        
+                    )
+                    
                 })
         }
     
-    }, [avatar])
+    }, [user, avatar])
 
     const uploadAvatar = (e) => {
         e.preventDefault();
@@ -103,6 +142,9 @@ export default function UserEdit({ user }) {
         if (e.target.files[0]) {
             setAvatar(e.target.files[0])
         }
+
+        setAvatarModal(false)
+        window.location.reload()
     }
 
     const deleteAvatar = (e) => {
@@ -110,7 +152,12 @@ export default function UserEdit({ user }) {
             avatarUrl: ''
         })
 
+        user.updateProfile({
+            photoURL: ''
+        })
+
         setAvatarModal(false)
+        window.location.reload()
     }
 
     return (
@@ -119,7 +166,7 @@ export default function UserEdit({ user }) {
             <Modal 
                 id="editModal"
                 className="app__modal" 
-                src={avatarUrl}
+                src={user?.photoURL}
                 open={avatarModal}
                 onClose={() => setAvatarModal(false)}
                 >
@@ -154,7 +201,7 @@ export default function UserEdit({ user }) {
                 </div>
                 <div className="userEdit__right">
                     <div className="right__top">
-                        <div><Avatar className="top__avatar" onClick={() => setAvatarModal(true)}></Avatar></div>
+                        <div><Avatar className="top__avatar" src={userData?.avatarUrl} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
                             <p className="right__username">{user?.displayName}</p>
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>

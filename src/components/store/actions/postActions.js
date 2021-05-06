@@ -4,7 +4,8 @@ export const addPost = (post) => {
         firestore.collection('posts').add({
             caption: post.caption,
             imageUrl: post.url,
-            username: post.username
+            username: post.username,
+            avatar: post.avatar
         })
             .then(() => {
                 dispatch({ type: 'ADD_POST_SUCCESS' })

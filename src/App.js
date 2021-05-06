@@ -1,14 +1,14 @@
-import './App.css';
+import './styles/App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Posts from './components/Posts';
-import UserEdit from './components/UserEdit';
-import User from './components/User';
-import LoginPage from './components/LoginPage';
-import PostPage from './components/PostPage';
-import { auth, db } from './fbConfig';
+import Header from './components/other/Header';
+import Sidebar from './components/dashboard/Sidebar';
+import Posts from './components/dashboard/Posts';
+import UserEdit from './components/user/UserEdit';
+import User from './components/user/User';
+import LoginPage from './components/auth/LoginPage';
+import PostPage from './components/other/PostPage';
+import { auth, db } from './firebase/fbConfig';
 
 function App() {
   

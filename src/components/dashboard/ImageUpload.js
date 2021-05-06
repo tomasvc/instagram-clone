@@ -1,10 +1,10 @@
 import { Button, LinearProgress, Input } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { storage, db } from '../fbConfig';
-import '../App.css';
-import './ImageUpload.css';
-import { addPost } from './store/actions/postActions';
+import { storage, db } from '../../firebase/fbConfig';
+import '../../styles/App.css';
+import '../../styles/ImageUpload.css';
+import { addPost } from '../store/actions/postActions';
 
 export default function ImageUpload({ user, username, onClose }) {
 
@@ -23,6 +23,8 @@ export default function ImageUpload({ user, username, onClose }) {
     const handleUpload = () => {
 
         const uploadTask = storage.ref(`images/${image.name}`).put(image);
+
+        const avatar = user.photoURL;
 
         uploadTask.on(
             "state_changed",
@@ -43,7 +45,7 @@ export default function ImageUpload({ user, username, onClose }) {
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        dispatch(addPost({caption, url, username}))
+                        dispatch(addPost({caption, url, username, avatar}))
                     })
 
                     onClose()
@@ -54,35 +56,7 @@ export default function ImageUpload({ user, username, onClose }) {
             }
         )
 
-
-        // 
-        //     () => {
-        //         // complete function...
-        //         storage
-        //             .ref("images")
-        //             .child(image.name)
-        //             .getDownloadURL()
-        //             .then(url => {
-        //                 // post image inside db
-        //                 db.collection("posts").add({
-        //                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        //                     caption: caption,
-        //                     imageUrl: url,
-        //                     username: username
-        //                 });
-
-        //                 setOpenAdd(false);
-
-        //                 setProgress(0);
-        //                 setCaption('');
-        //                 setImage(null);
-
-        //             })
-        //     }
-        // )
     }
-
-
 
     return (
         <div className="imageUpload">

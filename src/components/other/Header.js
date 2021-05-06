@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
-import { auth } from '../fbConfig';
+import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router';
+import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
-import SignIn from '../components/SignIn';
-import SignUp from '../components/SignUp';
-import AddPost from './AddPost';
-import './Header.css';
+import AddPost from '../dashboard/AddPost';
+import '../../styles/Header.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera } from '@fortawesome/free-solid-svg-icons'
+
+import history from '../../history';
+
+import UserContext from '../../user-context';
 
 export default function Header({ user, userData }) {
 
-    const [openSignIn, setOpenSignIn] = useState(false);
-    const [openSignUp, setOpenSignUp] = useState(false);
     const [openAdd, setOpenAdd] = useState(false);
     
     const topFunction = () => {
@@ -29,35 +33,25 @@ export default function Header({ user, userData }) {
         }
     }
 
-    const onSignInClose = () => {
-        setOpenSignIn(false)
-    }
-
-    const onSignUpClose = () => {
-        setOpenSignUp(false)
-    }
-
     const onAddClose = () => {
         setOpenAdd(false)
+    }
+
+    const logout = () => {
+      auth.signOut();
+      history.push('/login');
     }
     
 
     return (
         <div>
-        
-        <SignIn openSignIn={openSignIn} onClose={onSignInClose} />
-        <SignUp openSignUp={openSignUp} onClose={onSignUpClose} />
         <AddPost openAdd={openAdd} onClose={onAddClose} user={user} />
         <div className="header">
 
           {window.innerWidth < 600 ?
             <div className="header__wrapper">
               <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                <svg viewBox="0 0 48 48" width="22" height="22">
-                  <path stroke="#262626" fill="none" d="M30.1311,35.0978H17.8689c-2.74303,0-4.9667-2.22366-4.9667-4.9667V17.8689   
-                  c0-2.74303,2.22367-4.9667,4.9667-4.9667H30.1311c2.74303,0,4.9667,2.22367,4.9667,4.9667V30.1311   
-                  C35.0978,32.87414,32.87414,35.0978,30.1311,35.0978z"></path>
-                </svg>
+                <FontAwesomeIcon fill="#262626" icon={faCamera} />
               </button>
 
               <a href="/"><img
@@ -76,7 +70,7 @@ export default function Header({ user, userData }) {
                 }></div>
               <Avatar
                 onClick={onOpenNavColumn}
-                src={userData.avatarUrl}
+                src={user?.photoURL}
                 className="nav__avatar"
                 style={{maxWidth: '22px'}}
                 alt=""
@@ -84,16 +78,11 @@ export default function Header({ user, userData }) {
 
               <div id="navColumn" className="nav__column" style={{ display: "none", right: "-10px" }}>
                 <div className="column__arrow"></div>
-                  { user?.displayName ? 
-                  ( <div className="column__dropdown">
-                      <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
-                      <button id="nav-btn" className="dropdown__logout" onClick={() => auth.signOut()}>Logout</button> 
-                    </div> )
-                  :
-                  ( <div className="column__dropdown">
-                      <button id="nav-btn" className="dropdown__login" onClick={() => setOpenSignIn(true)}>Login</button>
-                      <button id="nav-btn" className="dropdown__signup" onClick={() => setOpenSignUp(true)}>Sign Up</button>
-                    </div> )
+                  {
+                    ( <div className="column__dropdown">
+                        <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                        <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
+                      </div> )
                   }
               </div>
 
@@ -116,7 +105,7 @@ export default function Header({ user, userData }) {
           
           <nav className="wrapper__nav">
 
-            <a href="/"><svg id="navHomeBtn" className="nav__home-btn" fill="#262626" height="22" viewBox="0 0 48 48" width="22" onClick={topFunction}>
+            <a href="/"><svg id="navHomeBtn" className="nav__home-btn" fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={topFunction}>
               <path d="M45.5 48H30.1c-.8 0-1.5-.7-1.5-1.5V34.2c0-2.6-2.1-4.6-4.6-4.6s-4.6 2.1-4.6 
               4.6v12.3c0 .8-.7 1.5-1.5 1.5H2.5c-.8 
               0-1.5-.7-1.5-1.5V23c0-.4.2-.8.4-1.1L22.9.4c.6-.6 1.6-.6 2.1 
@@ -125,12 +114,8 @@ export default function Header({ user, userData }) {
 
             { user?.displayName ?
               ( <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                <svg viewBox="0 0 48 48" width="22" height="22">
-                  <path stroke="#262626" fill="none" d="M30.1311,35.0978H17.8689c-2.74303,0-4.9667-2.22366-4.9667-4.9667V17.8689   
-                  c0-2.74303,2.22367-4.9667,4.9667-4.9667H30.1311c2.74303,0,4.9667,2.22367,4.9667,4.9667V30.1311   
-                  C35.0978,32.87414,32.87414,35.0978,30.1311,35.0978z"></path>
-                </svg>
-              </button> 
+                  <FontAwesomeIcon fill="#262626" icon={faCamera} />
+                </button> 
               ): ('')
             }
             
@@ -145,17 +130,12 @@ export default function Header({ user, userData }) {
 
           <div id="navColumn" className="nav__column" style={{ display: "none" }}>
             <div className="column__arrow"></div>
-              { user?.displayName ? 
-              ( <div className="column__dropdown">
-                  <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
-                  <button id="nav-btn" className="dropdown__logout" onClick={() => auth.signOut()}>Logout</button> 
-                </div> )
-              :
-              ( <div className="column__dropdown">
-                  <button id="nav-btn" className="dropdown__login" onClick={() => setOpenSignIn(true)}>Login</button>
-                  <button id="nav-btn" className="dropdown__signup" onClick={() => setOpenSignUp(true)}>Sign Up</button>
-                </div> )
-              }
+              {  
+                ( <div className="column__dropdown">
+                    <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                    <button id="nav-btn" className="dropdown__logout" onClick={() => auth.signOut()}>Logout</button> 
+                  </div> )
+              } 
           </div>
 
           </nav>

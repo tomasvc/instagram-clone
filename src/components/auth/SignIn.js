@@ -1,8 +1,8 @@
 import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Input, Modal } from '@material-ui/core';
-import { auth } from '../fbConfig';
-import '../App.css';
+import { auth } from '../../firebase/fbConfig';
+import '../../styles/App.css';
 
 function getModalStyle() {
     const top = 50;
