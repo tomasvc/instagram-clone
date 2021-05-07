@@ -5,6 +5,8 @@ import { db } from '../../firebase/fbConfig';
 import Avatar from "@material-ui/core/Avatar";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from '@material-ui/core/styles';
+import Skeleton from 'react-loading-skeleton';
+import Hammer from 'hammerjs';
 
 function getModalStyle() {
     const top = 50;
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 paper: {
     position: 'absolute',
     maxWidth: '80%',
+    minHeight: '200px',
     backgroundColor: theme.palette.background.paper,
     border: 'none',
     borderRadius: '12px',
@@ -49,13 +52,12 @@ export default function Post({ postId, user }) {
             const snapshot = await db.collection('posts').doc(postId).get();
     
             setPost(snapshot.data())
-            console.log(post)
     
         }
 
         getPost()
 
-    }, [])
+    }, [postId])
 
     // add comments to post
     useEffect(() => {
@@ -95,8 +97,6 @@ export default function Post({ postId, user }) {
         }
     }, [postId]);
 
-    
-
 
     const postComment = (event) => {
         event.preventDefault();
@@ -116,6 +116,7 @@ export default function Post({ postId, user }) {
         setTimeout(() => {
             document.getElementById(postId).childNodes[1].childNodes[1].classList.remove('showHeart')
         }, 1000)  
+
     }
 
 
@@ -156,12 +157,11 @@ export default function Post({ postId, user }) {
     
                                 document.getElementById(postId).childNodes[2].firstChild.classList.add("like")
                                 document.getElementById(postId).childNodes[2].firstChild.firstChild.setAttribute("d", "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
-                                localStorage.setItem(postId, 'liked')
     
                                 // add user, post is liked
                                 db.collection("posts").doc(postId).collection("likes").add({
-                                    username: user.displayName,
-                                    avatar: user.profileURL,
+                                    username: user?.displayName,
+                                    avatar: user?.photoURL,
                                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                                 }); 
     
@@ -179,7 +179,7 @@ export default function Post({ postId, user }) {
                     // add user, like post
                     db.collection("posts").doc(postId).collection("likes").add({
                         username: user.displayName,
-                        avatar: user.profileURL,
+                        avatar: user.photoURL,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }); 
     
@@ -195,6 +195,25 @@ export default function Post({ postId, user }) {
         }
         
     }
+
+    // let image = document.querySelector('.post__imageContainer');
+    // let manager = new Hammer.Manager(image)
+    // let DoubleTap = new Hammer.Tap({
+    //     event: 'doubletap',
+    //     taps: 2
+    // });
+
+    // manager.add(DoubleTap);
+
+    // if (post) {
+    //     manager.on('doubletap', (e) => {
+    //         e.target.showHeart();
+    //         e.target.likePost();
+    //     });
+    // }
+    
+
+
     
     return (
         
@@ -211,18 +230,18 @@ export default function Post({ postId, user }) {
 
                         {likes.map(like => {
                             return <div className="modal__user">
-                                        <a href={'/' + like.username}>
+                                        <a href={'/' + like?.username}>
                                             <Avatar
                                                 className="modal__avatar"
-                                                src={like.avatar}
+                                                src={like?.avatar}
                                                 alt=""
                                             />
                                         </a>
                                         <div>
-                                            <a href={'/' + like.username}>
-                                                <p className="modal__username">{like.username}</p>
+                                            <a href={'/' + like?.username}>
+                                                <p className="modal__username">{like?.username}</p>
                                             </a>
-                                            <p className="modal__name">{like.name}</p>
+                                            <p className="modal__name">{like?.name}</p>
                                         </div>
                                     </div>
                         })}
@@ -235,22 +254,25 @@ export default function Post({ postId, user }) {
 
 
             <div className="post__header">
+                
+                    <a href={'/' + post.username}>
+                        <Avatar
+                            className="post__avatar"
+                            src={post.avatar}
+                            alt=""
+                        />
+                    </a>
+
                 <a href={'/' + post.username}>
-                    <Avatar
-                        className="post__avatar"
-                        src={post.avatar}
-                        alt=""
-                    />
+                    { post.username ? <h4 className="post__username">{post.username}</h4> : <Skeleton className="post__username" width={200} height={12} /> }
                 </a>
-                <a href={'/' + post.username}>
-                    <h4 className="post__username">{post.username}</h4>
-                </a>
+
             </div>
 
-            <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}} >
-                <img className="post__image" src={post.imageUrl} alt="" />
-                <div className="post__imageHeart" ></div>
-            </div>
+                <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}}>
+                { post.imageUrl ? <img className="post__image" src={post?.imageUrl} alt="" /> : <Skeleton maxWidth={550} height={750} /> }
+                    <div className="post__imageHeart" ></div>
+                </div>
 
             <div className="post__buttons">
                 <svg className="post__like" fill="#262626" ariaLabel="like" height="24" viewBox="0 0 48 48" width="24" onClick={() => {showHeart(); likePost()}}>
@@ -312,7 +334,9 @@ export default function Post({ postId, user }) {
                 })}
             </div>
 
-            {user && (
+            <p className="post__date">Today</p>
+
+            {user && window.innerWidth > 600 ? (
                 <form className="post__commentBox" >
                 <svg fill="#262626" height="24" width="24" viewBox="0 0 48 48">
                             <path d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24zm0-45C12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21S35.6 3 24 3z"></path>
@@ -336,7 +360,9 @@ export default function Post({ postId, user }) {
                         Post
                     </button>
             </form>
-            )}
+            ) : ''}
+
+            
             
         </div>
     )

@@ -2,6 +2,7 @@ import { Button, LinearProgress, Input } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
+import firebase from 'firebase';
 import '../../styles/App.css';
 import '../../styles/ImageUpload.css';
 import { addPost } from '../store/actions/postActions';
@@ -45,7 +46,13 @@ export default function ImageUpload({ user, username, onClose }) {
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        dispatch(addPost({caption, url, username, avatar}))
+                        db.collection('posts').add({
+                            caption,
+                            username,
+                            avatar,
+                            imageUrl: url,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        })
                     })
 
                     onClose()

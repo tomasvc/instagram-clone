@@ -4,7 +4,7 @@ import { Avatar, Modal } from "@material-ui/core";
 import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
 import '../../styles/UserEdit.css';
-import { editUser } from '../store/actions/userActions';
+import Skeleton from 'react-loading-skeleton';
 import firebase from 'firebase';
 
 function getModalStyle() {
@@ -35,8 +35,6 @@ function getModalStyle() {
 
 export default function UserEdit({ user }) {
 
-    const dispatch = useDispatch();
-
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
 
@@ -48,12 +46,11 @@ export default function UserEdit({ user }) {
     const [bio, setBio] = useState('')
 
     const [avatarModal, setAvatarModal] = useState(false)
-    const [avatar, setAvatar] = useState(null)
+    const [avatar, setAvatar] = useState('')
     const [avatarUrl, setAvatarUrl] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //dispatch(editUser({username, name, website, bio}))
         db.collection('users').doc(user.uid).update({
             username,
             name,
@@ -144,7 +141,6 @@ export default function UserEdit({ user }) {
         }
 
         setAvatarModal(false)
-        window.location.reload()
     }
 
     const deleteAvatar = (e) => {
@@ -157,7 +153,6 @@ export default function UserEdit({ user }) {
         })
 
         setAvatarModal(false)
-        window.location.reload()
     }
 
     return (
@@ -203,7 +198,7 @@ export default function UserEdit({ user }) {
                     <div className="right__top">
                         <div><Avatar className="top__avatar" src={userData?.avatarUrl} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
-                            <p className="right__username">{user?.displayName}</p>
+                            { user ? <p className="right__username">{user?.displayName}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>

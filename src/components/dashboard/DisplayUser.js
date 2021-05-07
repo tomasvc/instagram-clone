@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/fbConfig';
 import Avatar from "@material-ui/core/Avatar";
 import '../../styles/DisplayUser.css';
+import Skeleton from 'react-loading-skeleton';
 
 export default function DisplayUser({ user }) {
 
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        if (user) {
-                db
+
+        async function getUser() {
+                await db
                 .collection('users')
                 .doc(user.uid)
                 .get()
@@ -17,18 +19,27 @@ export default function DisplayUser({ user }) {
                     setUserData(doc.data())
                 }) 
         }
+
+        if(user) {
+            getUser()
+        }
+                
     }, [user])
 
     return (
         <div className="app__user">
+            { userData ? 
             <a href={'/' + userData?.username} ><Avatar
                     className="displayUser__avatar"
                     alt=""
                     src={userData?.avatarUrl}
                 /></a>
+            :
+            <Skeleton className="displayUser__avatar" circle width={50} height={50} />
+            }
             <div>
-                <a href={'/' + userData?.username} className="displayUser__username">{user?.displayName}</a>
-                <h5 className="displayUser__name">{userData?.name}</h5>
+                { userData ? <a href={'/' + userData?.username} className="displayUser__username">{userData?.username}</a> : <Skeleton width={150} height={15} /> }
+                { userData ? <h5 className="displayUser__name">{userData?.name}</h5> : <Skeleton width={150} height={15} /> }
             </div>
         </div>
     )

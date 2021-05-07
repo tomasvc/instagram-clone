@@ -1,6 +1,5 @@
 import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Input, Modal } from '@material-ui/core';
 import { auth } from '../../firebase/fbConfig';
 import '../../styles/App.css';
 
@@ -28,7 +27,7 @@ function getModalStyle() {
     }
   }));
 
-export default function SignIn({ openSignIn, onClose }) {
+export default function Login({ openSignIn, onClose }) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -47,35 +46,34 @@ export default function SignIn({ openSignIn, onClose }) {
     }
 
     return (
-        <div>
-            <Modal
-        className="app__modal"
-        open={openSignIn}
-        onClose={onClose}
-      >
-      <div style={modalStyle} className={classes.paper}>
-        <center>
-          <h4 className="app__modalLabel">Log In</h4>
-          <form className="app__signup">
-            <Input
-              className="app__modalInput"
-              placeholder="Email"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              className="app__modalInput"
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button type="submit" onClick={signIn}>Login</Button>
-          </form>
-        </center>
-      </div>
-      </Modal>
+      <div className="wrapper">
+        
+        <div className="login">
+            <div className="login__logo"></div>
+            <p className="login__error">{error}</p>
+            <form className="login__form">
+                <input
+                className="form__input"
+                placeholder="Email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                className="form__input"
+                placeholder="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="form__btn" type="submit" onClick={signIn}>Log In</button>
+            </form>
         </div>
+        
+        <div className="signup-link">
+            <p>Don't have an account?</p><span>Sign up</span>
+        </div>
+        
+    </div>
     )
 }

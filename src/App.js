@@ -7,6 +7,7 @@ import Posts from './components/dashboard/Posts';
 import UserEdit from './components/user/UserEdit';
 import User from './components/user/User';
 import LoginPage from './components/auth/LoginPage';
+import SignUpPage from './components/auth/SignUpPage';
 import PostPage from './components/other/PostPage';
 import { auth, db } from './firebase/fbConfig';
 
@@ -72,19 +73,12 @@ function App() {
         <Switch>
 
           <Route exact path="/">
-
-            { user ? 
-            
             <div className="app__globalWrapper">
               <Sidebar user={user} userData={userData} />
               <div className="app__contentWrapper">
                 <Posts user={user} posts={posts} />
               </div> 
             </div>
-            
-            : <LoginPage /> }
-
-            
           </Route>
 
           <Route path="/p/:postId">
@@ -93,6 +87,14 @@ function App() {
 
           <Route path="/:username/edit">
             <UserEdit user={user} />
+          </Route>
+
+          <Route path="/signup">
+            <SignUpPage />
+          </Route>
+
+          <Route path="/login">
+            <LoginPage />
           </Route>
 
           <Route exact path="/:username">

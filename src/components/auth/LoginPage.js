@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { auth } from '../../firebase/fbConfig';
 import '../../styles/LoginPage.css';
 
@@ -19,8 +19,6 @@ export default function LoginPage() {
           .then(history.push("/"))
           .catch(error => {
               setError(error.message);
-              setEmail('');
-              setPassword('');
             })
     }
 
@@ -50,7 +48,7 @@ export default function LoginPage() {
                     </form>
                 </div>
                 <div className="signup-link">
-                    <p>Don't have an account?</p><span>Sign up</span>
+                    <p>Don't have an account?</p><a href="/signup">Sign up</a>
                 </div>
                 
             </div>

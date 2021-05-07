@@ -1,8 +1,8 @@
-import React, { useState }from 'react';
+import React, { useState } from 'react';
 import { auth, db } from '../../firebase/fbConfig';
-import '../../styles/App.css';
+import '../../styles/LoginPage.css';
 
-export default function SignUp({ openSignUp, onClose }) {
+export default function SignUpPage() {
 
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
@@ -27,11 +27,11 @@ export default function SignUp({ openSignUp, onClose }) {
             followers: 0,
             dateCreated: Date.now()
           })
-          return authUser.user.updateProfile({
+          authUser.user.updateProfile({
             displayName: username
           })
         })
-        .catch((error) => alert(error.message))
+        .catch((error) => setError(error))
     }
 
     return (
@@ -73,8 +73,27 @@ export default function SignUp({ openSignUp, onClose }) {
             </form>
         </div>
         <div className="signup-link">
-            <p>Already have an account?</p><span>Log In</span>
+            <p>Already have an account?</p><a href="/login">Log In</a>
         </div>
+
+        <footer>
+                <nav className="nav">
+                    <a href="/">About</a>
+                    <a href="/">Blog</a>
+                    <a href="/">Jobs</a>
+                    <a href="/">Help</a>
+                    <a href="/">API</a>
+                    <a href="/">Privacy</a>
+                    <a href="/">Terms</a>
+                    <a href="/">Top Accounts</a>
+                    <a href="/">Hashtags</a>
+                    <a href="/">Locations</a>
+                </nav>
+
+                <div className="copyright">
+                    <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="http://github.com/tomasvc">tomasvc</a></p>
+                </div>
+            </footer>
 
       </div>
     )

@@ -58,6 +58,7 @@
     padding: 9px 0 7px 8px;
     color: #262626;
     margin-top: 7px;
+    -webkit-appearance: none;
 }
 
 .form__input::placeholder {
@@ -105,17 +106,17 @@
     justify-content: center;
 }
 
-.signup-link span {
+.signup-link a {
     margin-left: 5px;
     font-weight: 600;
     color: #0095f6;
 }
 
-.signup-link span:hover {
+.signup-link a:hover {
     cursor: pointer;
 }
 
-.signup-link span:active {
+.signup-link a:active {
     opacity: 0.6;
 }
 

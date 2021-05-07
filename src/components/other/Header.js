@@ -4,9 +4,10 @@ import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
 import AddPost from '../dashboard/AddPost';
 import '../../styles/Header.css';
+import Skeleton from 'react-loading-skeleton';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCamera } from '@fortawesome/free-solid-svg-icons'
+import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
 
 import history from '../../history';
 
@@ -51,7 +52,7 @@ export default function Header({ user, userData }) {
           {window.innerWidth < 600 ?
             <div className="header__wrapper">
               <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                <FontAwesomeIcon fill="#262626" icon={faCamera} />
+                <FontAwesomeIcon width="26" height="26" icon={faPlusSquare} />
               </button>
 
               <a href="/"><img
@@ -68,13 +69,18 @@ export default function Header({ user, userData }) {
                   top: '13.5px',
                   border: '1px solid #262626'}
                 }></div>
-              <Avatar
+              
+              { user ?
+                <Avatar
                 onClick={onOpenNavColumn}
                 src={user?.photoURL}
                 className="nav__avatar"
                 style={{maxWidth: '22px'}}
                 alt=""
-              />
+              /> :
+              <Skeleton width={22} height={22} />
+            }
+              
 
               <div id="navColumn" className="nav__column" style={{ display: "none", right: "-10px" }}>
                 <div className="column__arrow"></div>
@@ -114,7 +120,7 @@ export default function Header({ user, userData }) {
 
             { user?.displayName ?
               ( <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                  <FontAwesomeIcon fill="#262626" icon={faCamera} />
+                  <FontAwesomeIcon icon={faPlusSquare} />
                 </button> 
               ): ('')
             }
@@ -133,7 +139,7 @@ export default function Header({ user, userData }) {
               {  
                 ( <div className="column__dropdown">
                     <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
-                    <button id="nav-btn" className="dropdown__logout" onClick={() => auth.signOut()}>Logout</button> 
+                    <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                   </div> )
               } 
           </div>
