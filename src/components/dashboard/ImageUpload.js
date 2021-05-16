@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
 import firebase from 'firebase';
+import { Avatar } from "@material-ui/core";
 import '../../styles/App.css';
-import '../../styles/ImageUpload.css';
+import './ImageUpload.css';
 import { addPost } from '../store/actions/postActions';
 
 export default function ImageUpload({ user, username, onClose }) {
@@ -19,6 +20,10 @@ export default function ImageUpload({ user, username, onClose }) {
         if (e.target.files[0]) {
             setImage(e.target.files[0])
         }
+    }
+
+    const handleUploadClick = () => {
+        document.getElementById('file__input').click()
     }
 
     const handleUpload = () => {
@@ -67,22 +72,27 @@ export default function ImageUpload({ user, username, onClose }) {
 
     return (
         <div className="imageUpload">
-                <LinearProgress className="imageUpload__progressBar" variant="determinate" value={progress} max="100" />
-                <Button
+                {/* <LinearProgress className="imageUpload__progressBar" variant="determinate" value={progress} max="100" /> */}
+                <button
                     className="imageUpload__file"
                     variant="contained"
                     component="label"
+                    onClick={handleUploadClick}
                     >
                     Upload File
-                    <input
+                </button>
+                <input
                         id="file__input"
                         onChange={handleChange}
                         type="file"
                         hidden
                     />
-                </Button>
+                <div className="imageUpload__bottom">
+                    <Avatar></Avatar>
+                    <input className="bottom__caption" type="text" multiline placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)}></input>
+                </div>
+                
                 {image ? <span>File Selected</span> : ""}
-                <Input className="app__modalInput imageUpload__caption" type="text" multiline placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)} />
                 <Button onClick={handleUpload}>Upload</Button>
         </div>
     )

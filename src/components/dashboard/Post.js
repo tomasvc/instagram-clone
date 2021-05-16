@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import '../../styles/Post.css';
+import React, { useState, useEffect, useContext } from 'react';
+import './Post.css';
 import firebase from 'firebase';
 import { db } from '../../firebase/fbConfig';
 import Avatar from "@material-ui/core/Avatar";
@@ -57,7 +57,7 @@ export default function Post({ postId, user }) {
 
         getPost()
 
-    }, [postId])
+    }, [postId, user])
 
     // add comments to post
     useEffect(() => {
@@ -76,7 +76,7 @@ export default function Post({ postId, user }) {
         return () => {
             unsubscribe();
         };
-    }, [postId]);
+    }, [postId, user]);
 
     // add likes to post
     useEffect(() => {
@@ -95,7 +95,33 @@ export default function Post({ postId, user }) {
         return () => {
             unsubscribe();
         }
-    }, [postId]);
+    }, [postId, user]);
+
+    useEffect(() => {
+        db.collection('posts').doc(postId).collection('likes').where('username', '==', user?.displayName).get().then(res => {
+
+            let batch = firebase.firestore().batch()
+
+            res.docs.forEach(doc => {
+                const docRef = firebase.firestore().collection('posts').doc(postId).collection('likes').doc(doc.id)
+                batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
+            })
+            batch.commit()
+
+        })
+
+        db.collection('posts').doc(postId).collection('comments').where('username', '==', user?.displayName).get().then(res => {
+
+            let batch = firebase.firestore().batch()
+
+            res.docs.forEach(doc => {
+                const docRef = firebase.firestore().collection('posts').doc(postId).collection('comments').doc(doc.id)
+                batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
+            })
+            batch.commit()
+
+        })
+    }, [user, postId])
 
 
     const postComment = (event) => {
@@ -104,6 +130,7 @@ export default function Post({ postId, user }) {
         db.collection("posts").doc(postId).collection("comments").add({
             text: comment,
             username: user.displayName,
+            avatar: user.photoURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
         setComment('');
@@ -141,8 +168,6 @@ export default function Post({ postId, user }) {
     
                             document.getElementById(postId).childNodes[2].firstChild.classList.remove("like")
                             document.getElementById(postId).childNodes[2].firstChild.firstChild.setAttribute("d", "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
-                            localStorage.removeItem(postId)
-
     
                             // remove user from collection, or unlike post
                             doc.ref.delete()
@@ -314,25 +339,21 @@ export default function Post({ postId, user }) {
             
             <h4 className="post__text"><a href={'/' + post.username}><span className="post__username">{post.username}</span></a> {post.caption}</h4>
 
+
+
             <div className="post__comments">
-                {comments.map((comment) => {
+                { comments.length > 2 ? <a href={'/p/' + postId} className="post__allCommentsLink">View all {comments.length} comments</a> :
+                
+                comments.map((comment) => {
                     return (
                     <p className="post__comment">
                         <a href={'/' + comment.username}><strong>{comment.username}</strong></a> <span>{comment.text}</span>
-                        <svg className="comment__like" ariaLabel="like" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
-                            <path id="comment__likePath" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 
-                            41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 
-                            6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 
-                            1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 
-                            3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 
-                            7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 
-                            2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z">
-                            </path>
-                        </svg>
                     </p>
                     )
                 })}
             </div>
+
+
 
             <p className="post__date">Today</p>
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { auth } from '../../firebase/fbConfig';
-import '../../styles/LoginPage.css';
+import './LoginPage.css';
 
 export default function LoginPage() {
 

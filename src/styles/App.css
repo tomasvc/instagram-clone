@@ -321,6 +321,7 @@
   }
 
   .app__globalWrapper {
+    display: flex;
     width: 100vw;
     margin: 0;
     padding-top: 50px;
@@ -346,6 +347,10 @@
 
   .app__aside {
     display: none;
+  }
+
+  .app__sidebar {
+    width: auto;
   }
 
 }

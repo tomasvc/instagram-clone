@@ -225,6 +225,22 @@
 
 @media screen and (max-width: 768px) {
 
+    body, .userEdit {
+        background-color: white;
+    }
+
+    #editModal {
+        width: 200px;
+        margin: auto;
+    }
+
+    .userEdit__wrapper {
+        top: 50px;
+        height: 100vh;
+        background-color: white;
+        border: none;
+    }
+
     .userEdit__left {
         display: none;
         align-items: flex-start;

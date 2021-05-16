@@ -1,10 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Avatar } from "@material-ui/core";
+import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
-import '../../styles/PostPage.css';
+import firebase from 'firebase';
+import { makeStyles } from '@material-ui/core/styles';
+import './PostPage.css';
+
+function getModalStyle() {
+    const top = 50;
+    const left = 50;
+  
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`,
+    };
+  }
+  
+const useStyles = makeStyles((theme) => ({
+paper: {
+    position: 'absolute',
+    maxWidth: '80%',
+    minHeight: '200px',
+    backgroundColor: theme.palette.background.paper,
+    border: 'none',
+    borderRadius: '12px',
+    outline: 0,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 2, 3),
+}
+}));
 
 export default function PostPage({ user }) {
+
+    const classes = useStyles();
+    const [modalStyle] = useState(getModalStyle);
 
     const { postId } = useParams();
     const [post, setPost] = useState(null);
@@ -12,6 +42,7 @@ export default function PostPage({ user }) {
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
     const [likes, setLikes] = useState([]);
+    const [openLikes, setOpenLikes] = useState(false);
 
     useEffect(() => {
         let unsubscribe;
@@ -64,6 +95,24 @@ export default function PostPage({ user }) {
 
     }, [user])
 
+    useEffect(() => {
+        let unsubscribe;
+        if (postId) {
+            unsubscribe = db
+                .collection("posts")
+                .doc(postId)
+                .collection("likes")
+                .orderBy('timestamp', 'desc')
+                .onSnapshot((snapshot) => {
+                    setLikes(snapshot.docs.map(doc => doc.data()));
+                })
+        }
+
+        return () => {
+            unsubscribe();
+        }
+    }, [postId]);
+
     async function getPost() {
 
         const snapshot = await db.collection('posts').doc(postId).get()
@@ -92,9 +141,52 @@ export default function PostPage({ user }) {
         }, 1000)  
     }
 
+    const postComment = (event) => {
+        event.preventDefault();
+
+        db.collection("posts").doc(postId).collection("comments").add({
+            text: comment,
+            username: user.displayName,
+            avatar: user.photoURL,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        setComment('');
+    } 
+
     return (
         
         <div className="postPage__main">
+
+            <Modal 
+                className="post__modal"
+                open={openLikes}
+                onClose={() => setOpenLikes(false)}
+                >
+                <div style={modalStyle} className={classes.paper}>
+                    <center>
+                    <h4 className="modal__label">Likes</h4>
+
+                        {likes.map(like => {
+                            return <div className="modal__user">
+                                        <a href={'/' + like?.username}>
+                                            <Avatar
+                                                className="modal__avatar"
+                                                src={like?.avatar}
+                                                alt=""
+                                            />
+                                        </a>
+                                        <div>
+                                            <a href={'/' + like?.username}>
+                                                <p className="modal__username">{like?.username}</p>
+                                            </a>
+                                            <p className="modal__name">{like?.name}</p>
+                                        </div>
+                                    </div>
+                        })}
+
+                    </center>
+                </div>
+            </Modal>
 
             { window.innerWidth < 600 ? 
 
@@ -114,12 +206,13 @@ export default function PostPage({ user }) {
                             disabled={!comment}
                             className="comment__buttonSmall"
                             type="submit"
+                            onClick={postComment}
                             >
                                 Post
                             </button>
                     </div>
                 </div>
-                <div className="content__user" id="content__userSmall">
+                <div className="content__user content__userSmall" id="content__userSmall">
                     <div className="user__avatar">
                         <a href={'/' + post?.username}><Avatar className="avatar__avatar" src={post?.avatar}></Avatar></a>
                     </div>
@@ -128,6 +221,19 @@ export default function PostPage({ user }) {
                     <a href={'/' + post?.username}><span className="caption__username">{post?.username}</span></a><span className="caption__caption">{post?.caption}</span>
                     </div>
                 </div>
+                <div className="content__comments" id="comments__mobile">
+                        {comments.map(comment => {
+                            return (
+                                <div className="comments__comment" id="comment__mobile">
+                                    <a href={'/' + comment?.username}><Avatar className="comment__avatar" src={comment?.avatar}></Avatar></a>
+                                    <div>
+                                        <a href={'/' + comment?.username}><span className="comment__username">{comment.username}</span></a>
+                                        <span className="comment__text">{comment.text}</span>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
             </div>
             
             :
@@ -199,8 +305,15 @@ export default function PostPage({ user }) {
                         </svg>
                     </div>
                     
-                    { likes.length ? <p className="bottom__likes">{likes?.length} likes</p> : '' }
-                    <form className="bottom__comment" >
+                    <div className="bottom__likes" onClick={() => setOpenLikes(true)}>{
+                        likes.length === 1 ? `Liked by ${likes[0].username}` :
+                        likes.length === 2 ? `Liked by ${likes[0].username} and ${likes[1].username}` :
+                        likes.length > 1 ? `${likes.length} likes` : ''
+                    }</div>
+                    <p className="bottom__date">Today</p>
+                    
+                </div>
+                <form className="right__comment" >
                         <svg fill="#262626" height="24" width="24" viewBox="0 0 48 48">
                             <path d="M24 48C10.8 48 0 37.2 0 24S10.8 0 24 0s24 10.8 24 24-10.8 24-24 24zm0-45C12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21S35.6 3 24 3z"></path>
                             <path d="M34.9 24c0-1.4-1.1-2.5-2.5-2.5s-2.5 1.1-2.5 2.5 1.1 2.5 2.5 2.5 2.5-1.1 2.5-2.5zm-21.8 0c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5-1.1 2.5-2.5 
@@ -219,12 +332,11 @@ export default function PostPage({ user }) {
                             disabled={!comment}
                             className="comment__button"
                             type="submit"
-                            
+                            onClick={postComment}
                             >
                                 Post
                             </button>
                     </form>
-                </div>
             </div>
             </div>
             }

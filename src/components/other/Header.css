@@ -20,12 +20,15 @@
     height: inherit;
     padding: 0 20px;
     margin: auto;
+    background-color: white;
   }
   
   .wrapper__logo {
     object-fit: contain;
     margin-top: 16px;
     max-width: 103px;
+    position: relative;
+    left: -10px;
   }
   
   .wrapper__logo:hover {
@@ -75,7 +78,7 @@
     position: absolute;
     top: 21.5px;
     left: 57px;
-    background-image: url("../img/images-sprite.png");
+    background-image: url("../../img/images-sprite.png");
     background-position: -408px -328px;
     background-size: 440px 411px;
     width: 12px;
@@ -233,10 +236,26 @@
     
     .header {
       height: 50px;
+      background-color: white;
+    }
+
+    .wrapper__logo {
+      top: -1px;
     }
 
     .wrapper__search-container {
       display: none;
     }
 
+    .nav__add-btn {
+      top: 12px;
+    }
+
+    .nav__avatar {
+      top: 15px;
+    }
+
+    .nav__avatar-ring {
+      top: 12.5px !important;
+    }
   }

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
-import '../../styles/User.css';
+import firebase from 'firebase';
+import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
 
@@ -44,7 +45,10 @@ export default function Profile({ user }) {
     const [openModal, setOpenModal] = useState(false);
     const [unfollowModal, setUnfollowModal] = useState(false);
 
-    const [following, setFollowing] = useState(false);
+    const [following, setFollowing] = useState([]);
+    const [followers, setFollowers] = useState([]);
+
+    const [isFollowingProfile, setIsFollowingProfile] = useState(null);
 
     useEffect(() => {
 
@@ -57,8 +61,6 @@ export default function Profile({ user }) {
             }));
     
             setUserData(user[0])
-
-            //userData.followingUser && setFollowing(true)
     
         }
 
@@ -84,39 +86,113 @@ export default function Profile({ user }) {
             }
         }
 
+        async function getFollowInfo() {
+
+            const followersSnap = await db.collection('users').doc(userData?.userId).collection('followers').get();
+            const followingSnap = await db.collection('users').doc(userData?.userId).collection('following').get();
+
+            setFollowers(followersSnap.doc?.data())
+            setFollowing(followingSnap.doc?.data())
+
+        }
+
         getUser()
 
         getPosts()
 
-    }, [])
+        getFollowInfo()
 
-     
+    }, [user])
+
+    async function isUserFollowingProfile() {
+
+        const snapshot = await db.collection('users').doc(user?.uid).collection('following').where('username', '==', userData?.username).get();
+
+        const response = snapshot.docs.map(item => ({ 
+            ...item.data()
+        }))
+
+        return response[0].id
+
+    }
 
     
+    async function updateFollows() {
 
-    const onFollow = () => {
-        setFollowing(true);
-        document.querySelector('.buttons__follow-btn').style.display = 'none';
-        document.querySelector('.right__buttons').innerHTML = `
-            <button id="message-btn" className="buttons__message-btn" value="Message">Message</button>
-            <button id="unfollow-btn" className="buttons__unfollow-btn"><span id="unfollow-icon"></span></button>
-            <button id="arrow-btn" className="buttons__arrow-btn">
-                <svg aria-label="Down Chevron Icon" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
-                    <path d="M40 33.5c-.4 0-.8-.1-1.1-.4L24 18.1l-14.9 
-                    15c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l16-16c.6-.6 
-                    1.5-.6 2.1 0l16 16c.6.6.6 1.5 0 2.1-.3.3-.7.4-1.1.4z">
-                    </path
-                </svg>
-            </button>
-            `
-        document.getElementById('unfollow-btn').addEventListener("click", () => {
-            setUnfollowModal(true)
-        })
+    }
+    
+
+    const toggleFollow =  async () => {
+
+        const isFollowing = isUserFollowingProfile()
+
+        console.log(isFollowing)
+
+        setIsFollowingProfile(!!isFollowing)
+
+        console.log(isFollowingProfile)
+
+        // if (isFollowing) {
+        //     await db.collection('users').doc(user.uid).update({
+        //         following: isFollowing
+        //             ? firebase.firestore.FieldValue.arrayRemove(user.uid)
+        //             : firebase.firestore.FieldValue.arrayUnion(user.uid)
+        //     })
+        //     await db.collection('users').doc(userData.userId).update({
+        //         followers: isFollowing
+        //             ? firebase.firestore.FieldValue.arrayRemove(user.uid)
+        //             : firebase.firestore.FieldValue.arrayUnion(user.uid)
+        //     })
+        // }
+
+        if (isFollowing) {
+
+            await db.collection('users').doc(user.uid).collection('following').doc(userData.userId).set({ 
+                id: userData.userId,
+                username: userData.username,
+                avatar: userData.avatarUrl
+            })
+    
+            await db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).set({
+                id: user.uid,
+                username: user.displayName,
+                avatar: user.photoURL
+            })
+
+            document.querySelector('.buttons__follow-btn').style.display = 'none';
+            document.querySelector('.right__buttons').innerHTML = `
+                <button id="message-btn" className="buttons__message-btn" value="Message">Message</button>
+                <button id="unfollow-btn" className="buttons__unfollow-btn"><span id="unfollow-icon"></span></button>
+                <button id="arrow-btn" className="buttons__arrow-btn">
+                    <svg aria-label="Down Chevron Icon" fill="#262626" height="12" viewBox="0 0 48 48" width="12">
+                        <path d="M40 33.5c-.4 0-.8-.1-1.1-.4L24 18.1l-14.9 
+                        15c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l16-16c.6-.6 
+                        1.5-.6 2.1 0l16 16c.6.6.6 1.5 0 2.1-.3.3-.7.4-1.1.4z">
+                        </path
+                    </svg>
+                </button>
+                `
+            document.getElementById('unfollow-btn').addEventListener("click", () => {
+                setUnfollowModal(true)
+            })
+
+        } else {
+            setUnfollowModal(false);
+
+            db.collection('users').doc(user.uid).collection('following').doc(userData.userId).delete();
+
+            db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).delete();
+        }
+        
     }
 
     const onUnfollow = () => {
         setUnfollowModal(false);
-        setFollowing(false);
+
+        db.collection('users').doc(user.uid).collection('following').doc(userData.userId).delete();
+
+        db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).delete();
+
     }
 
     return (
@@ -147,7 +223,7 @@ export default function Profile({ user }) {
                             <Avatar src={ userData?.avatarUrl } className="unfollowModal__avatar"></Avatar>
                             <p>Unfollow @{username}?</p>
                         </div>
-                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={onUnfollow}>Unfollow</h5>
+                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={toggleFollow}>Unfollow</h5>
                         <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)} >Cancel</h5>
                     </center>
                 </div>
@@ -181,7 +257,7 @@ export default function Profile({ user }) {
                         </div>
                     :
                         <div className="right__buttons">
-                            <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={onFollow}>Follow</button>
+                            <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={toggleFollow}>Follow</button>
                         </div>
                     }
                     
@@ -193,8 +269,8 @@ export default function Profile({ user }) {
                     
                     <div className="header__top-info">
                     <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span> posts</p>
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ userData?.followers }</span> followers</p>
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ userData?.following }</span> following</p>
+                    <p className="top-info__info-item"><span className="info-item__info-num">{ followers?.length }</span> followers</p>
+                    <p className="top-info__info-item"><span className="info-item__info-num">{ following?.length }</span> following</p>
                 </div>
 
                 : <Skeleton className="skeleton-row" width={400} height={20} />

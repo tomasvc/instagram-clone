@@ -26,7 +26,7 @@
 }
 
 .login__logo {
-    background-image: url('../img/images-sprite.png');
+    background-image: url('../../img/images-sprite.png');
     background-repeat: no-repeat;
     background-position: 0 -130px;
     width: 175px;

@@ -10,6 +10,9 @@ import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import PostPage from './components/other/PostPage';
 import { auth, db } from './firebase/fbConfig';
+import history from './history';
+import UserContext from './user-context';
+import ProtectedRoute from './protected-route';
 
 function App() {
   
@@ -18,14 +21,16 @@ function App() {
   const [posts, setPosts] = useState([]);
 
   // update posts on start
-  useEffect(() => {
-    db.collection('posts').onSnapshot(snapshot => {
-      setPosts(snapshot.docs.map(doc => ({
-        id: doc.id,
-        post: doc.data()
-      })))
-    })
-  }, []);
+  useEffect(() => { 
+    if (user) {
+      db.collection('posts').onSnapshot(snapshot => {
+        setPosts(snapshot.docs.map(doc => ({
+          id: doc.id,
+          post: doc.data()
+        })))
+      })
+    }
+  }, [user]);
 
 
   // get auth state of user
@@ -64,22 +69,22 @@ function App() {
 
   return (
 
-    <div className="app">
+    <UserContext.Provider value={{user}}>
 
-      <Router>
+      <Router history={history}>
 
-      { user ? <Header user={user} userData={userData} /> : '' }
+        { user ? <Header user={user} userData={userData} history={history} /> : '' }
 
         <Switch>
 
-          <Route exact path="/">
+          <ProtectedRoute exact path="/" component={Posts}>
             <div className="app__globalWrapper">
               <Sidebar user={user} userData={userData} />
               <div className="app__contentWrapper">
                 <Posts user={user} posts={posts} />
               </div> 
             </div>
-          </Route>
+          </ProtectedRoute>
 
           <Route path="/p/:postId">
             <PostPage user={user} />
@@ -93,7 +98,7 @@ function App() {
             <SignUpPage />
           </Route>
 
-          <Route path="/login">
+          <Route exact path="/login">
             <LoginPage />
           </Route>
 
@@ -105,7 +110,7 @@ function App() {
 
       </Router>
 
-    </div>
+    </UserContext.Provider>
     
   );
 }

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Modal } from "@material-ui/core";
 import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
-import '../../styles/UserEdit.css';
+import './UserEdit.css';
 import Skeleton from 'react-loading-skeleton';
 import firebase from 'firebase';
 
@@ -22,7 +22,7 @@ function getModalStyle() {
     paper: {
       position: 'absolute',
       minWidth: '200px',
-      width: '340px',
+      maxWidth: '340px',
       backgroundColor: theme.palette.background.paper,
       border: 'none',
       borderRadius: '12px',
@@ -68,7 +68,7 @@ export default function UserEdit({ user }) {
 
     const updatePosts = username => {
 
-        db.collection('posts').where('username', '==', user.displayName).get().then(res => {
+        db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
             let batch = firebase.firestore().batch()
 
@@ -80,22 +80,56 @@ export default function UserEdit({ user }) {
         }
             
         )
+
+        db.collection('posts').collection('likes').where('username', '==', user?.displayName).get().then(res => {
+
+            let batch = firebase.firestore().batch()
+
+            res.docs.forEach(doc => {
+                const docRef = firebase.firestore().collection('posts').collection('likes').doc(doc.id)
+                batch.update(docRef, { username: username, avatar: user?.photoURL })
+            })
+            batch.commit()
+
+        })
     }
 
     // get user data
     useEffect(() => {
-        if (user) {
-                db
+
+        async function getUser() {
+            db
                 .collection('users')
-                .doc(user.uid)
+                .doc(user?.uid)
                 .get()
                 .then(doc => {
                     setUserData(doc.data())
-                }) 
+                })
         }
+
+        getUser()
+
     }, [user])
 
     useEffect(() => {  
+
+        async function setAvatarToNull() {
+            if (user) {
+                await db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
+
+                    let batch = firebase.firestore().batch()
+    
+                    res.docs.forEach(doc => {
+                        const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                        batch.update(docRef, { avatar: user?.photoURL })
+                    })
+                    batch.commit()
+                }
+                    
+                )
+            }
+                
+        }
         
         if (avatar) {
             const uploadAvatar = storage.ref(`images/${avatar.name}`).put(avatar);
@@ -107,7 +141,7 @@ export default function UserEdit({ user }) {
                     .getDownloadURL()
                     .then(url => {
                         setAvatarUrl(url)
-                        db.collection('users').doc(user.uid).update({
+                        db.collection('users').doc(user?.uid).update({
                             avatarUrl: url
                         })
                         user.updateProfile({
@@ -115,13 +149,13 @@ export default function UserEdit({ user }) {
                         })
                     })
                     
-                    db.collection('posts').where('username', '==', user.displayName).get().then(res => {
+                    db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
                         let batch = firebase.firestore().batch()
             
                         res.docs.forEach(doc => {
                             const docRef = firebase.firestore().collection('posts').doc(doc.id)
-                            batch.update(docRef, { avatar: user.photoURL })
+                            batch.update(docRef, { avatar: user?.photoURL })
                         })
                         batch.commit()
                     }
@@ -129,6 +163,9 @@ export default function UserEdit({ user }) {
                     )
                     
                 })
+
+        } else {
+            setAvatarToNull()
         }
     
     }, [user, avatar])
@@ -198,11 +235,11 @@ export default function UserEdit({ user }) {
                     <div className="right__top">
                         <div><Avatar className="top__avatar" src={userData?.avatarUrl} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
-                            { user ? <p className="right__username">{user?.displayName}</p> : <Skeleton width={150} height={30} /> }
+                            { user ? <p className="right__username">{userData?.username}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>
-                    <form type="submit" className="userEdit__form">
+                    <form className="userEdit__form">
                         <div className="form__item form__name">
                             <aside className="item__aside">
                                 <label for="name">Name</label>
@@ -217,7 +254,7 @@ export default function UserEdit({ user }) {
                                 <label for="username">Username</label>
                             </aside>
                             <div className="item__input">
-                                <input id="username" className="item__inputField" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                                <input id="username" className="item__inputField" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
                             </div>
                         </div>
                         <div className="form__item form__website">
@@ -239,7 +276,7 @@ export default function UserEdit({ user }) {
                         <div className="form__item form__submit">
                             <aside className="item__aside"></aside>
                             <div className="item__input">
-                                <button className="form__submitBtn" type="submit" onClick={handleSubmit}>Submit</button>
+                                <button className="form__submitBtn" type="submit" onSumbit={handleSubmit}>Submit</button>
                             </div>
                         </div>
                         

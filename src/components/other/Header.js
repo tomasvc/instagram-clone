@@ -3,17 +3,15 @@ import { useHistory } from 'react-router';
 import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
 import AddPost from '../dashboard/AddPost';
-import '../../styles/Header.css';
+import './Header.css';
 import Skeleton from 'react-loading-skeleton';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
 
-import history from '../../history';
-
 import UserContext from '../../user-context';
 
-export default function Header({ user, userData }) {
+export default function Header({ user, userData, history }) {
 
     const [openAdd, setOpenAdd] = useState(false);
     
@@ -40,7 +38,7 @@ export default function Header({ user, userData }) {
 
     const logout = () => {
       auth.signOut();
-      history.push('/login');
+      this.props.history.push('/login');
     }
     
 

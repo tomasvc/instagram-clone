@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/fbConfig';
 import Avatar from "@material-ui/core/Avatar";
-import '../../styles/DisplayUser.css';
+import './DisplayUser.css';
 import Skeleton from 'react-loading-skeleton';
 
 export default function DisplayUser({ user }) {

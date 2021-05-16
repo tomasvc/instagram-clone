@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth, db } from '../../firebase/fbConfig';
-import '../../styles/LoginPage.css';
+import './LoginPage.css';
 
 export default function SignUpPage() {
 
@@ -16,12 +16,12 @@ export default function SignUpPage() {
         auth
         .createUserWithEmailAndPassword(email, password)
         .then(authUser => {
-          console.log(authUser)
           db.collection('users').doc(authUser.user.uid).set({
             userId: authUser.user.uid,
             username,
             name,
             email,
+            password,
             avatarUrl: '',
             following: 0,
             followers: 0,

@@ -10,9 +10,7 @@ const firebaseApp = {
     measurementId: "G-ELVW7EG096"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseApp);
-}
+firebase.initializeApp(firebaseApp);
 
 firebase.firestore().settings({ timestampsInSnapshots: true });
 

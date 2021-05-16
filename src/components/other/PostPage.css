@@ -11,6 +11,11 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.postPage__main div {
+    display: flex;
+    flex-grow: 1;
+}
+
 .main__small {
     display: flex;
     flex-direction: column;
@@ -20,9 +25,13 @@
 .main__commentBox {
     display: flex;
     align-items: center;
+    position: fixed;
+    width: 100%;
     background: rgb(236, 236, 236);
     padding: 8px 4px;
     border-bottom: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
+    z-index: 1;
 }
 
 .commentBox__avatar {
@@ -41,6 +50,7 @@
     position: relative;
     flex-grow: 1;
     margin: 0 5px;
+    margin-right: 15px;
     padding: 12px 15px;
     border-radius: 50px;
     border: 1px solid lightgrey;
@@ -51,7 +61,7 @@
 
 .comment__buttonSmall {
     position: absolute;
-    right: 14px;
+    right: 20px;
     background: none;
     border: none;
     outline: none;
@@ -62,6 +72,8 @@
 
 #content__userSmall {
     padding: 20px 15px;
+    position: relative;
+    top: 60px;
 }
 
 .main__left {
@@ -89,7 +101,6 @@
 .right__header {
     display: flex;
     align-items: center;
-    width: 92%;
     padding: 17px 15px;
     border-bottom: 1px solid rgb(235, 235, 235);
 }
@@ -125,16 +136,24 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    flex-basis: 340px;
     padding: 20px 15px;
+    overflow-y: auto;
 }
 
 .content__user {
     display: flex;
     align-items: center;
+    flex-grow: 0 !important;
+}
+
+.user__avatar {
+    flex-grow: 0 !important;
 }
 
 .user__caption {
     flex-grow: 1;
+    align-items: center;
 }
 
 .content__comments {
@@ -142,13 +161,28 @@
     flex-direction: column;
 }
 
+#comments__mobile {
+    padding: 0 15px;
+    height: 100vh;
+    border: none;
+    position: relative;
+    top: 55px;
+}
+
 .comments__comment {
     margin-top: 20px;
     display: flex;
     align-items: center;
+    flex-grow: 0 !important;
+}
+
+.comments__comment div {
+    align-items: center;
 }
 
 .right__bottom {
+    display: flex;
+    flex-direction: column;
     padding: 12px 15px;
     border-top: 1px solid rgba(235, 235, 235);
 }
@@ -160,6 +194,10 @@
 
 .bottom__icons svg {
     margin-right: 15px;
+}
+
+.bottom__icons svg:hover {
+    cursor: pointer;
 }
 
 .icons__save {
@@ -174,13 +212,21 @@
     margin-bottom: 10px;
 }
 
-.bottom__comment {
+.bottom__likes:hover {
+    cursor: pointer;
+}
+
+.bottom__date {
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #8e8e8e;
+}
+
+.right__comment {
     border-top: 1px solid rgba(235, 235, 235);
     display: flex;
     align-items: center;
-    padding-top: 10px;
-    padding-bottom: 2px;
-    width: 100%;
+    padding: 12px 15px;
 }
 
 .comment__input {
@@ -206,6 +252,7 @@
     cursor: default;
     position: relative;
     top: 1px;
+    right: -5px;
 }
 
 .comment__button:disabled {
@@ -254,8 +301,24 @@
 
 @media screen and (max-width: 700px) {
 
+    body, html {
+        background-color: white;
+    }
+
     .postPage__main {
         flex-direction: column;
+        margin-top: 50px;
+        background-color: white;
+        border: none;
     }
+
+    .main__small {
+        background-color: white;
+    }
+
+    .content__user {
+        border-bottom: 1px solid lightgrey;
+    }
+
 
 }

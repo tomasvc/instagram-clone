@@ -1,16 +1,13 @@
 import React from 'react';
 import DisplayUser from './DisplayUser';
 
-export default function Aside({ user }) {
+export default function Sidebar({ user }) {
     return (
-        <div className="app__aside">
-          { user ? (
-            <DisplayUser user={user} />
-          ) : (
-            <DisplayUser username="Username" name="Name" />
-          )
+        <div className="app__sidebar">
 
-          }
+            <DisplayUser user={user} />
+
+          
 
           <div className="app__info">
             <ul className="app__menu">
