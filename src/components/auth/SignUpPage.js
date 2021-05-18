@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { auth, db } from '../../firebase/fbConfig';
+import firebase from 'firebase';
 import './LoginPage.css';
 
 export default function SignUpPage() {
+
+    const history = useHistory();
 
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
@@ -23,14 +27,13 @@ export default function SignUpPage() {
             email,
             password,
             avatarUrl: '',
-            following: 0,
-            followers: 0,
-            dateCreated: Date.now()
+            dateCreated: firebase.firestore.FieldValue.serverTimestamp()
           })
           authUser.user.updateProfile({
             displayName: username
           })
         })
+        .then(history.push('/'))
         .catch((error) => setError(error))
     }
 

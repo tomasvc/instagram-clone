@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
-import firebase from 'firebase';
 import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
@@ -51,18 +50,27 @@ export default function Profile({ user }) {
     const [isFollowingProfile, setIsFollowingProfile] = useState(null);
 
     useEffect(() => {
-
+        
         async function getUser() {
+
             const snapshot = await db.collection('users').where('username', '==', username).get();
     
-            const user = snapshot.docs.map(item => ({
-                ...item.data(),
-                docId: item.id
-            }));
-    
-            setUserData(user[0])
+                const user = snapshot.docs.map(item => ({
+                    ...item.data()
+                }))
+        
+                setUserData(user[0])
     
         }
+
+        user && getUser()
+
+        return () => setUserData(null)
+        
+
+    }, [user, username])
+
+    useEffect(() => {
 
         async function getPosts() {
 
@@ -73,17 +81,20 @@ export default function Profile({ user }) {
             }));
     
             setPosts(posts);
-    
-            if(document.querySelector('.user__posts').innerHTML === '') {
-                for(let i = 0; i < posts.length; i++) {
-                    document
-                    .querySelector('.user__posts')
-                    .innerHTML += `<div className="posts__post">
-                                        <div id="post__shade"></div>
-                                        <img className="post__image" src=${posts[i].imageUrl} />
-                                    </div>`
+
+            if (document.querySelector('.user__posts') != null) {
+                if(document.querySelector('.user__posts').innerHTML === '') {
+                    for(let i = 0; i < posts.length; i++) {
+                        document
+                        .querySelector('.user__posts')
+                        .innerHTML += `<div className="posts__post">
+                                            <div id="post__shade"></div>
+                                            <img className="post__image" src=${posts[i].imageUrl} />
+                                        </div>`
+                    }
                 }
             }
+            
         }
 
         async function getFollowInfo() {
@@ -94,73 +105,48 @@ export default function Profile({ user }) {
             setFollowers(followersSnap.doc?.data())
             setFollowing(followingSnap.doc?.data())
 
+            console.log(followersSnap.doc?.data())
+
         }
 
-        getUser()
+        if (user) {
+            getPosts()
+            getFollowInfo()
+        }
 
-        getPosts()
+        
 
-        getFollowInfo()
+    }, [user, userData])
 
-    }, [user])
-
-    async function isUserFollowingProfile() {
-
-        const snapshot = await db.collection('users').doc(user?.uid).collection('following').where('username', '==', userData?.username).get();
-
-        const response = snapshot.docs.map(item => ({ 
-            ...item.data()
-        }))
-
-        return response[0].id
-
-    }
-
-    
-    async function updateFollows() {
-
-    }
-    
-
-    const toggleFollow =  async () => {
-
-        const isFollowing = isUserFollowingProfile()
-
-        console.log(isFollowing)
-
-        setIsFollowingProfile(!!isFollowing)
-
+    useEffect(() => {
+        console.log(userData)
         console.log(isFollowingProfile)
+        console.log(followers)
+    }, [userData, isFollowingProfile, followers])
+ 
+    useEffect(() => {
 
-        // if (isFollowing) {
-        //     await db.collection('users').doc(user.uid).update({
-        //         following: isFollowing
-        //             ? firebase.firestore.FieldValue.arrayRemove(user.uid)
-        //             : firebase.firestore.FieldValue.arrayUnion(user.uid)
-        //     })
-        //     await db.collection('users').doc(userData.userId).update({
-        //         followers: isFollowing
-        //             ? firebase.firestore.FieldValue.arrayRemove(user.uid)
-        //             : firebase.firestore.FieldValue.arrayUnion(user.uid)
-        //     })
-        // }
+        async function isUserFollowingProfile() {
 
-        if (isFollowing) {
-
-            await db.collection('users').doc(user.uid).collection('following').doc(userData.userId).set({ 
-                id: userData.userId,
-                username: userData.username,
-                avatar: userData.avatarUrl
-            })
+            if (userData) {
+                const result = await db.collection('users').doc(user?.uid).collection('following').where('username', '==', userData?.username).get();
     
-            await db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).set({
-                id: user.uid,
-                username: user.displayName,
-                avatar: user.photoURL
-            })
+                const [response = {}] = result.docs.map(item => ({ 
+                    ...item?.data()
+                }))
+        
+                setIsFollowingProfile(!!response.id)
+            }
 
-            document.querySelector('.buttons__follow-btn').style.display = 'none';
-            document.querySelector('.right__buttons').innerHTML = `
+        }
+    
+        isUserFollowingProfile()
+
+        if (isFollowingProfile) {
+
+            if (document.querySelector('.right__buttons') !== null && document.querySelector('#follow-btn') !== null ) {
+                document.querySelector('#follow-btn').style.display = 'none';
+                document.querySelector('.right__buttons').innerHTML = `
                 <button id="message-btn" className="buttons__message-btn" value="Message">Message</button>
                 <button id="unfollow-btn" className="buttons__unfollow-btn"><span id="unfollow-icon"></span></button>
                 <button id="arrow-btn" className="buttons__arrow-btn">
@@ -172,28 +158,53 @@ export default function Profile({ user }) {
                     </svg>
                 </button>
                 `
-            document.getElementById('unfollow-btn').addEventListener("click", () => {
-                setUnfollowModal(true)
-            })
 
-        } else {
-            setUnfollowModal(false);
+                document.getElementById('unfollow-btn').addEventListener("click", () => {
+                    setUnfollowModal(true)
+                })
+            }
 
-            db.collection('users').doc(user.uid).collection('following').doc(userData.userId).delete();
+        } else if (!isFollowingProfile && document.querySelector('.right__buttons') != null) {   
 
-            db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).delete();
+            document.querySelector('.right__buttons').innerHTML  = `
+                <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick="toggleFollow()">Follow</button>
+            `;
+
+            document.getElementById('follow-btn').addEventListener('click', () => toggleFollow())
+            
         }
+
+    }, [user, userData, isFollowingProfile])
+
+    const toggleFollow = async () => {
+
+            setIsFollowingProfile(true)
+
+            await db.collection('users').doc(user?.uid).collection('following').doc(userData?.userId).set({ 
+                id: userData.userId,
+                username: userData.username,
+                avatar: userData.avatarUrl
+            })
+    
+            await db.collection('users').doc(userData?.userId).collection('followers').doc(user?.uid).set({
+                id: user.uid,
+                username: user.displayName,
+                avatar: user.photoURL
+            })   
+
         
     }
 
-    const onUnfollow = () => {
+    const toggleUnfollow = async () => {
+
+        setIsFollowingProfile(false);
         setUnfollowModal(false);
 
-        db.collection('users').doc(user.uid).collection('following').doc(userData.userId).delete();
-
-        db.collection('users').doc(userData.userId).collection('followers').doc(user.uid).delete();
-
+        await db.collection('users').doc(user?.uid).collection('following').doc(userData?.userId).delete();
+        await db.collection('users').doc(userData?.userId).collection('followers').doc(user?.uid).delete();
+        
     }
+
 
     return (
 
@@ -223,7 +234,7 @@ export default function Profile({ user }) {
                             <Avatar src={ userData?.avatarUrl } className="unfollowModal__avatar"></Avatar>
                             <p>Unfollow @{username}?</p>
                         </div>
-                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={toggleFollow}>Unfollow</h5>
+                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={toggleUnfollow}>Unfollow</h5>
                         <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)} >Cancel</h5>
                     </center>
                 </div>
@@ -236,7 +247,7 @@ export default function Profile({ user }) {
                     
                 </div>
                 <div className="header__right">
-                    { userData ?
+                    { userData && isFollowingProfile !== null ?
                     
                     <div className="right__name">
                     <span className="right__username">{ username }</span>

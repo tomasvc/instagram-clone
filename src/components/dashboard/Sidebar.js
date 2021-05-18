@@ -23,7 +23,7 @@ export default function Sidebar({ user }) {
                 <li>Hashtags</li>
                 <li>Language</li>
             </ul>
-            <h6 className="app__copyright">&copy; 2021 INSTAGRAM NOT FROM FACEBOOK. MADE BY TOMASVC</h6>
+            <h6 className="app__copyright">&copy; 2021 INSTAGRAM CLONE NOT FROM FACEBOOK. MADE BY TOMASVC</h6>
           </div>
 
         </div>

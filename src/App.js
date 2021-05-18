@@ -19,19 +19,67 @@ function App() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   // update posts on start
   useEffect(() => { 
-    if (user) {
-      db.collection('posts').onSnapshot(snapshot => {
-        setPosts(snapshot.docs.map(doc => ({
-          id: doc.id,
-          post: doc.data()
-        })))
-      })
-    }
-  }, [user]);
 
+    const getPosts = async () => {
+
+      if (following.length > 0) {
+
+        for (let i = 0; i < following.length; i++) {
+
+          const snapshot = await db.collection('posts').where('username', '==', following[i]?.username).get();
+  
+          const newPosts = snapshot.docs.map(post => ({
+            id: post.id,
+            ...post.data()
+          }))
+  
+          setPosts(...posts, newPosts)
+  
+        }
+
+      }
+
+    }
+
+    if (user) {
+      getPosts()
+    
+      // db.collection('posts').onSnapshot(snapshot => {
+      //   setPosts(snapshot.docs.map(doc => ({
+      //     id: doc.id,
+      //     post: doc.data()
+      //   })))
+      // })
+
+    }
+
+    return () => setPosts([])
+
+  }, [user, following]);
+
+  useEffect(() => {
+
+    const getFollowingUsers = async () => {
+      const followingSnap = await db.collection('users').doc(user?.uid).collection('following').get();
+
+      const users = followingSnap.docs.map(user => ({
+        ...user.data()
+      }))
+
+      setFollowing(users)
+    }
+
+    if (user) {
+      getFollowingUsers()
+    }
+
+    return () => setFollowing([])
+
+  }, [user])
 
   // get auth state of user
   useEffect(() => {
@@ -63,6 +111,9 @@ function App() {
                 setUserData(doc.data())
             }) 
     }
+
+    return () => (setUserData([]), setPosts([]))
+
   }, [user])
 
 
@@ -77,7 +128,7 @@ function App() {
 
         <Switch>
 
-          <ProtectedRoute exact path="/" component={Posts}>
+          <ProtectedRoute exact path="/">
             <div className="app__globalWrapper">
               <Sidebar user={user} userData={userData} />
               <div className="app__contentWrapper">

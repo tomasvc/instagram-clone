@@ -37,8 +37,7 @@ export default function Header({ user, userData, history }) {
     }
 
     const logout = () => {
-      auth.signOut();
-      this.props.history.push('/login');
+      auth.signOut().then(history.push('/login'))
     }
     
 
