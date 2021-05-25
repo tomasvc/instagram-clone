@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
+import firebase from 'firebase/app';
 import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
@@ -47,31 +48,37 @@ export default function Profile({ user }) {
     const [following, setFollowing] = useState([]);
     const [followers, setFollowers] = useState([]);
 
+    const [followingModal, setFollowingModal] = useState(false);
+    const [followersModal, setFollowersModal] = useState(false);
+
     const [isFollowingProfile, setIsFollowingProfile] = useState(null);
 
     useEffect(() => {
         
+        // get currently logged in user data
         async function getUser() {
 
             const snapshot = await db.collection('users').where('username', '==', username).get();
     
-                const user = snapshot.docs.map(item => ({
-                    ...item.data()
-                }))
-        
-                setUserData(user[0])
+            const user = snapshot.docs.map(item => ({
+                ...item.data()
+            }))
+    
+            setUserData(user[0])
     
         }
 
-        user && getUser()
-
-        return () => setUserData(null)
-        
+        username && getUser()
 
     }, [user, username])
 
     useEffect(() => {
+        console.log(followers)
+    }, [followers])
 
+    useEffect(() => {
+
+        // get current user posts from firestore
         async function getPosts() {
 
             const snapshot = await db.collection('posts').where('username', '==', username).get();
@@ -82,15 +89,27 @@ export default function Profile({ user }) {
     
             setPosts(posts);
 
+            // render posts
             if (document.querySelector('.user__posts') != null) {
                 if(document.querySelector('.user__posts').innerHTML === '') {
                     for(let i = 0; i < posts.length; i++) {
                         document
                         .querySelector('.user__posts')
-                        .innerHTML += `<div className="posts__post">
-                                            <div id="post__shade"></div>
+                        .innerHTML += `<a href="${'/p/' + posts[i].id}"><div className="posts__post">
+                                            <div id="post__shade">
+                                                <div id="shade__info">
+                                                    <div id="info__likes">
+                                                        <span id="info__like-icon"></span>
+                                                        <span id="info__count">${posts[i].likes}</span>
+                                                    </div>
+                                                    <div id="info__comments">
+                                                        <span id="info__comment-icon"></span>
+                                                        <span id="info__count">${posts[i].comments}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <img className="post__image" src=${posts[i].imageUrl} />
-                                        </div>`
+                                        </div></a>`
                     }
                 }
             }
@@ -99,42 +118,58 @@ export default function Profile({ user }) {
 
         async function getFollowInfo() {
 
-            const followersSnap = await db.collection('users').doc(userData?.userId).collection('followers').get();
-            const followingSnap = await db.collection('users').doc(userData?.userId).collection('following').get();
+            db
+                .collection('users')
+                .doc(userData?.userId)
+                .collection('followers')
+                .onSnapshot(snapshot => {
+                    setFollowers(snapshot.doc?.data())
+                })
 
-            setFollowers(followersSnap.doc?.data())
-            setFollowing(followingSnap.doc?.data())
-
-            console.log(followersSnap.doc?.data())
+            db
+                .collection('users')
+                .doc(userData?.userId)
+                .collection('following')
+                .onSnapshot(snapshot => {
+                    setFollowing(snapshot.doc?.data())
+                })
 
         }
 
         if (user) {
             getPosts()
+        }
+
+        if (userData) {
             getFollowInfo()
         }
 
-        
+        return function cleanup() {
+            setFollowers(null)
+            setFollowing(null)
+        }
 
-    }, [user, userData])
-
-    useEffect(() => {
-        console.log(userData)
-        console.log(isFollowingProfile)
-        console.log(followers)
-    }, [userData, isFollowingProfile, followers])
+    }, [user, userData, username])
  
     useEffect(() => {
 
+        // check if currently logged in user is following the user that's being viewed
+        // that's done by checking the current user's following collection to see if it contains the other user's data
         async function isUserFollowingProfile() {
 
             if (userData) {
-                const result = await db.collection('users').doc(user?.uid).collection('following').where('username', '==', userData?.username).get();
+                const result = await db
+                                        .collection('users')
+                                        .doc(user?.uid)
+                                        .collection('following')
+                                        .where('username', '==', userData?.username)
+                                        .get();
     
                 const [response = {}] = result.docs.map(item => ({ 
                     ...item?.data()
                 }))
-        
+                
+                // then set this value to a boolean
                 setIsFollowingProfile(!!response.id)
             }
 
@@ -142,6 +177,8 @@ export default function Profile({ user }) {
     
         isUserFollowingProfile()
 
+        // change buttons on the user header based on whether the user is being followed or not
+        // so if the user is being followed, don't show the 'follow' button, etc.
         if (isFollowingProfile) {
 
             if (document.querySelector('.right__buttons') !== null && document.querySelector('#follow-btn') !== null ) {
@@ -176,35 +213,76 @@ export default function Profile({ user }) {
 
     }, [user, userData, isFollowingProfile])
 
+
+    // this gets triggered when the user clicks the 'follow' button
+    // store the currently logged in user in the other user's 'followers' collection
+    // and store the other user in the current user's 'following' collection
     const toggleFollow = async () => {
 
             setIsFollowingProfile(true)
 
-            await db.collection('users').doc(user?.uid).collection('following').doc(userData?.userId).set({ 
-                id: userData.userId,
-                username: userData.username,
-                avatar: userData.avatarUrl
-            })
+            await db
+                    .collection('users')
+                    .doc(user?.uid)
+                    .collection('following')
+                    .doc(userData?.userId)
+                    .set({ 
+                        id: userData.userId,
+                        username: userData.username,
+                        avatar: userData.avatarUrl
+                    })
     
-            await db.collection('users').doc(userData?.userId).collection('followers').doc(user?.uid).set({
-                id: user.uid,
-                username: user.displayName,
-                avatar: user.photoURL
-            })   
+            await db
+                    .collection('users')
+                    .doc(userData?.userId)
+                    .collection('followers')
+                    .doc(user?.uid)
+                    .set({
+                        id: user.uid,
+                        username: user.displayName,
+                        avatar: user.photoURL
+                    })   
 
-        
+            await db.collection("users").doc(user?.uid).update({
+                following: firebase.firestore.FieldValue.increment(1)
+            })
+
+            await db.collection("users").doc(userData?.userId).update({
+                followers: firebase.firestore.FieldValue.increment(1)
+            })
+            
     }
 
+    // gets triggered when the user unfollows another user
+    // same as above but deletes the data in both collections
     const toggleUnfollow = async () => {
 
         setIsFollowingProfile(false);
         setUnfollowModal(false);
 
-        await db.collection('users').doc(user?.uid).collection('following').doc(userData?.userId).delete();
-        await db.collection('users').doc(userData?.userId).collection('followers').doc(user?.uid).delete();
+        await db
+                .collection('users')
+                .doc(user?.uid)
+                .collection('following')
+                .doc(userData?.userId)
+                .delete();
+
+        await db
+                .collection('users')
+                .doc(userData?.userId)
+                .collection('followers')
+                .doc(user?.uid)
+                .delete();
+
+        await db.collection("users").doc(user?.uid).update({
+            following: firebase.firestore.FieldValue.increment(-1)
+        })
+
+        await db.collection("users").doc(userData?.userId).update({
+            followers: firebase.firestore.FieldValue.increment(-1)
+        })
         
     }
-
 
     return (
 
@@ -238,6 +316,42 @@ export default function Profile({ user }) {
                         <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)} >Cancel</h5>
                     </center>
                 </div>
+            </Modal>
+
+            <Modal
+                className="follow__modal"
+                open={followersModal}
+                onClose={() => setFollowersModal(false)}
+                >
+                    <div style={modalStyle} className={classes.paper}>
+                        <center>
+                            <div className="followModal__header">
+                                Followers
+                                <div>
+                                    {followers}
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+
+            </Modal>
+
+            <Modal
+                className="follow__modal"
+                open={followingModal}
+                onClose={() => setFollowingModal(false)}
+                >
+                    <div style={modalStyle} className={classes.paper}>
+                        <center>
+                            <div className="followModal__header">
+                                Following
+                            </div>
+                            <div>
+                                {following}
+                            </div>
+                        </center>
+                    </div>
+
             </Modal>
 
             <div className="user__header">
@@ -280,8 +394,8 @@ export default function Profile({ user }) {
                     
                     <div className="header__top-info">
                     <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span> posts</p>
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ followers?.length }</span> followers</p>
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ following?.length }</span> following</p>
+                    <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span> followers</p>
+                    <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span> following</p>
                 </div>
 
                 : <Skeleton className="skeleton-row" width={400} height={20} />
@@ -295,14 +409,13 @@ export default function Profile({ user }) {
 
             { userData &&
                 <nav className="content__nav">
-                    <a id="active" href=".">Posts</a>
+                    <a id="active" href={'/' + userData?.username}>Posts</a>
                     <a href={'/' + userData?.username}>IGTV</a>
                     <a href={'/' + userData?.username}>Saved</a>
                     <a href={'/' + userData?.username}>Tagged</a>
                 </nav>
             }
             
-
             <div className="user__posts">
             </div>
         </div>

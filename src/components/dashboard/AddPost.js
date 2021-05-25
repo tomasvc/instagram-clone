@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Modal, Avatar, Button } from '@material-ui/core';
+import { Modal, Avatar } from '@material-ui/core';
 import { storage, db } from '../../firebase/fbConfig';
-import firebase from 'firebase';
-import '../../styles/App.css';
+import firebase from 'firebase/app';
+import '../../App.css';
 import './AddPost.css';
 
 function getModalStyle() {
@@ -69,20 +69,22 @@ export default function AddPost({ openAdd, onClose, user }) {
             (error) => {
                 alert(error.message);
             },
-            () => {
-                storage
+            async () => {
+                await storage
                     .ref("images")
                     .child(image.name)
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        console.log(image)
                         document.getElementById('imageUpload__btn').style.background = 'url(' + url + ')'
                         db.collection('posts').add({
+                            id: db.collection('posts').doc().id,
                             caption,
                             username: user.displayName,
                             avatar: user.photoURL,
                             imageUrl: url,
+                            likes: 0,
+                            comments: 0,
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         })
                     })
@@ -94,9 +96,7 @@ export default function AddPost({ openAdd, onClose, user }) {
                     setImage(null)
             }
             
-        ).catch(err => {
-            alert(err) 
-        })
+        )
 
       }
     }

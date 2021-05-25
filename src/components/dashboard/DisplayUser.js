@@ -23,6 +23,10 @@ export default function DisplayUser({ user }) {
         if(user) {
             getUser()
         }
+
+        return function cleanup() {
+            setUserData(null)
+        }
                 
     }, [user])
 

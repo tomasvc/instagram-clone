@@ -1,13 +1,15 @@
 import React from 'react';
 import DisplayUser from './DisplayUser';
+import Suggestions from './Suggestions';
+import './Sidebar.css';
 
-export default function Sidebar({ user }) {
+export default function Sidebar({ user, following }) {
     return (
         <div className="app__sidebar">
 
-            <DisplayUser user={user} />
+            <DisplayUser className="DisplayUser" user={user} />
 
-          
+            <Suggestions className="Suggestions" user={user} following={following} />
 
           <div className="app__info">
             <ul className="app__menu">

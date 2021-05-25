@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Modal } from "@material-ui/core";
-import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
 import './UserEdit.css';
 import Skeleton from 'react-loading-skeleton';
-import firebase from 'firebase';
 
 function getModalStyle() {
     const top = 50;
@@ -47,7 +45,6 @@ export default function UserEdit({ user }) {
 
     const [avatarModal, setAvatarModal] = useState(false)
     const [avatar, setAvatar] = useState('')
-    const [avatarUrl, setAvatarUrl] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -70,10 +67,10 @@ export default function UserEdit({ user }) {
 
         db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
-            let batch = firebase.firestore().batch()
+            let batch = db.batch()
 
             res.docs.forEach(doc => {
-                const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                const docRef = db.collection('posts').doc(doc.id)
                 batch.update(docRef, { username: username })
             })
             batch.commit()
@@ -81,17 +78,22 @@ export default function UserEdit({ user }) {
             
         )
 
-        db.collection('posts').collection('likes').where('username', '==', user?.displayName).get().then(res => {
+        db
+            .collection('posts')
+            .collection('likes')
+            .where('username', '==', user?.displayName)
+            .get()
+            .then(res => {
 
-            let batch = firebase.firestore().batch()
+                let batch = db.batch()
 
-            res.docs.forEach(doc => {
-                const docRef = firebase.firestore().collection('posts').collection('likes').doc(doc.id)
-                batch.update(docRef, { username: username, avatar: user?.photoURL })
+                res.docs.forEach(doc => {
+                    const docRef = db.collection('posts').collection('likes').doc(doc.id)
+                    batch.update(docRef, { username: username, avatar: user?.photoURL })
+                })
+                batch.commit()
+
             })
-            batch.commit()
-
-        })
     }
 
     // get user data
@@ -117,10 +119,10 @@ export default function UserEdit({ user }) {
             if (user) {
                 await db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
-                    let batch = firebase.firestore().batch()
+                    let batch = db.batch()
     
                     res.docs.forEach(doc => {
-                        const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                        const docRef = db.collection('posts').doc(doc.id)
                         batch.update(docRef, { avatar: user?.photoURL })
                     })
                     batch.commit()
@@ -140,7 +142,6 @@ export default function UserEdit({ user }) {
                     .child(avatar.name)
                     .getDownloadURL()
                     .then(url => {
-                        setAvatarUrl(url)
                         db.collection('users').doc(user?.uid).update({
                             avatarUrl: url
                         })
@@ -151,10 +152,10 @@ export default function UserEdit({ user }) {
                     
                     db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
-                        let batch = firebase.firestore().batch()
+                        let batch = db.batch()
             
                         res.docs.forEach(doc => {
-                            const docRef = firebase.firestore().collection('posts').doc(doc.id)
+                            const docRef = db.collection('posts').doc(doc.id)
                             batch.update(docRef, { avatar: user?.photoURL })
                         })
                         batch.commit()
@@ -262,7 +263,7 @@ export default function UserEdit({ user }) {
                                 <label for="website">Website</label>
                             </aside>
                             <div className="item__input">
-                                <input id="website" className="item__inputField" type="url" placeholder="Website" onChange={(e) => setWebsite(e.target.value)} />
+                                <input id="website" className="item__inputField" placeholder="Website" onChange={(e) => setWebsite(e.target.value)} />
                             </div>
                         </div>
                         <div className="form__item form__bio">

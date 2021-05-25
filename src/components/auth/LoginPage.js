@@ -11,15 +11,17 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const signIn = (event) => {
+    const signIn = async (event) => {
         event.preventDefault();
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password)
+            history.push('/')
+        } catch (error) {
+            console.error(error)
+            setError(error)
+        }
     
-        auth
-          .signInWithEmailAndPassword(email, password)
-          .then(history.push("/"))
-          .catch(error => {
-              setError(error.message);
-            })
     }
 
     return (
@@ -55,16 +57,16 @@ export default function LoginPage() {
 
             <footer>
                 <nav className="nav">
-                    <a href="/">About</a>
-                    <a href="/">Blog</a>
-                    <a href="/">Jobs</a>
-                    <a href="/">Help</a>
-                    <a href="/">API</a>
-                    <a href="/">Privacy</a>
-                    <a href="/">Terms</a>
-                    <a href="/">Top Accounts</a>
-                    <a href="/">Hashtags</a>
-                    <a href="/">Locations</a>
+                    <a href="/login">About</a>
+                    <a href="/login">Blog</a>
+                    <a href="/login">Jobs</a>
+                    <a href="/login">Help</a>
+                    <a href="/login">API</a>
+                    <a href="/login">Privacy</a>
+                    <a href="/login">Terms</a>
+                    <a href="/login">Top Accounts</a>
+                    <a href="/login">Hashtags</a>
+                    <a href="/login">Locations</a>
                 </nav>
 
                 <div className="copyright">

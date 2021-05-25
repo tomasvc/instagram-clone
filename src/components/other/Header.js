@@ -1,15 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router';
+import React, { useState } from 'react';
 import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
 import AddPost from '../dashboard/AddPost';
 import './Header.css';
 import Skeleton from 'react-loading-skeleton';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlusSquare } from '@fortawesome/free-regular-svg-icons'
-
-import UserContext from '../../user-context';
 
 export default function Header({ user, userData, history }) {
 
@@ -49,7 +43,7 @@ export default function Header({ user, userData, history }) {
           {window.innerWidth < 600 ?
             <div className="header__wrapper">
               <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                <FontAwesomeIcon width="26" height="26" icon={faPlusSquare} />
+                <span className="add-btn__icon"></span>
               </button>
 
               <a href="/"><img
@@ -117,7 +111,7 @@ export default function Header({ user, userData, history }) {
 
             { user?.displayName ?
               ( <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
-                  <FontAwesomeIcon icon={faPlusSquare} />
+                  <span className="add-btn__icon"></span>
                 </button> 
               ): ('')
             }
@@ -126,7 +120,7 @@ export default function Header({ user, userData, history }) {
             <div id="navAvatarRing" className="nav__avatar-ring"></div>
             <Avatar
               onClick={onOpenNavColumn}
-              src={userData.avatarUrl}
+              src={user?.photoURL}
               className="nav__avatar"
               alt=""
             />

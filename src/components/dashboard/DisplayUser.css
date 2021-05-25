@@ -30,7 +30,9 @@
 }
 
 @media screen and (max-width: 1000px) {
-    .app__user {
+    .app__user,
+    .app__menu,
+    .app__copyright {
         display: none;
     }
 }

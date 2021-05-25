@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { makeStyles } from '@material-ui/core/styles';
 import './PostPage.css';
 
@@ -38,7 +38,6 @@ export default function PostPage({ user }) {
 
     const { postId } = useParams();
     const [post, setPost] = useState(null);
-    const [userData, setUserData] = useState(null);
     const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
     const [likes, setLikes] = useState([]);
@@ -81,19 +80,12 @@ export default function PostPage({ user }) {
     }, [postId]);
 
     useEffect(() => {
+
         if (user) {
             getPost()
-        } else {
-            return
         }
 
-        if (post) {
-            getUser()
-        } else {
-            return
-        }
-
-    }, [user])
+    })
 
     useEffect(() => {
         let unsubscribe;
@@ -117,20 +109,7 @@ export default function PostPage({ user }) {
 
         const snapshot = await db.collection('posts').doc(postId).get()
 
-        await setPost(snapshot.data())
-
-    }
-
-    async function getUser() {
-
-        const snapshot = await db.collection('users').where('username', '==', post?.username).get()
-
-        const user = await snapshot.docs.map(item => ({
-            ...item.data(),
-            docId: item.id
-        }));
-
-        await setUserData(user[0])
+        setPost(snapshot.data())
 
     }
 
@@ -150,6 +129,11 @@ export default function PostPage({ user }) {
             avatar: user.photoURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        db.collection("posts").doc(postId).update({
+            comments: firebase.firestore.FieldValue.increment(1)
+        })
+
         setComment('');
     } 
 

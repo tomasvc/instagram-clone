@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Post.css';
-import firebase from 'firebase';
 import { db } from '../../firebase/fbConfig';
-import Avatar from "@material-ui/core/Avatar";
-import Modal from "@material-ui/core/Modal";
+import firebase from 'firebase/app';
+import { Avatar, Modal } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
 import Hammer from 'hammerjs';
@@ -57,8 +56,6 @@ export default function Post({ postId, user }) {
 
         getPost()
 
-        return user && getPost()
-
     }, [postId, user])
 
     // add comments to post
@@ -100,29 +97,63 @@ export default function Post({ postId, user }) {
     }, [postId, user]);
 
     useEffect(() => {
-        db.collection('posts').doc(postId).collection('likes').where('username', '==', user?.displayName).get().then(res => {
 
-            let batch = firebase.firestore().batch()
-
-            res.docs.forEach(doc => {
-                const docRef = firebase.firestore().collection('posts').doc(postId).collection('likes').doc(doc.id)
-                batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
-            })
-            batch.commit()
-
-        })
-
-        db.collection('posts').doc(postId).collection('comments').where('username', '==', user?.displayName).get().then(res => {
-
-            let batch = firebase.firestore().batch()
-
-            res.docs.forEach(doc => {
-                const docRef = firebase.firestore().collection('posts').doc(postId).collection('comments').doc(doc.id)
-                batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
-            })
-            batch.commit()
-
-        })
+        const getLikesAndComments = async () => {
+            if (postId) {
+                await db
+                    .collection('posts')
+                    .doc(postId)
+                    .collection('likes')
+                    .where('username', '==', user?.displayName)
+                    .get()
+                    .then(snapshot => {
+    
+                    let batch = db.batch()
+        
+                    snapshot.docs.forEach(doc => {
+                        const docRef = db.collection('posts').doc(postId).collection('likes').doc(doc.id)
+                        batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
+                    })
+                    batch.commit()
+        
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        
+                await db
+                    .collection('posts')
+                    .doc(postId)
+                    .collection('comments')
+                    .where('username', '==', user?.displayName)
+                    .get()
+                    .then(snapshot => {
+        
+                    let batch = db.batch()
+        
+                    snapshot.docs.forEach(doc => {
+                        const docRef = db.collection('posts').doc(postId).collection('comments').doc(doc.id)
+                        batch.update(docRef, { username: user?.displayName, avatar: user?.photoURL })
+                    })
+                    batch.commit()
+        
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+            }
+        }
+        
+        try {
+            getLikesAndComments()
+        } catch (error) {
+            console.error(error)
+        }
+    
+        return function cleanup() {
+            setPost(null)
+        }
+        
     }, [user, postId])
 
 
@@ -135,6 +166,11 @@ export default function Post({ postId, user }) {
             avatar: user.photoURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        db.collection("posts").doc(postId).update({
+            comments: firebase.firestore.FieldValue.increment(1)
+        })
+
         setComment('');
     } 
 
@@ -148,15 +184,15 @@ export default function Post({ postId, user }) {
 
     }
 
-
-
-    const likePost = () => {
+    const likePost = async () => {
 
         if (!user) {
             alert("You need to log in to like posts")
         } else {
 
-            db.collection("posts").doc(postId).collection("likes").get().then(snapshot => {
+            
+
+             await db.collection("posts").doc(postId).collection("likes").get().then(snapshot => {
 
                 var itemsProcessed = 0;
     
@@ -173,6 +209,13 @@ export default function Post({ postId, user }) {
     
                             // remove user from collection, or unlike post
                             doc.ref.delete()
+
+                            setTimeout(async () => {
+                                await db.collection("posts").doc(postId).update({
+                                    likes: firebase.firestore.FieldValue.increment(-1)
+                                })
+                            }, 0)
+
                             
                         } else {
     
@@ -191,6 +234,12 @@ export default function Post({ postId, user }) {
                                     avatar: user?.photoURL,
                                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                                 }); 
+
+                                setTimeout(async () => {
+                                    await db.collection("posts").doc(postId).update({
+                                        likes: firebase.firestore.FieldValue.increment(1)
+                                    })
+                                }, 0)
     
                             }
                             return
@@ -199,7 +248,7 @@ export default function Post({ postId, user }) {
     
                 // if like collections is empty
                 } else {
-    
+
                     document.getElementById(postId).childNodes[2].firstChild.classList.add("like")
                     document.getElementById(postId).childNodes[2].firstChild.firstChild.setAttribute("d", "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
     
@@ -209,6 +258,10 @@ export default function Post({ postId, user }) {
                         avatar: user.photoURL,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }); 
+
+                    db.collection("posts").doc(postId).update({
+                        likes: firebase.firestore.FieldValue.increment(1)
+                    })
     
                 }
 
@@ -218,6 +271,8 @@ export default function Post({ postId, user }) {
                     timestamp: doc.timestamp
                 })))
             })
+
+            
 
         }
         
@@ -238,8 +293,6 @@ export default function Post({ postId, user }) {
     //         e.target.likePost();
     //     });
     // }
-    
-
 
     
     return (
@@ -256,7 +309,7 @@ export default function Post({ postId, user }) {
                     <h4 className="modal__label">Likes</h4>
 
                         {likes.map(like => {
-                            return <div className="modal__user">
+                            return <div className="modal__user" key={like?.username}>
                                         <a href={'/' + like?.username}>
                                             <Avatar
                                                 className="modal__avatar"
@@ -348,7 +401,7 @@ export default function Post({ postId, user }) {
                 
                 comments.map((comment) => {
                     return (
-                    <p className="post__comment">
+                    <p className="post__comment" key={comment.username}>
                         <a href={'/' + comment.username}><strong>{comment.username}</strong></a> <span>{comment.text}</span>
                     </p>
                     )

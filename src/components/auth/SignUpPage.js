@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { auth, db } from '../../firebase/fbConfig';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import './LoginPage.css';
 
 export default function SignUpPage() {
@@ -14,27 +14,34 @@ export default function SignUpPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const signUp = (event) => {
+    const signUp = async (event) => {
         event.preventDefault();
-    
-        auth
-        .createUserWithEmailAndPassword(email, password)
-        .then(authUser => {
-          db.collection('users').doc(authUser.user.uid).set({
-            userId: authUser.user.uid,
-            username,
-            name,
-            email,
-            password,
-            avatarUrl: '',
-            dateCreated: firebase.firestore.FieldValue.serverTimestamp()
-          })
-          authUser.user.updateProfile({
-            displayName: username
-          })
-        })
-        .then(history.push('/'))
-        .catch((error) => setError(error))
+
+        try {
+          await auth
+            .createUserWithEmailAndPassword(email, password)
+            .then(authUser => {
+              db.collection('users').doc(authUser.user.uid).set({
+                userId: authUser.user.uid,
+                username,
+                name,
+                email,
+                password,
+                avatarUrl: '',
+                followers: 0,
+                following: 0,
+                dateCreated: firebase.firestore.FieldValue.serverTimestamp()
+              })
+              authUser.user.updateProfile({
+                displayName: username
+              })
+            })
+          history.push('/')
+        } catch (error) {
+          console.error(error)
+          setError(error)
+        }
+        
     }
 
     return (
@@ -81,16 +88,16 @@ export default function SignUpPage() {
 
         <footer>
                 <nav className="nav">
-                    <a href="/">About</a>
-                    <a href="/">Blog</a>
-                    <a href="/">Jobs</a>
-                    <a href="/">Help</a>
-                    <a href="/">API</a>
-                    <a href="/">Privacy</a>
-                    <a href="/">Terms</a>
-                    <a href="/">Top Accounts</a>
-                    <a href="/">Hashtags</a>
-                    <a href="/">Locations</a>
+                    <a href="/signup">About</a>
+                    <a href="/signup">Blog</a>
+                    <a href="/signup">Jobs</a>
+                    <a href="/signup">Help</a>
+                    <a href="/signup">API</a>
+                    <a href="/signup">Privacy</a>
+                    <a href="/signup">Terms</a>
+                    <a href="/signup">Top Accounts</a>
+                    <a href="/signup">Hashtags</a>
+                    <a href="/signup">Locations</a>
                 </nav>
 
                 <div className="copyright">

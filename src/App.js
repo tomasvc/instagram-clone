@@ -1,6 +1,6 @@
-import './styles/App.css';
+import './App.css';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import Header from './components/other/Header';
 import Sidebar from './components/dashboard/Sidebar';
 import Posts from './components/dashboard/Posts';
@@ -20,66 +20,6 @@ function App() {
   const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
-
-  // update posts on start
-  useEffect(() => { 
-
-    const getPosts = async () => {
-
-      if (following.length > 0) {
-
-        for (let i = 0; i < following.length; i++) {
-
-          const snapshot = await db.collection('posts').where('username', '==', following[i]?.username).get();
-  
-          const newPosts = snapshot.docs.map(post => ({
-            id: post.id,
-            ...post.data()
-          }))
-  
-          setPosts(...posts, newPosts)
-  
-        }
-
-      }
-
-    }
-
-    if (user) {
-      getPosts()
-    
-      // db.collection('posts').onSnapshot(snapshot => {
-      //   setPosts(snapshot.docs.map(doc => ({
-      //     id: doc.id,
-      //     post: doc.data()
-      //   })))
-      // })
-
-    }
-
-    return () => setPosts([])
-
-  }, [user, following]);
-
-  useEffect(() => {
-
-    const getFollowingUsers = async () => {
-      const followingSnap = await db.collection('users').doc(user?.uid).collection('following').get();
-
-      const users = followingSnap.docs.map(user => ({
-        ...user.data()
-      }))
-
-      setFollowing(users)
-    }
-
-    if (user) {
-      getFollowingUsers()
-    }
-
-    return () => setFollowing([])
-
-  }, [user])
 
   // get auth state of user
   useEffect(() => {
@@ -102,6 +42,7 @@ function App() {
 
   // get current user data
   useEffect(() => {
+
     if (user) {
             db
             .collection('users')
@@ -112,10 +53,77 @@ function App() {
             }) 
     }
 
-    return () => (setUserData([]), setPosts([]))
+    return function cleanup() {
+      setUserData([])
+    }
 
   }, [user])
 
+  // update posts on start
+  useEffect(() => { 
+
+    const getPosts = async () => {
+
+      if (user) {
+
+        for (let i = 0; i < following.length; i++) {
+
+          await db
+                  .collection('posts')
+                  .where('username', '==', following[i].username)
+                  .get()
+                  .then(querySnapshot => {
+            
+                    const newPosts = querySnapshot.docs.map(post => ({
+                      id: post.id,
+                      ...post.data()
+                    }))
+
+                    console.log(newPosts)
+            
+                    setPosts(posts => newPosts.concat(posts))
+                    
+                  })
+                  .catch(error => {
+                    console.error(error)
+                  })
+  
+                }
+              }
+            }
+
+    try {
+      getPosts()
+    } catch (error) {
+      console.log(error)
+    }
+
+  }, [user, following]);
+
+  useEffect(() => {
+
+    const getFollowingUsers = async () => {
+      await db.collection('users').doc(user?.uid).collection('following').get().then(querySnapshot => {
+        const users = querySnapshot.docs.map(user => ({
+          ...user.data()
+        }))
+  
+        setFollowing(users)
+      })
+      
+    }
+
+    if (user) {
+      getFollowingUsers()
+    }
+
+  }, [user])
+
+  
+useEffect(() => {
+  console.log(posts)
+  console.log(following)
+}, [posts, following])
 
 
   return (
@@ -130,7 +138,7 @@ function App() {
 
           <ProtectedRoute exact path="/">
             <div className="app__globalWrapper">
-              <Sidebar user={user} userData={userData} />
+              <Sidebar user={user} following={following} />
               <div className="app__contentWrapper">
                 <Posts user={user} posts={posts} />
               </div> 

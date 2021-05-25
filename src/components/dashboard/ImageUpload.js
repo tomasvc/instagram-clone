@@ -1,16 +1,12 @@
-import { Button, LinearProgress, Input } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { storage, db } from '../../firebase/fbConfig';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { Avatar } from "@material-ui/core";
 import '../../styles/App.css';
 import './ImageUpload.css';
-import { addPost } from '../store/actions/postActions';
 
 export default function ImageUpload({ user, username, onClose }) {
-
-    const dispatch = useDispatch();
 
     const [caption, setCaption] = useState('')
     const [progress, setProgress] = useState(0)
