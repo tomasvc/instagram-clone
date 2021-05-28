@@ -73,15 +73,15 @@ export default function Profile({ user }) {
     }, [user, username])
 
     useEffect(() => {
-        console.log(followers)
-    }, [followers])
-
-    useEffect(() => {
 
         // get current user posts from firestore
         async function getPosts() {
 
-            const snapshot = await db.collection('posts').where('username', '==', username).get();
+            const snapshot = await db
+                                    .collection('posts')
+                                    .where('username', '==', username)
+                                    .orderBy('timestamp', 'desc')
+                                    .get();
     
             const posts = snapshot.docs.map(item => ({ 
                 ...item.data()
@@ -354,6 +354,57 @@ export default function Profile({ user }) {
 
             </Modal>
 
+            { window.innerWidth < 600 ? 
+            
+                    <div className="user__header">
+                        <div className="header__left">
+                            { userData ? <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar> :
+                            <Skeleton className="skeleton-row" circle width={77} height={77} />}
+                            
+                        </div>
+                        <div className="header__right">
+                            { userData && isFollowingProfile !== null ?
+                            
+                            <div className="right__name">
+                                <span className="right__username">{ username }</span>
+                                { userData?.userId === user?.uid ?
+                                    <div className="name__config">
+                                        <a href={user?.displayName + '/edit'} id="edit-btn" className="config__editBtn">Edit Profile</a>
+                                    </div>
+                                :
+                                    <div className="right__buttons">
+                                        <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={toggleFollow}>Follow</button>
+                                    </div>
+                                }
+                                
+                            </div>
+                    :
+                    <Skeleton className="skeleton-row" width={200} height={40} />
+                    }
+                        
+                    </div>
+
+                    <div className="header__details">
+                        { userData ? <p className="header__name">{ userData?.name }</p> : <Skeleton width={200} height={20} /> }
+                        <p className="header__bio">{ userData?.bio }</p>
+                        <a href={ userData?.website } className="header__website">{ userData?.website }</a>
+                    </div>
+
+                    { userData ? 
+                        
+                        <div className="header__top-info">
+                            <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
+                            <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
+                            <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
+                        </div>
+
+                    : <Skeleton className="skeleton-row" width={200} height={20} />
+                    }
+
+                    </div>
+        
+            :
+
             <div className="user__header">
                 <div className="header__left">
                     { userData ? <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar> :
@@ -393,9 +444,9 @@ export default function Profile({ user }) {
                     { userData ? 
                     
                     <div className="header__top-info">
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span> posts</p>
-                    <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span> followers</p>
-                    <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span> following</p>
+                    <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
+                    <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
+                    <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
                 </div>
 
                 : <Skeleton className="skeleton-row" width={400} height={20} />
@@ -406,6 +457,8 @@ export default function Profile({ user }) {
                     <a href={ userData?.website } className="header__website">{ userData?.website }</a>
                 </div>
             </div>
+
+            }   
 
             { userData &&
                 <nav className="content__nav">

@@ -76,9 +76,12 @@ export default function AddPost({ openAdd, onClose, user }) {
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        document.getElementById('imageUpload__btn').style.background = 'url(' + url + ')'
-                        db.collection('posts').add({
-                            id: db.collection('posts').doc().id,
+                        //document.getElementById('imageUpload__btn').style.background = 'url(' + url + ')'
+
+                        const ref = db.collection('posts').doc();
+
+                        ref.set({
+                            id: ref.id,
                             caption,
                             username: user.displayName,
                             avatar: user.photoURL,

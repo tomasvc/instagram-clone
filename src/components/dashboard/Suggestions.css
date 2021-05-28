@@ -21,7 +21,7 @@
 .list__user {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 13px;
 }
 
 .user__avatar {
@@ -48,4 +48,11 @@
 .info__suggestion {
     color: #8e8e8e;
     font-size: 12px;
+}
+
+.suggestions__none {
+    margin-left: -5px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #262626;
 }

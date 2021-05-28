@@ -23,6 +23,7 @@ function App() {
 
   // get auth state of user
   useEffect(() => {
+
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         // user has logged in
@@ -37,6 +38,7 @@ function App() {
       // perform some cleanup actions before you refire the useEffect
       unsubscribe();
     }
+    
   }, [user])
 
 
@@ -64,30 +66,31 @@ function App() {
 
     const getPosts = async () => {
 
-      if (user) {
+      if (user && following) {
+
+        
 
         for (let i = 0; i < following.length; i++) {
 
-          await db
+              db
                   .collection('posts')
                   .where('username', '==', following[i].username)
+                  .orderBy('timestamp', 'desc')
                   .get()
                   .then(querySnapshot => {
-            
-                    const newPosts = querySnapshot.docs.map(post => ({
-                      id: post.id,
-                      ...post.data()
-                    }))
+                    const newPosts = []
 
-                    console.log(newPosts)
-            
+                    querySnapshot.docs.forEach(doc => {
+                      
+                      newPosts.push({
+                        id: doc.id,
+                        ...doc.data()
+                      })
+                    })
+
                     setPosts(posts => newPosts.concat(posts))
                     
                   })
-                  .catch(error => {
-                    console.error(error)
-                  })
-  
                 }
               }
             }
@@ -118,12 +121,6 @@ function App() {
     }
 
   }, [user])
-
-  
-useEffect(() => {
-  console.log(posts)
-  console.log(following)
-}, [posts, following])
 
 
   return (

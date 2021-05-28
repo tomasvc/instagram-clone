@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
+import { db } from '../../firebase/fbConfig';
 import AddPost from '../dashboard/AddPost';
 import './Header.css';
 import Skeleton from 'react-loading-skeleton';
@@ -33,14 +34,13 @@ export default function Header({ user, userData, history }) {
     const logout = () => {
       auth.signOut().then(history.push('/login'))
     }
-    
 
     return (
         <div>
         <AddPost openAdd={openAdd} onClose={onAddClose} user={user} />
         <div className="header">
 
-          {window.innerWidth < 600 ?
+          { window.innerWidth < 600 ?
             <div className="header__wrapper">
               <button className="nav__add-btn" onClick={ () => setOpenAdd(true) }>
                 <span className="add-btn__icon"></span>
@@ -97,7 +97,7 @@ export default function Header({ user, userData, history }) {
 
           <div className="wrapper__search-container">
             <span className="search-container__icon"></span>
-            <input className="search-container__input" placeholder="Search"></input>
+            <input id="searchInput" className="search-container__input" placeholder="Search"></input>
           </div>
           
           <nav className="wrapper__nav">

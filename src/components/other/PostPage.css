@@ -78,6 +78,7 @@
 
 .main__left {
     display: flex;
+    position: relative;
     flex-basis: 450px;
     max-height: 600px;
     object-fit: cover;
@@ -85,9 +86,21 @@
 
 .left__image {
     flex-shrink: 1;
+    flex-basis: 500px;
     max-height: 600.5px;
-    min-width: 450px;
+    max-width: 500px;
     object-fit: cover;
+}
+
+.post__imageHeart {
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    transform: translate(0, -50%);
+    margin: auto auto;
+    opacity: 0;
+    pointer-events: none;
+    touch-action: manipulation;
 }
 
 .main__right {
@@ -114,21 +127,24 @@
 
 .header__username, 
 .caption__username, 
-.comment__username {
+.line__username {
     font-size: 14px;
     font-weight: 600;
+}
+
+.header__username {
     margin-left: 15px;
 }
 
 .header__username:hover, 
 .caption__username:hover, 
 .caption__username:hover, 
-.comment__username:hover {
+.line__username:hover {
     text-decoration: underline;
 }
 
-.caption__caption, .comment__text {
-    margin-left: 15px;
+.caption__caption, .line__text {
+    margin-left: 10px;
     font-size: 14px;
 }
 
@@ -180,8 +196,9 @@
     flex-grow: 0 !important;
 }
 
-.comments__comment div {
-    align-items: center;
+.comment__line {
+    display: block !important;
+    padding-left: 15px;
 }
 
 .right__bottom {
@@ -300,6 +317,38 @@
         opacity: 0;
         -webkit-transform: scale(0);
         transform: scale(0);
+    }
+}
+
+.like {
+    fill: rgb(237, 73, 86);
+    animation: like 0.45s ease-in-out;
+}
+
+.unlike {
+    fill: #262626;
+    animation: like 0.45s ease-in-out;
+}
+
+@keyframes like {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    25% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+
+    50% {
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
     }
 }
 

@@ -184,13 +184,7 @@ export default function Post({ postId, user }) {
 
     }
 
-    const likePost = async () => {
-
-        if (!user) {
-            alert("You need to log in to like posts")
-        } else {
-
-            
+    const likePost = async () => {    
 
              await db.collection("posts").doc(postId).collection("likes").get().then(snapshot => {
 
@@ -271,10 +265,6 @@ export default function Post({ postId, user }) {
                     timestamp: doc.timestamp
                 })))
             })
-
-            
-
-        }
         
     }
 

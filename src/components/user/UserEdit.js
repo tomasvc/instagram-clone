@@ -20,7 +20,6 @@ function getModalStyle() {
     paper: {
       position: 'absolute',
       minWidth: '200px',
-      maxWidth: '340px',
       backgroundColor: theme.palette.background.paper,
       border: 'none',
       borderRadius: '12px',
@@ -80,6 +79,7 @@ export default function UserEdit({ user }) {
 
         db
             .collection('posts')
+            .doc()
             .collection('likes')
             .where('username', '==', user?.displayName)
             .get()
@@ -277,7 +277,7 @@ export default function UserEdit({ user }) {
                         <div className="form__item form__submit">
                             <aside className="item__aside"></aside>
                             <div className="item__input">
-                                <button className="form__submitBtn" type="submit" onSumbit={handleSubmit}>Submit</button>
+                                <button className="form__submitBtn" type="submit" onClick={handleSubmit}>Submit</button>
                             </div>
                         </div>
                         

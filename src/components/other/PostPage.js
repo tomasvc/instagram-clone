@@ -114,11 +114,95 @@ export default function PostPage({ user }) {
     }
 
     const showHeart = () => {
-        document.getElementById('like-btn').classList.add('showHeart')  
+        document.getElementById('image-heart').classList.add('showHeart')  
         setTimeout(() => {
-            document.getElementById('like-btn').classList.remove('showHeart')
+            document.getElementById('image-heart').classList.remove('showHeart')
         }, 1000)  
     }
+
+    const likePost = async () => {    
+
+        await db.collection("posts").doc(postId).collection("likes").get().then(snapshot => {
+
+           var itemsProcessed = 0;
+
+           // if 'likes' collection is not empty
+           if(snapshot.docs.length !== 0) {
+
+               snapshot.docs.forEach(doc => {
+
+                   // if user is in the 'likes' collection, or if user has liked the post
+                   if (doc.data().username === user.displayName) {
+
+                       document.getElementById('like-btn').classList.remove("like")
+                       document.getElementById('like-btn').firstChild.setAttribute("d", "M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 1.6-2.3 3.9-4.3 8.1-4.3m0-3c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5.6 0 1.1-.2 1.6-.5 1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
+
+                       // remove user from collection, or unlike post
+                       doc.ref.delete()
+
+                       setTimeout(async () => {
+                           await db.collection("posts").doc(postId).update({
+                               likes: firebase.firestore.FieldValue.increment(-1)
+                           })
+                       }, 0)
+
+                       
+                   } else {
+
+                       // eslint-disable-next-line no-unused-vars
+                       itemsProcessed++;
+
+                       // if 'likes' collection does not contain user, add user, or like post
+                       if(itemsProcessed === snapshot.docs.length) {
+
+                           document.getElementById('like-btn').classList.add("like")
+                           document.getElementById('like-btn').firstChild.setAttribute("d", "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
+
+                           // add user, post is liked
+                           db.collection("posts").doc(postId).collection("likes").add({
+                               username: user?.displayName,
+                               avatar: user?.photoURL,
+                               timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                           }); 
+
+                           setTimeout(async () => {
+                               await db.collection("posts").doc(postId).update({
+                                   likes: firebase.firestore.FieldValue.increment(1)
+                               })
+                           }, 0)
+
+                       }
+                       return
+                   }
+               })
+
+           // if like collections is empty
+           } else {
+
+               document.getElementById('like-btn').firstChild.classList.add("like")
+               document.getElementById('like-btn').firstChild.setAttribute("d", "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
+
+               // add user, like post
+               db.collection("posts").doc(postId).collection("likes").add({
+                   username: user.displayName,
+                   avatar: user.photoURL,
+                   timestamp: firebase.firestore.FieldValue.serverTimestamp()
+               }); 
+
+               db.collection("posts").doc(postId).update({
+                   likes: firebase.firestore.FieldValue.increment(1)
+               })
+
+           }
+
+           setLikes(snapshot.docs.map(doc => ({
+               username: doc.username,
+               avatar: doc.avatar,
+               timestamp: doc.timestamp
+           })))
+       })
+   
+}
 
     const postComment = (event) => {
         event.preventDefault();
@@ -176,7 +260,7 @@ export default function PostPage({ user }) {
 
             <div className="main__small">
                 <div className="main__commentBox">
-                    <Avatar className="commentBox__avatar" src={post?.avatar}></Avatar>
+                    <Avatar className="commentBox__avatar" src={user?.photoURL}></Avatar>
                     <div className="commentBox__container">
                         <input
                                 id="comment__input"
@@ -202,7 +286,7 @@ export default function PostPage({ user }) {
                     </div>
                     
                     <div className="user__caption">
-                    <a href={'/' + post?.username}><span className="caption__username">{post?.username}</span></a><span className="caption__caption">{post?.caption}</span>
+                        <a href={'/' + post?.username}><span className="caption__username">{post?.username}</span></a><span className="caption__caption">{post?.caption}</span>
                     </div>
                 </div>
                 <div className="content__comments" id="comments__mobile">
@@ -210,9 +294,9 @@ export default function PostPage({ user }) {
                             return (
                                 <div className="comments__comment" id="comment__mobile">
                                     <a href={'/' + comment?.username}><Avatar className="comment__avatar" src={comment?.avatar}></Avatar></a>
-                                    <div>
-                                        <a href={'/' + comment?.username}><span className="comment__username">{comment.username}</span></a>
-                                        <span className="comment__text">{comment.text}</span>
+                                    <div className="comment__line">
+                                        <a href={'/' + comment?.username}><span className="line__username">{comment.username}</span></a>
+                                        <span className="line__text">{comment.text}</span>
                                     </div>
                                 </div>
                             )
@@ -223,8 +307,9 @@ export default function PostPage({ user }) {
             :
 
             <div>
-            <div className="main__left">
+            <div className="main__left" onDoubleClick={() => {showHeart(); likePost()}}>
                 <img className="left__image" src={post?.imageUrl} alt='' />
+                <div id="image-heart" className="post__imageHeart" ></div>
             </div>
             <div className="main__right">
                 <div className="right__header">
@@ -238,7 +323,7 @@ export default function PostPage({ user }) {
                         </div>
                         
                         <div className="user__caption">
-                        <a href={'/' + post?.username}><span className="caption__username">{post?.username}</span></a><span className="caption__caption">{post?.caption}</span>
+                            <a href={'/' + post?.username}><span className="caption__username">{post?.username}</span></a><span className="caption__caption">{post?.caption}</span>
                         </div>
                     </div>
                     
@@ -247,9 +332,9 @@ export default function PostPage({ user }) {
                             return (
                                 <div className="comments__comment">
                                     <a href={'/' + comment?.username}><Avatar className="comment__avatar" src={comment?.avatar}></Avatar></a>
-                                    <div>
-                                        <a href={'/' + comment?.username}><span className="comment__username">{comment.username}</span></a>
-                                        <span className="comment__text">{comment.text}</span>
+                                    <div className="comment__line">
+                                        <a href={'/' + comment?.username}><span className="line__username">{comment.username}</span></a>
+                                        <span className="line__text">{comment.text}</span>
                                     </div>
                                 </div>
                             )
@@ -258,7 +343,7 @@ export default function PostPage({ user }) {
                 </div>
                 <div className="right__bottom">
                     <div className="bottom__icons">
-                        <svg id="like-btn" className="icons__like" fill="#262626" ariaLabel="like" height="24" viewBox="0 0 48 48" width="24" onClick={() => {showHeart()}}>
+                        <svg id="like-btn" className="icons__like" fill="#262626" ariaLabel="like" height="24" viewBox="0 0 48 48" width="24" onClick={() => {likePost()}}>
                             <path id="button__likePath" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 
                             41.3 24 41.9c-1.1-.7-4.7-4-9.5-8.3-5.7-5-11.5-9.2-11.5-16C3 11.3 7.7 
                             6.1 13.4 6.1c4.2 0 6.5 2 8.1 4.3 1.9 2.6 2.2 3.9 2.5 3.9.3 0 .6-1.3 2.5-3.9 
