@@ -22,8 +22,31 @@ body {
     animation: modal .1s ease-out;
 }
 
-.unfollowModal__header,
-.follow__modal {
+.modal__label {
+    position: relative;
+    top: -5px;
+    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    color: #262626;
+    border-bottom: 1px solid lightgrey;
+    width: calc(100% + 32px);
+    left: -16px;
+}
+
+.modal__user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 300px;
+    text-align: left;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    position: relative;
+}
+
+.unfollowModal__header {
     margin: 20px;
     font-size: 14px;
 }
@@ -228,6 +251,10 @@ body {
 
 .config__settingsBtn:hover {
     cursor: pointer;
+}
+
+#postCount:hover {
+    cursor: text;
 }
 
 .header__top-info {

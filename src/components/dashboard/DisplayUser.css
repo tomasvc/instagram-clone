@@ -1,16 +1,13 @@
 .app__user {
-    position: fixed;
     display: flex;
     flex-direction: row;
     align-items: center;
-    top: 106px;
-    right: 254px;
     width: 330px;
 }
 
 .displayUser__avatar {
-    min-width: 55px;
-    min-height: 55px;
+    min-width: 56px;
+    min-height: 56px;
     margin-right: 18px;
 }
 

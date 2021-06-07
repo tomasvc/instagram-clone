@@ -10,6 +10,7 @@ import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import PostPage from './components/other/PostPage';
 import { auth, db } from './firebase/fbConfig';
+import firebase from 'firebase/app';
 import history from './history';
 import UserContext from './user-context';
 import ProtectedRoute from './protected-route';
@@ -68,31 +69,31 @@ function App() {
 
       if (user && following) {
 
-        
-
-        for (let i = 0; i < following.length; i++) {
-
-              db
+              await db
                   .collection('posts')
-                  .where('username', '==', following[i].username)
-                  .orderBy('timestamp', 'desc')
+                  .limit(10)
                   .get()
                   .then(querySnapshot => {
                     const newPosts = []
-
-                    querySnapshot.docs.forEach(doc => {
                       
-                      newPosts.push({
-                        id: doc.id,
-                        ...doc.data()
-                      })
-                    })
+                      querySnapshot.docs.forEach(doc => {
 
-                    setPosts(posts => newPosts.concat(posts))
+                        if (following.includes(doc.data().username)) {
+
+                          newPosts.push({
+                            id: doc.id,
+                            ...doc.data()
+                          })
+
+                        }   
+                        
+                      })
+                    
+                    setPosts(newPosts)
                     
                   })
                 }
-              }
+              
             }
 
     try {
@@ -107,9 +108,9 @@ function App() {
 
     const getFollowingUsers = async () => {
       await db.collection('users').doc(user?.uid).collection('following').get().then(querySnapshot => {
-        const users = querySnapshot.docs.map(user => ({
-          ...user.data()
-        }))
+        const users = querySnapshot.docs.map(user => {
+          return user.data().username
+        })
   
         setFollowing(users)
       })
@@ -141,6 +142,10 @@ function App() {
               </div> 
             </div>
           </ProtectedRoute>
+
+          <Route path="/suggestions">
+            
+          </Route>
 
           <Route path="/p/:postId">
             <PostPage user={user} />

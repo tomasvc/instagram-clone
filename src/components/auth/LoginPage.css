@@ -4,20 +4,19 @@
 }
 
 .wrapper {
-    min-height: 100%;
     background-color: #fafafa;
     display: flex;
     flex-direction: column;
+    align-items: space-around;
     flex-grow: 1;
     align-items: center;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
 }
 
 .login {
-    max-width: 350px;
-    width: 100%;
+    min-width: 350px;
     background-color: white;
-    margin-top: 40px;
+    margin-top: 4%;
     border: 1px solid lightgrey;
     border-radius: 2px;
     display: flex;
@@ -29,33 +28,33 @@
     background-image: url('../../img/images-sprite.png');
     background-repeat: no-repeat;
     background-position: 0 -130px;
-    width: 175px;
-    height: 51px;
+    min-width: 175px;
+    min-height: 51px;
     margin: auto;
-    margin-top: 40px;
+    margin-top: 11.5%;
 }
 
 .login__form {
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding: 40px;
+    padding: 11.5%;
     padding-top: 10px;
 }
 
 .login__error {
-    font-size: 13px;
+    font-size: 0.9rem;
     margin: 0 40px;
     margin-top: 10px;
 }
 
 .form__input {
-    max-width: 260px;
-    width: 100%;
+    min-width: 93.5%;
     background: #fafafa;
     border: 1px solid lightgrey;
     border-radius: 2px;
     outline: none;
-    padding: 9px 0 7px 8px;
+    padding: 9px 8px 7px 8px;
     color: #262626;
     margin-top: 7px;
     -webkit-appearance: none;
@@ -71,8 +70,7 @@
 
 .form__btn {
     display: block;
-    max-width: 280px;
-    width: 100%;
+    min-width: 100%;
     margin-top: 15px;
     border: none;
     outline: none;
@@ -81,7 +79,7 @@
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-weight: 600;
-    padding: 5px;
+    padding: 2%;
 }
 
 .form__btn:hover {
@@ -97,11 +95,10 @@
     background: white;
     border: 1px solid lightgrey;
     border-radius: 3px;
-    padding: 20px;
-    margin-top: 10px;
-    max-width: 310px;
-    width: 100%;
-    font-size: 14px;
+    padding: 1.5%;
+    margin-top: 0.5%;
+    min-width: 304px;
+    font-size: 0.9rem;
     display: flex;
     justify-content: center;
 }
@@ -123,19 +120,19 @@
 footer {
     position: absolute;
     bottom: 0;
-    width: 100vw;
+    min-width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 2.5%;
     background-color: rgb(241, 241, 241);
 }
 
 .nav a,
 .copyright {
     color: #8e8e8e;
-    font-size: 12px;
+    font-size: 0.75rem;
     margin: 0 10px;
 }
 
@@ -148,12 +145,12 @@ a:active {
 }
 
 .nav, .copyright {
-    margin-top: 20px;
+    margin-top: 1.5%;
 }
 
 @media screen and (max-width: 400px) {
-    .app {
-        background-color: #fafafa;
+    .app, .wrapper {
+        background-color: white;
     }
 
     .login, .signup-link {
@@ -162,7 +159,7 @@ a:active {
     }
 
     .form__btn {
-        padding: 8px;
+        padding: 3%;
     }
 
     .signup-link {
@@ -174,31 +171,19 @@ a:active {
         align-items: center;
         justify-content: center;
         background-color: transparent;
-        width: 90%;
-        margin: 0 20px;
-        margin-bottom: 40px;
+        
+        margin-bottom: 5%;
     }
 
     .nav {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        margin-bottom: 3%;
     }
 
     .nav a {
-        margin-top: 5px;
-    }
-
-}
-
-@media screen and (max-height: 500px) {
-
-    .wrapper {
-        min-height: 600px;
-    }
-
-    .nav a {
-        font-size: 8px;
+        margin-top: 1.5%;
     }
 
 }

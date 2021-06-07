@@ -25,7 +25,7 @@ export default function Suggestions({ user, following }) {
                         querySnapshot.docs.forEach(item => {
 
                             for (let i = 0; i < following.length; i++) {
-                                if (item.data().username === following[i].username && !alreadyFollowing.includes(item.data().username)) {
+                                if (following.includes(item.data().username) && !alreadyFollowing.includes(item.data().username)) {
                                     alreadyFollowing?.push(item.data().username)  
                                 }
                             }

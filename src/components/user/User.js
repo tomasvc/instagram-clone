@@ -21,15 +21,17 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
 paper: {
     position: 'absolute',
-    maxWidth: '80%',
-    minWidth: '300px',
+    minWidth: '280px',
+    maxWidth: '24%',
+    maxHeight: '300px',
     backgroundColor: theme.palette.background.paper,
     border: 'none',
     borderRadius: '12px',
     outline: 0,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    paddingBottom: 0
+    padding: theme.spacing(2, 2, 3),
+    paddingBottom: 0,
+    overflow: 'auto'
 }
 }));
 
@@ -58,7 +60,10 @@ export default function Profile({ user }) {
         // get currently logged in user data
         async function getUser() {
 
-            const snapshot = await db.collection('users').where('username', '==', username).get();
+            const snapshot = await db
+                                    .collection('users')
+                                    .where('username', '==', username)
+                                    .get()
     
             const user = snapshot.docs.map(item => ({
                 ...item.data()
@@ -116,40 +121,47 @@ export default function Profile({ user }) {
             
         }
 
-        async function getFollowInfo() {
-
-            db
-                .collection('users')
-                .doc(userData?.userId)
-                .collection('followers')
-                .onSnapshot(snapshot => {
-                    setFollowers(snapshot.doc?.data())
-                })
-
-            db
-                .collection('users')
-                .doc(userData?.userId)
-                .collection('following')
-                .onSnapshot(snapshot => {
-                    setFollowing(snapshot.doc?.data())
-                })
-
-        }
-
         if (user) {
             getPosts()
         }
 
+    }, [user, username])
+
+    useEffect(() => {
+
+        async function getFollowingAndFollowers() {
+
+            if (userData) {
+
+                const followerSnapshot = await db
+                    .collection('users')
+                    .doc(userData.userId)
+                    .collection('followers')
+                    .get()
+                    
+                    setFollowers(followerSnapshot.docs.map(item => ({
+                        ...item.data()
+                    })))
+
+                const followingSnapshot = await db
+                    .collection('users')
+                    .doc(userData.userId)
+                    .collection('following')
+                    .get()
+                    
+                    setFollowing(followingSnapshot.docs.map(item => ({
+                        ...item.data()
+                    })))
+
+            }
+
+        }
+
         if (userData) {
-            getFollowInfo()
+            getFollowingAndFollowers()
         }
 
-        return function cleanup() {
-            setFollowers(null)
-            setFollowing(null)
-        }
-
-    }, [user, userData, username])
+    }, [userData])
  
     useEffect(() => {
 
@@ -249,7 +261,7 @@ export default function Profile({ user }) {
 
             await db.collection("users").doc(userData?.userId).update({
                 followers: firebase.firestore.FieldValue.increment(1)
-            })
+            }) 
             
     }
 
@@ -281,8 +293,10 @@ export default function Profile({ user }) {
         await db.collection("users").doc(userData?.userId).update({
             followers: firebase.firestore.FieldValue.increment(-1)
         })
-        
+
     }
+        
+    
 
     return (
 
@@ -319,17 +333,33 @@ export default function Profile({ user }) {
             </Modal>
 
             <Modal
-                className="follow__modal"
+                className="post__modal"
                 open={followersModal}
                 onClose={() => setFollowersModal(false)}
                 >
                     <div style={modalStyle} className={classes.paper}>
                         <center>
-                            <div className="followModal__header">
+                            <h4 className="modal__label">
                                 Followers
-                                <div>
-                                    {followers}
-                                </div>
+                            </h4>
+                            <div className="modal__container">
+                                {followers.map(user => {
+                                        return <div className="modal__user" key={user?.username}>
+                                                    <a href={'/' + user?.username}>
+                                                        <Avatar
+                                                            className="modal__avatar"
+                                                            src={user?.avatar}
+                                                            alt=""
+                                                        />
+                                                    </a>
+                                                    <div>
+                                                        <a href={'/' + user?.username}>
+                                                            <p className="modal__username">{user?.username}</p>
+                                                        </a>
+                                                        <p className="modal__name">{user?.name}</p>
+                                                    </div>
+                                                </div>
+                                    })}
                             </div>
                         </center>
                     </div>
@@ -337,17 +367,33 @@ export default function Profile({ user }) {
             </Modal>
 
             <Modal
-                className="follow__modal"
+                className="post__modal"
                 open={followingModal}
                 onClose={() => setFollowingModal(false)}
                 >
                     <div style={modalStyle} className={classes.paper}>
                         <center>
-                            <div className="followModal__header">
+                            <h4 className="modal__label">
                                 Following
-                            </div>
-                            <div>
-                                {following}
+                            </h4>
+                            <div className="modal__container">
+                                {following.map(user => {
+                                        return <div className="modal__user" key={user?.username}>
+                                                    <a href={'/' + user?.username}>
+                                                        <Avatar
+                                                            className="modal__avatar"
+                                                            src={user?.avatar}
+                                                            alt=""
+                                                        />
+                                                    </a>
+                                                    <div>
+                                                        <a href={'/' + user?.username}>
+                                                            <p className="modal__username">{user?.username}</p>
+                                                        </a>
+                                                        <p className="modal__name">{user?.name}</p>
+                                                    </div>
+                                                </div>
+                                    })}
                             </div>
                         </center>
                     </div>
@@ -394,8 +440,8 @@ export default function Profile({ user }) {
                         
                         <div className="header__top-info">
                             <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
-                            <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
-                            <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
+                            <p className="top-info__info-item" onClick={followers.length > 0 ? () => setFollowersModal(true) : setFollowersModal(false)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
+                            <p className="top-info__info-item" onClick={following.length > 0 ? () => setFollowingModal(true) : setFollowingModal(false)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
                         </div>
 
                     : <Skeleton className="skeleton-row" width={200} height={20} />
@@ -444,7 +490,7 @@ export default function Profile({ user }) {
                     { userData ? 
                     
                     <div className="header__top-info">
-                    <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
+                    <p id="postCount" className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
                     <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
                     <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
                 </div>

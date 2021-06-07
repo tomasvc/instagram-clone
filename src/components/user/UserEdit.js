@@ -41,24 +41,34 @@ export default function UserEdit({ user }) {
     const [name, setName] = useState('')
     const [website, setWebsite] = useState('')
     const [bio, setBio] = useState('')
+    const [error, setError] = useState(null)
 
     const [avatarModal, setAvatarModal] = useState(false)
     const [avatar, setAvatar] = useState('')
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        db.collection('users').doc(user.uid).update({
-            username,
-            name,
-            website,
-            bio
-        })
-        .then((updatePosts(username)))
-        .then(
-            user.updateProfile({
-                displayName: username
+
+        if (username === '') {
+            setError("Please enter a valid username")
+        } else {
+            e.preventDefault();
+            db.collection('users').doc(user.uid).update({
+                username,
+                name,
+                website,
+                bio
             })
-        )
+            .then((updatePosts(username)))
+            .then(
+                user.updateProfile({
+                    displayName: username
+                })
+            )
+
+            setError(null)
+        }
+
+        
 
     }
 
@@ -125,10 +135,10 @@ export default function UserEdit({ user }) {
                         const docRef = db.collection('posts').doc(doc.id)
                         batch.update(docRef, { avatar: user?.photoURL })
                     })
-                    batch.commit()
-                }
                     
-                )
+                    batch.commit()
+
+                })
             }
                 
         }
@@ -240,7 +250,9 @@ export default function UserEdit({ user }) {
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>
+                    
                     <form className="userEdit__form">
+                    { error && <p className="form__error">{error}</p>}
                         <div className="form__item form__name">
                             <aside className="item__aside">
                                 <label for="name">Name</label>
@@ -252,7 +264,7 @@ export default function UserEdit({ user }) {
                         </div>
                         <div className="form__item form__username">
                             <aside className="item__aside">
-                                <label for="username">Username</label>
+                                <label for="username">Username*</label>
                             </aside>
                             <div className="item__input">
                                 <input id="username" className="item__inputField" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />

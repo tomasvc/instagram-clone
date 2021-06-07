@@ -58,6 +58,13 @@
     color: #262626;
 }
 
+.form__error {
+    font-size: 14px;
+    color: rgb(190, 57, 57);
+    margin: 10px;
+    margin-left: 28%;
+}
+
 .right__top {
     display: flex;
     flex-direction: row;
