@@ -10,7 +10,7 @@ export default function SuggestionsPage({ user, following }) {
     useEffect(() => {
         
         async function suggestedProfiles() {
-            const response = await getSuggestions(user, following)
+            const response = await getSuggestions(user, following, 10)
             setSuggestions(response)
         }
 

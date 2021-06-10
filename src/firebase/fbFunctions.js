@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { db } from './fbConfig';
 
-export async function getSuggestions(user, followingArray) {
+export async function getSuggestions(user, followingArray, number) {
 
     const snapshot = await db
                 .collection('users')
@@ -30,8 +30,8 @@ export async function getSuggestions(user, followingArray) {
                         })
 
                         // extract object data from result and store in users array, maximum 5 users
-                        if (result.length > 5) {
-                            for (let i = 0; i < 5; i++) {
+                        if (result.length > number) {
+                            for (let i = 0; i < number; i++) {
                                 users?.push(result[i].data())
                             }
                         } else {
