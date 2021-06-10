@@ -60,6 +60,10 @@ body {
     min-height: 50px;
 }
 
+.modal__container {
+    padding: 5px 0;
+}
+
 .modal__btn {
     padding: 15px;
     border-top: 1px solid lightgrey;
@@ -133,7 +137,7 @@ body {
 
 .right__username {
     font-weight: 200 !important;
-    font-size: 28px !important;
+    font-size: 1.8rem !important;
 }
 
 #follow-btn {
@@ -412,7 +416,7 @@ body {
     height: 20px;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
 
     body {
         background-color: white !important;

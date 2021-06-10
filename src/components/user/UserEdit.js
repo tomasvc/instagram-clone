@@ -19,7 +19,7 @@ function getModalStyle() {
   const useStyles = makeStyles((theme) => ({
     paper: {
       position: 'absolute',
-      minWidth: '200px',
+      minWidth: '300px',
       backgroundColor: theme.palette.background.paper,
       border: 'none',
       borderRadius: '12px',
@@ -44,7 +44,8 @@ export default function UserEdit({ user }) {
     const [error, setError] = useState(null)
 
     const [avatarModal, setAvatarModal] = useState(false)
-    const [avatar, setAvatar] = useState('')
+    const [avatarFile, setAvatarFile] = useState('')
+
 
     const handleSubmit = (e) => {
 
@@ -139,17 +140,18 @@ export default function UserEdit({ user }) {
                     batch.commit()
 
                 })
+
             }
                 
         }
         
-        if (avatar) {
-            const uploadAvatar = storage.ref(`images/${avatar.name}`).put(avatar);
+        if (avatarFile) {
+            const uploadAvatar = storage.ref(`images/${avatarFile.name}`).put(avatarFile);
     
                 uploadAvatar.on("state_changed", () => {
                     storage
                     .ref("images")
-                    .child(avatar.name)
+                    .child(avatarFile.name)
                     .getDownloadURL()
                     .then(url => {
                         db.collection('users').doc(user?.uid).update({
@@ -179,13 +181,13 @@ export default function UserEdit({ user }) {
             setAvatarToNull()
         }
     
-    }, [user, avatar])
+    }, [user, avatarFile])
 
     const uploadAvatar = (e) => {
         e.preventDefault();
 
         if (e.target.files[0]) {
-            setAvatar(e.target.files[0])
+            setAvatarFile(e.target.files[0])
         }
 
         setAvatarModal(false)
@@ -244,7 +246,7 @@ export default function UserEdit({ user }) {
                 </div>
                 <div className="userEdit__right">
                     <div className="right__top">
-                        <div><Avatar className="top__avatar" src={userData?.avatarUrl} onClick={() => setAvatarModal(true)}></Avatar></div>
+                        <div><Avatar className="top__avatar" src={user?.photoURL} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
                             { user ? <p className="right__username">{userData?.username}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>

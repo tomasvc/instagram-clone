@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { auth } from '../../firebase/fbConfig';
 import { Avatar } from '@material-ui/core';
-import { db } from '../../firebase/fbConfig';
 import AddPost from '../dashboard/AddPost';
 import './Header.css';
 import Skeleton from 'react-loading-skeleton';
@@ -34,6 +33,30 @@ export default function Header({ user, userData, history }) {
     const logout = () => {
       auth.signOut().then(history.push('/login'))
     }
+    
+
+    if (document.getElementById('searchInput') !== null) {
+      console.log(true)
+      if (document.activeElement.id === 'searchInput') {
+        console.log('active')
+        document.querySelector('.search-container__icon').style.left = '7px'
+      } else {
+        document.querySelector('.search-container__icon').style.left = '70px'
+      }
+    } else {
+      console.log(false)
+    }
+      
+
+    document.getElementById('searchInput')?.addEventListener('click', () => {
+      if (document.activeElement.id === 'searchInput') {
+        console.log('active')
+        document.querySelector('.search-container__icon').style.left = '7px'
+      } else {
+        document.querySelector('.search-container__icon').style.left = '70px'
+      }
+    })
+    
 
     return (
         <div>
@@ -78,6 +101,7 @@ export default function Header({ user, userData, history }) {
                   {
                     ( <div className="column__dropdown">
                         <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                        <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                         <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                       </div> )
                   }
@@ -130,6 +154,7 @@ export default function Header({ user, userData, history }) {
               {  
                 ( <div className="column__dropdown">
                     <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                    <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                     <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                   </div> )
               } 

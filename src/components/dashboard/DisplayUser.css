@@ -3,6 +3,7 @@
     flex-direction: row;
     align-items: center;
     width: 330px;
+    margin-bottom: 15px;
 }
 
 .displayUser__avatar {

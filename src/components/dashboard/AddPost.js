@@ -20,7 +20,8 @@ function getModalStyle() {
   const useStyles = makeStyles((theme) => ({
     paper: {
       position: 'absolute',
-      minWidth: '350px',
+      maxWidth: '100%',
+      minWidth: '250px',
       backgroundColor: theme.palette.background.paper,
       border: 'none',
       borderRadius: '12px',
@@ -39,11 +40,14 @@ export default function AddPost({ openAdd, onClose, user }) {
     const [caption, setCaption] = useState('')
     const [progress, setProgress] = useState(0)
     const [image, setImage] = useState(null)
+    const [imageURL, setImageURL] = useState(null)
     const [error, setError] = useState('')
 
     const handleChange = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0])
+            const url = URL.createObjectURL(e.target.files[0])
+            setImageURL(url)
         }
     }
 
@@ -118,7 +122,9 @@ export default function AddPost({ openAdd, onClose, user }) {
                   <div className="imageUpload">
                       {/* <LinearProgress className="imageUpload__progressBar" variant="determinate" value={progress} max="100" /> */}
                       
-                          <div id="imageUpload__btn" onClick={handleUploadClick}>Select Image</div>
+                          <div id="imageUpload__btn" onClick={handleUploadClick}>
+                            { imageURL ? <img className="btn__image" src={imageURL} alt='' /> : 'Select Image'}
+                          </div>
 
                           <input
                                   id="file__input"
@@ -133,11 +139,11 @@ export default function AddPost({ openAdd, onClose, user }) {
                           <textarea className="caption__input" type="text" multiline placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)}></textarea>
                           
                       </div>
-                      
-                      {image ? <span>File Selected</span> : ""}
-                      <button disabled={!image ? true : false} className="imageUpload__uploadBtn" onClick={handleUpload}>Upload</button>
-                      <button className="imageUpload__cancelBtn" onClick={onClose}>Cancel</button>
+
                   </div>
+
+                  <button disabled={!image ? true : false} className="imageUpload__uploadBtn modalBtn" onClick={handleUpload}>Upload</button>
+                  <button className="imageUpload__cancelBtn modalBtn" onClick={onClose}>Cancel</button>
                   
                 </center>
               </div>

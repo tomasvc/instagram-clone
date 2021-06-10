@@ -3,9 +3,11 @@ import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/fbConfig';
 import firebase from 'firebase/app';
+import history from '../../history';
 import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
+import PostPage from '../other/PostPage';
 
 function getModalStyle() {
     const top = 50;
@@ -22,8 +24,7 @@ const useStyles = makeStyles((theme) => ({
 paper: {
     position: 'absolute',
     minWidth: '280px',
-    maxWidth: '24%',
-    maxHeight: '300px',
+    maxHeight: '350px',
     backgroundColor: theme.palette.background.paper,
     border: 'none',
     borderRadius: '12px',
@@ -31,7 +32,8 @@ paper: {
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 2, 3),
     paddingBottom: 0,
-    overflow: 'auto'
+    overflowY: 'auto',
+    overflowX: 'hidden'
 }
 }));
 
@@ -44,7 +46,6 @@ export default function Profile({ user }) {
     const [posts, setPosts] = useState(null);
     const { username } = useParams();
 
-    const [openModal, setOpenModal] = useState(false);
     const [unfollowModal, setUnfollowModal] = useState(false);
 
     const [following, setFollowing] = useState([]);
@@ -64,18 +65,24 @@ export default function Profile({ user }) {
                                     .collection('users')
                                     .where('username', '==', username)
                                     .get()
-    
+            
             const user = snapshot.docs.map(item => ({
                 ...item.data()
             }))
-    
+            
             setUserData(user[0])
     
         }
 
-        username && getUser()
+        if (user) {
+            getUser()
+        }
 
-    }, [user, username])
+        return function cleanup() {
+            setUserData(null)
+        }
+
+    }, [user])
 
     useEffect(() => {
 
@@ -100,7 +107,7 @@ export default function Profile({ user }) {
                     for(let i = 0; i < posts.length; i++) {
                         document
                         .querySelector('.user__posts')
-                        .innerHTML += `<a href="${'/p/' + posts[i].id}"><div className="posts__post">
+                        .innerHTML += `<a href=${'/p/' + posts[i].id}><div className="posts__post">
                                             <div id="post__shade">
                                                 <div id="shade__info">
                                                     <div id="info__likes">
@@ -121,11 +128,11 @@ export default function Profile({ user }) {
             
         }
 
-        if (user) {
+        if (username) {
             getPosts()
         }
 
-    }, [user, username])
+    }, [username])
 
     useEffect(() => {
 
@@ -174,7 +181,7 @@ export default function Profile({ user }) {
                                         .collection('users')
                                         .doc(user?.uid)
                                         .collection('following')
-                                        .where('username', '==', userData?.username)
+                                        .where('username', '==', userData.username)
                                         .get();
     
                 const [response = {}] = result.docs.map(item => ({ 
@@ -188,6 +195,10 @@ export default function Profile({ user }) {
         }
     
         isUserFollowingProfile()
+
+    }, [user, userData])
+
+    useEffect(() => {
 
         // change buttons on the user header based on whether the user is being followed or not
         // so if the user is being followed, don't show the 'follow' button, etc.
@@ -221,9 +232,11 @@ export default function Profile({ user }) {
 
             document.getElementById('follow-btn').addEventListener('click', () => toggleFollow())
             
+        } else {
+            console.log('no')
         }
 
-    }, [user, userData, isFollowingProfile])
+    }, [isFollowingProfile])
 
 
     // this gets triggered when the user clicks the 'follow' button
@@ -239,9 +252,9 @@ export default function Profile({ user }) {
                     .collection('following')
                     .doc(userData?.userId)
                     .set({ 
-                        id: userData.userId,
-                        username: userData.username,
-                        avatar: userData.avatarUrl
+                        id: userData?.userId,
+                        username: userData?.username,
+                        avatar: userData?.avatarUrl
                     })
     
             await db
@@ -250,9 +263,9 @@ export default function Profile({ user }) {
                     .collection('followers')
                     .doc(user?.uid)
                     .set({
-                        id: user.uid,
-                        username: user.displayName,
-                        avatar: user.photoURL
+                        id: user?.uid,
+                        username: user?.displayName,
+                        avatar: user?.photoURL
                     })   
 
             await db.collection("users").doc(user?.uid).update({
@@ -304,19 +317,6 @@ export default function Profile({ user }) {
 
             <Modal
                 className="post__modal"
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                >
-                <div style={modalStyle} className={classes.paper}>
-                    <center>
-                        <div className="postModal__left"></div>
-                        <div className="postModal__right"></div>
-                    </center>
-                </div>
-            </Modal>
-
-            <Modal
-                className="post__modal"
                 open={unfollowModal}
                 onClose={() => setUnfollowModal(false)}
                 >
@@ -326,7 +326,7 @@ export default function Profile({ user }) {
                             <Avatar src={ userData?.avatarUrl } className="unfollowModal__avatar"></Avatar>
                             <p>Unfollow @{username}?</p>
                         </div>
-                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={toggleUnfollow}>Unfollow</h5>
+                        <h5 className="modal__btn unfollowModal__unfollow-btn" onClick={() => toggleUnfollow()}>Unfollow</h5>
                         <h5 className="modal__btn unfollowModal__cancel-btn" onClick={() => setUnfollowModal(false)} >Cancel</h5>
                     </center>
                 </div>
@@ -403,15 +403,20 @@ export default function Profile({ user }) {
             { window.innerWidth < 600 ? 
             
                     <div className="user__header">
+
                         <div className="header__left">
                             { userData ? <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar> :
                             <Skeleton className="skeleton-row" circle width={77} height={77} />}
-                            
                         </div>
+
                         <div className="header__right">
-                            { userData && isFollowingProfile !== null ?
-                            
+                        
+                            { userData && isFollowingProfile !== null ?   
+
+                            // if the user page is showing the currently logged in user, render edit button, else, render follow/unfollow button
+
                             <div className="right__name">
+
                                 <span className="right__username">{ username }</span>
                                 { userData?.userId === user?.uid ?
                                     <div className="name__config">
@@ -419,49 +424,49 @@ export default function Profile({ user }) {
                                     </div>
                                 :
                                     <div className="right__buttons">
-                                        <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={toggleFollow}>Follow</button>
+                                        <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={() => toggleFollow()}>Follow</button>
                                     </div>
                                 }
                                 
                             </div>
-                    :
-                    <Skeleton className="skeleton-row" width={200} height={40} />
-                    }
-                        
-                    </div>
-
-                    <div className="header__details">
-                        { userData ? <p className="header__name">{ userData?.name }</p> : <Skeleton width={200} height={20} /> }
-                        <p className="header__bio">{ userData?.bio }</p>
-                        <a href={ userData?.website } className="header__website">{ userData?.website }</a>
-                    </div>
-
-                    { userData ? 
-                        
-                        <div className="header__top-info">
-                            <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
-                            <p className="top-info__info-item" onClick={followers.length > 0 ? () => setFollowersModal(true) : setFollowersModal(false)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
-                            <p className="top-info__info-item" onClick={following.length > 0 ? () => setFollowingModal(true) : setFollowingModal(false)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
+                            :
+                            <Skeleton className="skeleton-row" width={200} height={40} /> }
+                                
                         </div>
 
-                    : <Skeleton className="skeleton-row" width={200} height={20} />
-                    }
+                        <div className="header__details">
+                            { userData ? <p className="header__name">{ userData?.name }</p> : <Skeleton width={200} height={20} /> }
+                            <p className="header__bio">{ userData?.bio }</p>
+                            <a href={ userData?.website } className="header__website">{ userData?.website }</a>
+                        </div>
+
+                        { userData ? 
+                            
+                            <div className="header__top-info">
+                                <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
+                                <p className="top-info__info-item" onClick={followers?.length > 0 ? () => setFollowersModal(true) : () => setFollowersModal(false)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
+                                <p className="top-info__info-item" onClick={following?.length > 0 ? () => setFollowingModal(true) : () => setFollowingModal(false)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
+                            </div>
+
+                        : <Skeleton className="skeleton-row" width={200} height={20} /> }
 
                     </div>
         
             :
 
             <div className="user__header">
+
                 <div className="header__left">
                     { userData ? <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar> :
                       <Skeleton className="skeleton-row" circle width={150} height={150}  />}
-                    
                 </div>
+
                 <div className="header__right">
+
                     { userData && isFollowingProfile !== null ?
                     
                     <div className="right__name">
-                    <span className="right__username">{ username }</span>
+                        <span className="right__username">{ username }</span>
                     { userData?.userId === user?.uid ?
                         <div className="name__config">
                             <a href={user?.displayName + '/edit'} id="edit-btn" className="config__editBtn">Edit Profile</a>
@@ -479,7 +484,7 @@ export default function Profile({ user }) {
                         </div>
                     :
                         <div className="right__buttons">
-                            <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={toggleFollow}>Follow</button>
+                            <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={() => toggleFollow()}>Follow</button>
                         </div>
                     }
                     
@@ -490,10 +495,10 @@ export default function Profile({ user }) {
                     { userData ? 
                     
                     <div className="header__top-info">
-                    <p id="postCount" className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
-                    <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
-                    <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
-                </div>
+                        <p id="postCount" className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
+                        <p className="top-info__info-item" onClick={() => setFollowersModal(true)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
+                        <p className="top-info__info-item" onClick={() => setFollowingModal(true)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
+                    </div>
 
                 : <Skeleton className="skeleton-row" width={400} height={20} />
                 }

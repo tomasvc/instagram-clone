@@ -9,8 +9,8 @@ import User from './components/user/User';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import PostPage from './components/other/PostPage';
+import SuggestionsPage from './components/dashboard/SuggestionsPage';
 import { auth, db } from './firebase/fbConfig';
-import firebase from 'firebase/app';
 import history from './history';
 import UserContext from './user-context';
 import ProtectedRoute from './protected-route';
@@ -144,7 +144,7 @@ function App() {
           </ProtectedRoute>
 
           <Route path="/suggestions">
-            
+            <SuggestionsPage user={user} following={following} />
           </Route>
 
           <Route path="/p/:postId">
