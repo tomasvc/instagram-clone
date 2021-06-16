@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
-export default function ProtectedRoute({ user, ...rest }) {
+export function ProtectedRoute({ user, children, ...rest }) {
+
     return (
+
       <Route
         {...rest}
         render={({ location }) => {
           if (user) {
-            return React.cloneElement({ user });
+            return React.cloneElement(children, { user });
           }
   
           if (!user) {
@@ -25,7 +27,9 @@ export default function ProtectedRoute({ user, ...rest }) {
           return null;
         }}
       />
+
     );
+
   }
 
 ProtectedRoute.propTypes = {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { auth } from '../../firebase/fbConfig';
+import { auth } from '../../firebase/config';
 import './LoginPage.css';
 
 export default function LoginPage() {
@@ -11,14 +11,15 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const signIn = async (event) => {
+    const login = async (event) => {
         event.preventDefault();
 
         try {
+            
             await auth.signInWithEmailAndPassword(email, password)
             history.push('/')
+
         } catch (error) {
-            console.error(error)
             setError(error)
         }
     
@@ -31,7 +32,7 @@ export default function LoginPage() {
                 <div className="login">
                     <div className="login__logo"></div>
                     <p className="login__error">{error}</p>
-                    <form className="login__form">
+                    <form onSubmit={login} className="login__form">
                         <input
                         className="form__input"
                         placeholder="Email"
@@ -46,7 +47,7 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         />
-                        <button className="form__btn" type="submit" onClick={signIn}>Log In</button>
+                        <button className="form__btn" type="submit" onSubmit={login}>Log In</button>
                     </form>
                 </div>
                 <div className="signup-link">

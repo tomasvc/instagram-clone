@@ -21,7 +21,7 @@ export default function SuggestionsPage({ user, following }) {
     }, [user, following])
 
     return (
-        <div className="wrapper">
+        <div className="suggestionsWrapper">
             <h4 className="wrapper__heading">Suggested</h4>
             <div className="suggestionsPage">
                 { suggestions && suggestions.map(suggestion => {

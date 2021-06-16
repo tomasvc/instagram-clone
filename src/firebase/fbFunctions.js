@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { db } from './fbConfig';
+import { db } from './config';
 
 export async function getSuggestions(user, followingArray, number) {
 

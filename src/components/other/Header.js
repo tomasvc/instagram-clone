@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../../firebase/fbConfig';
+import { auth } from '../../firebase/config';
 import { Avatar } from '@material-ui/core';
 import AddPost from '../dashboard/AddPost';
 import './Header.css';

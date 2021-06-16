@@ -10,37 +10,19 @@ import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import PostPage from './components/other/PostPage';
 import SuggestionsPage from './components/dashboard/SuggestionsPage';
-import { auth, db } from './firebase/fbConfig';
+import { db } from './firebase/config';
 import history from './history';
-import UserContext from './user-context';
-import ProtectedRoute from './protected-route';
+import { ProtectedRoute } from './protected-route';
+import { useAuthListener } from './useAuth';
+import UserContext from './userContext';
 
 function App() {
-  
-  const [user, setUser] = useState(null);
+
+  const { user } = useAuthListener();
+
   const [userData, setUserData] = useState([]);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
-
-  // get auth state of user
-  useEffect(() => {
-
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        // user has logged in
-        setUser(authUser);
-      } else {
-        // user has logged out
-        setUser(null);
-      }
-    })
-
-    return () => {
-      // perform some cleanup actions before you refire the useEffect
-      unsubscribe();
-    }
-    
-  }, [user])
 
 
   // get current user data
@@ -134,7 +116,7 @@ function App() {
 
         <Switch>
 
-          <ProtectedRoute exact path="/">
+          <ProtectedRoute user={user} path="/" exact>
             <div className="app__globalWrapper">
               <Sidebar user={user} following={following} />
               <div className="app__contentWrapper">
@@ -143,29 +125,27 @@ function App() {
             </div>
           </ProtectedRoute>
 
-          <Route path="/suggestions">
-            <SuggestionsPage user={user} following={following} />
-          </Route>
+          <ProtectedRoute user={user} path="/suggestions">
+              <SuggestionsPage user={user} following={following} />
+          </ProtectedRoute>
+          
+          <ProtectedRoute user={user} path="/p/:postId">
+              <PostPage user={user} />
+          </ProtectedRoute>
+          
+          <ProtectedRoute user={user} path="/:username/edit">
+              <UserEdit user={user} />
+          </ProtectedRoute>
+          
 
-          <Route path="/p/:postId">
-            <PostPage user={user} />
-          </Route>
+          <Route path="/signup" component={SignUpPage} />
 
-          <Route path="/:username/edit">
-            <UserEdit user={user} />
-          </Route>
+          <Route path="/login" component={LoginPage} />
 
-          <Route path="/signup">
-            <SignUpPage />
-          </Route>
-
-          <Route exact path="/login">
-            <LoginPage />
-          </Route>
-
-          <Route exact path="/:username">
-            <User user={user} />
-          </Route>
+          <ProtectedRoute user={user} path="/:username">
+              <User user={user} />
+          </ProtectedRoute>
+          
           
         </Switch>
 

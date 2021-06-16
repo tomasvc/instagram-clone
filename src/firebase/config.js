@@ -10,13 +10,13 @@ const firebaseApp = {
     measurementId: "G-ELVW7EG096"
 };
 
-firebase.initializeApp(firebaseApp);
+const Firebase = firebase.initializeApp(firebaseApp);
 
 firebase.firestore().settings({ timestampsInSnapshots: true });
 
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
+const { FieldValue } = firebase.firestore
 
-export { db, auth, storage }
-export default firebase
+export { db, auth, storage, Firebase, FieldValue }

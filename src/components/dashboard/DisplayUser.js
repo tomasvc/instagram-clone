@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../firebase/fbConfig';
+import { db } from '../../firebase/config';
 import Avatar from "@material-ui/core/Avatar";
 import './DisplayUser.css';
 import Skeleton from 'react-loading-skeleton';

@@ -1,8 +1,7 @@
 .post {
     position: relative;
     background-color: white;
-    max-width: 614px;
-    width: 614px;
+    max-width: 100%;
     border: 1px solid lightgrey;
     margin-bottom: 45px;
     margin-left: auto;
@@ -37,7 +36,7 @@ a:hover {
 }
 
 .post__username {
-    font-size: 14px;
+    font-size: 0.9rem;
     font-weight: 500;
     margin-right: 2px;
     color: #262626;
@@ -102,7 +101,7 @@ a:hover {
 
 .post__text {
     font-weight: normal;
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-left: 15px;  
 }
 
@@ -199,7 +198,7 @@ a:hover {
 }
 
 .post__likesCount {
-    font-size: 14px;
+    font-size: 0.9rem;
     font-weight: 500;
     color: #262626;
     margin: 5px 15px 7px 15px;
@@ -232,8 +231,7 @@ a:hover {
 .modal__label {
     position: relative;
     top: -5px;
-    font-size: 18px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     padding-bottom: 10px;
     color: #262626;
@@ -261,7 +259,7 @@ a:hover {
 .modal__user div {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
 .modal__username {
@@ -278,7 +276,7 @@ a:hover {
 }
 
 .post__allCommentsLink {
-    font-size: 14px;
+    font-size: 0.9rem;
     margin: 5px 0 5px 15px;
     color: #8e8e8e;
 }
@@ -297,7 +295,7 @@ a:hover {
 
 .post__comment {
     position: relative;
-    font-size: 14px;
+    font-size: 0.9rem;
     margin-left: 15px;
     margin-right: 15px;
     margin-top: 5px;
@@ -351,7 +349,7 @@ a:hover {
 
 .post__date {
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 0.7rem;
     margin: 10px 15px;
     color: #8e8e8e;
 }
@@ -375,7 +373,6 @@ a:hover {
     }
 
     .post__likesCount {
-        font-size: 15px;
         margin: 5px 15px 10px 15px;
     }
 
@@ -385,9 +382,7 @@ a:hover {
     }
 
     .post__input, .post__button {
-        font-size: 14px;
         padding: 5px;
-        font-size: 13px;
     }
 
     .post__input {
