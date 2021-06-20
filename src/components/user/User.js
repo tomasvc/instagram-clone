@@ -232,8 +232,6 @@ export default function Profile({ user }) {
 
             document.getElementById('follow-btn').addEventListener('click', () => toggleFollow())
             
-        } else {
-            console.log('no')
         }
 
     }, [isFollowingProfile])

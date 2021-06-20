@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Avatar } from '@material-ui/core';
 import { storage, db } from '../../firebase/config';
 import firebase from 'firebase/app';
+import imageCompression from 'browser-image-compression';
 import '../../App.css';
 import './AddPost.css';
 
@@ -55,12 +56,21 @@ export default function AddPost({ openAdd, onClose, user }) {
       document.getElementById('file__input').click()
     }
 
-    const handleUpload = () => {
+    const handleUpload = async () => {
 
       if (image) {
-          
-        const uploadTask = storage.ref(`images/${image.name}`).put(image);
 
+        let uploadTask = null;
+
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1000
+        }
+
+        await imageCompression(image, options).then(compressedFile => {
+          uploadTask = storage.ref(`images/${image.name}`).put(compressedFile);
+        })
+          
         uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -136,7 +146,7 @@ export default function AddPost({ openAdd, onClose, user }) {
                       <div className="imageUpload__caption">
                         
                           <Avatar src={user?.photoURL}></Avatar>
-                          <textarea className="caption__input" type="text" multiline placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)}></textarea>
+                          <textarea className="caption__input" type="text" placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)}></textarea>
                           
                       </div>
 

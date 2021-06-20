@@ -22,7 +22,7 @@ export default function SuggestionsPage({ user, following }) {
 
     return (
         <div className="suggestionsWrapper">
-            <h4 className="wrapper__heading">Suggested</h4>
+            <h4 className="suggestionsWrapper__heading">Suggested</h4>
             <div className="suggestionsPage">
                 { suggestions && suggestions.map(suggestion => {
                     return <div className="suggestionsPage__item" key={suggestions.indexOf(suggestion)}>

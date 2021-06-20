@@ -36,21 +36,16 @@ export default function Header({ user, userData, history }) {
     
 
     if (document.getElementById('searchInput') !== null) {
-      console.log(true)
       if (document.activeElement.id === 'searchInput') {
-        console.log('active')
         document.querySelector('.search-container__icon').style.left = '7px'
       } else {
         document.querySelector('.search-container__icon').style.left = '70px'
       }
-    } else {
-      console.log(false)
     }
       
 
     document.getElementById('searchInput')?.addEventListener('click', () => {
       if (document.activeElement.id === 'searchInput') {
-        console.log('active')
         document.querySelector('.search-container__icon').style.left = '7px'
       } else {
         document.querySelector('.search-container__icon').style.left = '70px'
@@ -71,7 +66,7 @@ export default function Header({ user, userData, history }) {
 
               <a href="/"><img
               className="wrapper__logo"
-              src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+              src="https://firebasestorage.googleapis.com/v0/b/instagram-7664b.appspot.com/o/images%2Fphotogram.png?alt=media&token=d9642e69-da17-49e5-9f69-7890f1083d75"
               alt=""
               onClick={topFunction}
               /></a>
@@ -114,8 +109,8 @@ export default function Header({ user, userData, history }) {
           <div className="header__wrapper">
             <a href="/"><img
             className="wrapper__logo"
-            src="https://instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
-            alt=""
+            src="https://firebasestorage.googleapis.com/v0/b/instagram-7664b.appspot.com/o/images%2Fphotogram.png?alt=media&token=d9642e69-da17-49e5-9f69-7890f1083d75"
+            alt="Photogram"
             onClick={topFunction}
           /></a>
 

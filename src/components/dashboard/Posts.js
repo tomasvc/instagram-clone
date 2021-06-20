@@ -3,6 +3,7 @@ import Post from './Post';
 import './Posts.css';
 
 export default function Posts({ user, posts }) {
+
     return (
         <div className="app__postsWrapper">
           {

@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import { Avatar, Modal } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
-import Hammer from 'hammerjs';
+//import Hammer from 'hammerjs';
 
 function getModalStyle() {
     const top = 50;
@@ -325,22 +325,22 @@ export default function Post({ postId, user }) {
 
             <div className="post__header">
                 
-                    <a href={'/' + post.username}>
+                    <a href={'/' + post?.username}>
                         <Avatar
                             className="post__avatar"
-                            src={post.avatar}
+                            src={post?.avatar}
                             alt=""
                         />
                     </a>
 
-                <a href={'/' + post.username}>
-                    { post.username ? <h4 className="post__username">{post.username}</h4> : <Skeleton className="post__username" width={200} height={12} /> }
+                <a href={'/' + post?.username}>
+                    { post?.username ? <h4 className="post__username">{post?.username}</h4> : <Skeleton className="post__username" width={200} height={12} /> }
                 </a>
 
             </div>
 
                 <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}}>
-                { post.imageUrl ? <img className="post__image" src={post?.imageUrl} alt="" /> : <Skeleton maxWidth={550} height={750} /> }
+                { post?.imageUrl ? <img className="post__image" src={post?.imageUrl} alt="" /> : <Skeleton maxWidth={550} height={750} /> }
                     <div className="post__imageHeart" ></div>
                 </div>
 

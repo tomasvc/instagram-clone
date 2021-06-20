@@ -259,7 +259,7 @@ export default function PostPage({ user }) {
             { window.innerWidth < 600 ? 
 
             <div className="main__small">
-                <div className="main__commentBox">
+                <div className="mainSmall__commentBox">
                     <Avatar className="commentBox__avatar" src={user?.photoURL}></Avatar>
                     <div className="commentBox__container">
                         <input
@@ -281,8 +281,8 @@ export default function PostPage({ user }) {
                     </div>
                 </div>
                 <div className="content__user content__userSmall" id="content__userSmall">
-                    <div className="user__avatar">
-                        <a href={'/' + post?.username}><Avatar className="avatar__avatar" src={post?.avatar}></Avatar></a>
+                    <div className="user__avatarSmall">
+                        <a href={'/' + post?.username}><Avatar className="avatarSmall__avatar" src={post?.avatar}></Avatar></a>
                     </div>
                     
                     <div className="user__caption">

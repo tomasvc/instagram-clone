@@ -8,7 +8,6 @@ export async function getSuggestions(user, followingArray, number) {
                 .where('username', '!=', user?.displayName)
                 .get()
                 
-
                     let alreadyFollowing = []  // contains names of people the user is already following
                     let result = [] // contains query result of people the user is NOT following
                     let users = [] // contains objects of each user extracted from result
@@ -41,8 +40,6 @@ export async function getSuggestions(user, followingArray, number) {
                         }
                     
                     return users
-
-                
-                
+    
 
 }

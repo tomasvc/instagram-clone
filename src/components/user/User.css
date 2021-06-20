@@ -284,6 +284,7 @@ body {
 }
 
 .header__details {
+    width: 100%;
     margin-left: 20px;
     font-size: 14px;
 }
@@ -449,8 +450,8 @@ body {
 
     .header__right {
         margin: 0;
-        margin-left: 30px;
-        max-width: 200px;
+        margin-left: 8%;
+        width: auto;
     }
 
     .right__username {
@@ -468,8 +469,6 @@ body {
     #edit-btn {
         margin-left: 0;
         flex-grow: 1;
-        padding-left: 60px;
-        padding-right: 60px;
     }
 
     .config__settingsBtn {

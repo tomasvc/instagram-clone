@@ -4,6 +4,7 @@ import { Avatar, Modal } from "@material-ui/core";
 import { storage, db } from '../../firebase/config';
 import './UserEdit.css';
 import Skeleton from 'react-loading-skeleton';
+import imageCompression from 'browser-image-compression';
 
 function getModalStyle() {
     const top = 50;
@@ -146,7 +147,19 @@ export default function UserEdit({ user }) {
         }
         
         if (avatarFile) {
-            const uploadAvatar = storage.ref(`images/${avatarFile.name}`).put(avatarFile);
+
+            async function uploadCompressedAvatarImage() {
+
+                let uploadAvatar = null;
+
+                const options = {
+                    maxSizeMB: 0.5,
+                    maxWidthOrHeight: 1000
+                }
+
+                await imageCompression(avatarFile, options).then(compressedFile => {
+                    uploadAvatar = storage.ref(`images/${avatarFile.name}`).put(compressedFile);
+                })
     
                 uploadAvatar.on("state_changed", () => {
                     storage
@@ -177,9 +190,16 @@ export default function UserEdit({ user }) {
                     
                 })
 
+            }
+            
+            uploadCompressedAvatarImage()
+                
         } else {
             setAvatarToNull()
         }
+
+        
+            
     
     }, [user, avatarFile])
 

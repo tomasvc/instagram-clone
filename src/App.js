@@ -53,7 +53,7 @@ function App() {
 
               await db
                   .collection('posts')
-                  .limit(10)
+                  .limit(20)
                   .get()
                   .then(querySnapshot => {
                     const newPosts = []
