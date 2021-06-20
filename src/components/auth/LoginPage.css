@@ -44,9 +44,11 @@
 }
 
 .login__error {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin: 0 40px;
     margin-top: 10px;
+    text-align: center;
+    color: rgb(219, 19, 59);
 }
 
 .form__input {
@@ -118,7 +120,7 @@
 }
 
 footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100vw;
     display: flex;

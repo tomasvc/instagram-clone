@@ -17,30 +17,50 @@ export default function SignUpPage() {
     const signUp = async (event) => {
         event.preventDefault();
 
+        setError('')
+
         try {
-          await auth
-            .createUserWithEmailAndPassword(email, password)
-            .then(authUser => {
-              db.collection('users').doc(authUser.user.uid).set({
-                userId: authUser.user.uid,
-                username,
-                name,
-                email,
-                password,
-                avatarUrl: '',
-                followers: 0,
-                following: 0,
-                dateCreated: firebase.firestore.FieldValue.serverTimestamp()
-              })
-              authUser.user.updateProfile({
-                displayName: username
-              })
+
+          await db.collection('users').where('username', '==', username).get().then(user => {
+
+            if (user.docs.length !== 0) {
+              setError('An account with this username already exists')
+            } else {
+
+              const createUser = async () => {
+                await auth
+                  .createUserWithEmailAndPassword(email, password)
+                  .then(async (authUser) => {
+                    try {
+                      db.collection('users').doc(authUser.user.uid).set({
+                        userId: authUser.user.uid,
+                        username,
+                        name,
+                        email,
+                        password,
+                        avatarUrl: '',
+                        followers: 0,
+                        following: 0,
+                        dateCreated: firebase.firestore.FieldValue.serverTimestamp()
+                      })
+                        authUser.user.updateProfile({
+                          displayName: username
+                        })
+                        history.push('/')
+                    } catch (error) {
+                      setError(error.message)
+                    }
+                  })
+              }
+
+              createUser()
+                
+              }
             })
-          history.push('/')
+          
         } catch (error) {
-          console.error(error)
-          setError(error)
-        }
+          setError(error.message)
+        } 
         
     }
 

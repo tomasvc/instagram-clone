@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Modal } from "@material-ui/core";
-import { storage, db } from '../../firebase/config';
+import { storage, db, auth } from '../../firebase/config';
 import './UserEdit.css';
 import Skeleton from 'react-loading-skeleton';
 import imageCompression from 'browser-image-compression';
@@ -48,29 +48,48 @@ export default function UserEdit({ user }) {
     const [avatarFile, setAvatarFile] = useState('')
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
-        if (username === '') {
-            setError("Please enter a valid username")
-        } else {
-            e.preventDefault();
-            db.collection('users').doc(user.uid).update({
-                username,
-                name,
-                website,
-                bio
-            })
-            .then((updatePosts(username)))
-            .then(
-                user.updateProfile({
-                    displayName: username
-                })
-            )
+        e.preventDefault();
 
-            setError(null)
-        }
+        await db.collection('users').where('username', '==', username).get().then(user => {
 
+            if (user.docs.length !== 0) {
+
+                setError('An account with this username already exists')
+
+            } else if (username === '') {
+
+                setError("Please enter a valid username")
+
+            } else {
+
+                (async () => {
+
+                    await db.collection('users').doc(user.uid).update({
+                        username,
+                        name,
+                        website,
+                        bio
+                    })
+                    .then((updatePosts(username)))
+                    .then(
+                        auth.currentUser.updateProfile({
+                            displayName: username
+                        }).then(() => {
+                            setError('Profile updated successfully')
+                        }).catch((err) => {
+                            setError('There was a problem updating your profile. ' + err)
+                        })
+                    )
         
+                    setError(null)
+
+                })()
+
+            }
+
+        })
 
     }
 
@@ -268,7 +287,7 @@ export default function UserEdit({ user }) {
                     <div className="right__top">
                         <div><Avatar className="top__avatar" src={user?.photoURL} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
-                            { user ? <p className="right__username">{userData?.username}</p> : <Skeleton width={150} height={30} /> }
+                            { user ? <p className="right__username">{user.displayName}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>

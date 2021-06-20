@@ -89,12 +89,17 @@ function App() {
   useEffect(() => {
 
     const getFollowingUsers = async () => {
-      await db.collection('users').doc(user?.uid).collection('following').get().then(querySnapshot => {
-        const users = querySnapshot.docs.map(user => {
-          return user.data().username
-        })
+      await db
+              .collection('users')
+              .doc(user?.uid)
+              .collection('following')
+              .get()
+              .then(querySnapshot => {
+                const users = querySnapshot.docs.map(user => {
+                  return user.data().username
+                })
   
-        setFollowing(users)
+                setFollowing(users)
       })
       
     }
@@ -112,29 +117,41 @@ function App() {
 
       <Router history={history}>
 
-        { user ? <Header user={user} userData={userData} history={history} /> : '' }
+        
 
         <Switch>
 
           <ProtectedRoute user={user} path="/" exact>
-            <div className="app__globalWrapper">
-              <Sidebar user={user} following={following} />
-              <div className="app__contentWrapper">
-                <Posts user={user} posts={posts} />
-              </div> 
+            <div>
+              <Header user={user} userData={userData} history={history} />
+              <div className="app__globalWrapper">
+                <Sidebar user={user} following={following} />
+                <div className="app__contentWrapper">
+                  <Posts user={user} posts={posts} />
+                </div> 
+              </div>
             </div>
           </ProtectedRoute>
 
           <ProtectedRoute user={user} path="/suggestions">
+            <div>
+              <Header user={user} userData={userData} history={history} />
               <SuggestionsPage user={user} following={following} />
+            </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/p/:postId">
+            <div>
+              <Header user={user} userData={userData} history={history} />
               <PostPage user={user} />
+            </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/:username/edit">
+            <div>
+              <Header user={user} userData={userData} history={history} />
               <UserEdit user={user} />
+            </div>
           </ProtectedRoute>
           
 
@@ -143,7 +160,10 @@ function App() {
           <Route path="/login" component={LoginPage} />
 
           <ProtectedRoute user={user} path="/:username">
+            <div>
+              <Header user={user} userData={userData} history={history} />
               <User user={user} />
+            </div>
           </ProtectedRoute>
           
           

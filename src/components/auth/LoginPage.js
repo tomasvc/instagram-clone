@@ -15,12 +15,18 @@ export default function LoginPage() {
         event.preventDefault();
 
         try {
-            
+
             await auth.signInWithEmailAndPassword(email, password)
-            history.push('/')
+                .then(authUser => {
+                    if (authUser) {
+                        history.push('/')
+                    } else {
+                        history.push('/login')
+                    }
+                })
 
         } catch (error) {
-            setError(error)
+            setError(error.message)
         }
     
     }
@@ -37,6 +43,7 @@ export default function LoginPage() {
                         className="form__input"
                         placeholder="Email"
                         type="text"
+                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         />
@@ -44,6 +51,7 @@ export default function LoginPage() {
                         className="form__input"
                         placeholder="Password"
                         type="password"
+                        required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         />
