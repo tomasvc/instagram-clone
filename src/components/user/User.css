@@ -335,58 +335,57 @@ body {
     border-top: 1px solid #262626; 
 }
 
-.user__posts {
+.user__gallery {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 28px;
+    justify-content: space-between;
     max-width: 935px;
     margin: auto;
-    padding: 0 20px;
     padding-bottom: 50px;
 }
 
-.user__posts div {
+.gallery__galleryItem {
     position: relative;
-    max-height: 293px;
     max-width: 293px;
-    aspect-ratio: 1;
-    -webkit-aspect-ratio: 1;
-}
-
-.user__posts div img {
-    width: 100%;
-    height: 100%;
+    max-height: 293px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
 }
 
-#post__shade {
+.galleryItem__image {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+#galleryItem__shade {
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 98.7%;
     margin: 0;
     top: 0;
-    aspect-ratio: 0;
-    -webkit-aspect-ratio: 0;
     opacity: 0;
+    z-index: 1;
 }
 
-#post__shade:hover {
+#galleryItem__shade:hover {
     background-color: #0000003f;
     cursor: pointer;
     opacity: 1;
 }
 
-#shade__info {
+#shade__itemInfo {
     display: flex;
     max-height: 293px;
     align-items: center;
 }
 
-#info__likes,
-#info__comments {
+#itemInfo__likes,
+#itemInfo__comments {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -396,7 +395,7 @@ body {
     z-index: 2
 }
 
-#info__like-icon {
+#likes__likeIcon {
     background-image: url('../../img/images-sprite-2.png');
     background-position: -484px -375px;
     background-size: 544px 520px;
@@ -404,7 +403,7 @@ body {
     height: 16px;
 }
 
-#info__comment-icon {
+#comments__commentIcon {
     background-image: url('../../img/images-sprite-2.png');
     background-position: -500px -107px;
     background-size: 544px 520px;
@@ -412,12 +411,15 @@ body {
     height: 16px;
 }
 
-#info__count {
+#comments__count,
+#likes__count {
     padding-left: 10px;
     height: 20px;
 }
 
-@media screen and (max-width: 600px) {
+@media only screen 
+    and (max-width: 600px)
+    and (-webkit-min-device-pixel-ratio: 2) {
 
     body {
         background-color: white !important;
@@ -518,21 +520,18 @@ body {
         margin: 0;
     }
 
-    .user__posts {
+    .user__gallery {
+        grid-gap: 1px;
         width: 100vw;
-        grid-gap: 2px 2px;
         padding: 0;
     }
 
-    .user__posts div {
-        max-width: auto;
-        max-height: auto;
-        aspect-ratio: 1;
-        -webkit-aspect-ratio: 1;
+    .gallery__galleryItem {
+        margin-bottom: -4px ;
     }
 
-    #post__shade:hover {
-        opacity: 0;
+    #galleryItem__shade {
+        display: none;
     }
 }
 

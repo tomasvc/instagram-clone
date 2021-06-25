@@ -10,7 +10,7 @@
     object-fit: contain;
     height: 53px;
     border-bottom: 1px solid lightgrey;
-    z-index: 1;
+    z-index: 10;
   }
   
   .header__wrapper {

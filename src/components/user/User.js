@@ -102,25 +102,27 @@ export default function Profile({ user }) {
             setPosts(posts);
 
             // render posts
-            if (document.querySelector('.user__posts') != null) {
-                if(document.querySelector('.user__posts').innerHTML === '') {
+            if (document.querySelector('.user__gallery') != null) {
+                if(document.querySelector('.user__gallery').innerHTML === '') {
                     for(let i = 0; i < posts.length; i++) {
                         document
-                        .querySelector('.user__posts')
-                        .innerHTML += `<a href=${'/p/' + posts[i].id}><div className="posts__post">
-                                            <div id="post__shade">
-                                                <div id="shade__info">
-                                                    <div id="info__likes">
-                                                        <span id="info__like-icon"></span>
-                                                        <span id="info__count">${posts[i].likes}</span>
-                                                    </div>
-                                                    <div id="info__comments">
-                                                        <span id="info__comment-icon"></span>
-                                                        <span id="info__count">${posts[i].comments}</span>
+                        .querySelector('.user__gallery')
+                        .innerHTML += `<a href=${'/p/' + posts[i].id}><div class="gallery__galleryItem">
+
+                                                <div id="galleryItem__shade">
+                                                    <div id="shade__itemInfo">
+                                                        <div id="itemInfo__likes">
+                                                            <span id="likes__likeIcon"></span>
+                                                            <span id="likes__count">${posts[i].likes}</span>
+                                                        </div>
+                                                        <div id="itemInfo__comments">
+                                                            <span id="comments__commentIcon"></span>
+                                                            <span id="comments__count">${posts[i].comments}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <img className="post__image" src=${posts[i].imageUrl} />
+                                                <img class="galleryItem__image" src=${posts[i].imageUrl} />
+                                            
                                         </div></a>`
                     }
                 }
@@ -518,7 +520,7 @@ export default function Profile({ user }) {
                 </nav>
             }
             
-            <div className="user__posts">
+            <div className="user__gallery">
             </div>
         </div>
     )
