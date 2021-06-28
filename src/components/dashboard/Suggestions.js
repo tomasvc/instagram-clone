@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Avatar } from "@material-ui/core";
 import { getSuggestions } from '../../firebase/fbFunctions';
+import UserContext from '../../userContext';
 import './Suggestions.css';
+import { toggleFollow } from '../../firebase/fbFunctions';
 
-export default function Suggestions({ user, following }) {
+export default function Suggestions({ following }) {
+
+    const { user } = useContext(UserContext)
 
     const [suggestions, setSuggestions] = useState([])
 
@@ -29,8 +33,21 @@ export default function Suggestions({ user, following }) {
                 </div>
             <div className="suggestions__list">
             
-                {suggestions.map(user => {
-                    return <div className="list__user" key={suggestions.indexOf(user)}><a href={'/' + user.username}><Avatar className="user__avatar" src={user.avatarUrl} /></a><div className="user__info"><a href={'/' + user.username}><p className="info__username">{user.username}</p></a><p className="info__suggestion">New to Instagram</p></div></div>
+                {suggestions.map(suggestion => {
+                    return <div className="list__user" key={suggestions.indexOf(suggestion)}>
+                                <div className="user__left">
+                                    <a href={'/' + suggestion.username}>
+                                        <Avatar className="user__avatar" src={suggestion.avatarUrl} />
+                                    </a>
+                                    <div className="user__info">
+                                        <a href={'/' + suggestion.username}>
+                                            <p className="info__username">{suggestion.username}</p>
+                                        </a>
+                                        <p className="info__suggestion">New to Photogram</p>
+                                    </div>
+                                </div>
+                                <button className="user__followBtn" onClick={() => toggleFollow(user, suggestion)}>Follow</button>
+                            </div>
                 })}
             
             </div>

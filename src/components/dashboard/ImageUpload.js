@@ -1,15 +1,17 @@
 import { Button } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { storage, db } from '../../firebase/fbConfig';
 import firebase from 'firebase/app';
 import { Avatar } from "@material-ui/core";
+import UserContext from '../../userContext';
 import '../../styles/App.css';
 import './ImageUpload.css';
 
-export default function ImageUpload({ user, username, onClose }) {
+export default function ImageUpload({ username, onClose }) {
+
+    const { user } = useContext(UserContext)
 
     const [caption, setCaption] = useState('')
-    const [progress, setProgress] = useState(0)
     const [image, setImage] = useState(null)
 
     const handleChange = (e) => {
@@ -30,16 +32,6 @@ export default function ImageUpload({ user, username, onClose }) {
 
         uploadTask.on(
             "state_changed",
-            (snapshot) => {
-                // progress function...
-                const progress = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                );
-                setProgress(progress)
-            },
-            (error) => {
-                alert(error.message);
-            },
             () => {
                 storage
                     .ref("images")
@@ -58,7 +50,6 @@ export default function ImageUpload({ user, username, onClose }) {
 
                     onClose()
 
-                    setProgress(0)
                     setCaption('')
                     setImage(null)
             }

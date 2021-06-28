@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { db } from '../../firebase/config';
 import Avatar from "@material-ui/core/Avatar";
 import './DisplayUser.css';
 import Skeleton from 'react-loading-skeleton';
+import UserContext from '../../userContext';
 
-export default function DisplayUser({ user }) {
+export default function DisplayUser() {
+
+    const { user } = useContext(UserContext)
 
     const [userData, setUserData] = useState(null);
 

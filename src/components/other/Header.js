@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { auth } from '../../firebase/config';
 import { Avatar } from '@material-ui/core';
 import AddPost from '../dashboard/AddPost';
 import './Header.css';
 import Skeleton from 'react-loading-skeleton';
+import UserContext from '../../userContext';
 
-export default function Header({ user, userData, history }) {
+export default function Header({ history }) {
+
+    const { user } = useContext(UserContext)
 
     const [openAdd, setOpenAdd] = useState(false);
     
@@ -95,7 +98,7 @@ export default function Header({ user, userData, history }) {
                 <div className="column__arrow"></div>
                   {
                     ( <div className="column__dropdown">
-                        <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                        <a href={'/' + user?.displayName}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
                         <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                         <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                       </div> )
@@ -148,7 +151,7 @@ export default function Header({ user, userData, history }) {
             <div className="column__arrow"></div>
               {  
                 ( <div className="column__dropdown">
-                    <a href={'/' + userData?.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                    <a href={'/' + user?.displayName}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
                     <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                     <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                   </div> )

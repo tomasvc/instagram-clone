@@ -365,9 +365,36 @@
         background-color: white;
     }
 
+    .mainSmall__commentBox {
+        background-color: rgb(241, 241, 241);
+        padding: 7px 0 7px 7px;
+        align-items: center;
+        border-bottom: 1px solid lightgrey;
+    }
+
     .content__user {
         border-bottom: 1px solid lightgrey;
     }
 
+    #content__userSmall {
+        top: 0;
+    }
+
+    .user__avatarSmall {
+        flex-grow: 0 !important;
+    }
+
+    .avatarSmall__avatar {
+        min-width: 32px !important;
+        min-height: 32px !important;
+    }
+
+    .user__caption {
+        margin-left: 10px;
+    }
+
+    #comments__mobile {
+        top: 0;
+    }
 
 }

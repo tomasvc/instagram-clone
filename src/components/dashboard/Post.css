@@ -244,6 +244,7 @@ a:hover {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     width: 300px;
     text-align: left;
     margin-bottom: 10px;
@@ -258,7 +259,8 @@ a:hover {
 
 .modal__user div {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     font-size: 0.9rem;
 }
 

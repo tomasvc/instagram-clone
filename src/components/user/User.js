@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/config';
 import firebase from 'firebase/app';
-import history from '../../history';
 import './User.css';
 import { makeStyles } from '@material-ui/core/styles';
 import Skeleton from 'react-loading-skeleton';
-import PostPage from '../other/PostPage';
+import UserContext from '../../userContext';
+import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
 
 function getModalStyle() {
     const top = 50;
@@ -37,10 +37,12 @@ paper: {
 }
 }));
 
-export default function Profile({ user }) {
+export default function Profile() {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
+
+    const { user } = useContext(UserContext)
     
     const [userData, setUserData] = useState(null);
     const [posts, setPosts] = useState(null);
@@ -345,19 +347,22 @@ export default function Profile({ user }) {
                             <div className="modal__container">
                                 {followers.map(user => {
                                         return <div className="modal__user" key={user?.username}>
-                                                    <a href={'/' + user?.username}>
-                                                        <Avatar
-                                                            className="modal__avatar"
-                                                            src={user?.avatar}
-                                                            alt=""
-                                                        />
-                                                    </a>
-                                                    <div>
+                                                    <div className="user__left">
                                                         <a href={'/' + user?.username}>
-                                                            <p className="modal__username">{user?.username}</p>
+                                                            <Avatar
+                                                                className="modal__avatar"
+                                                                src={user?.avatar}
+                                                                alt=""
+                                                            />
                                                         </a>
-                                                        <p className="modal__name">{user?.name}</p>
+                                                        <div>
+                                                            <a href={'/' + user?.username}>
+                                                                <p className="modal__username">{user?.username}</p>
+                                                            </a>
+                                                            <p className="modal__name">{user?.name}</p>
+                                                        </div>
                                                     </div>
+                                                    <button className="modal__unfollowBtn">Remove</button>
                                                 </div>
                                     })}
                             </div>
@@ -379,19 +384,22 @@ export default function Profile({ user }) {
                             <div className="modal__container">
                                 {following.map(user => {
                                         return <div className="modal__user" key={user?.username}>
-                                                    <a href={'/' + user?.username}>
-                                                        <Avatar
-                                                            className="modal__avatar"
-                                                            src={user?.avatar}
-                                                            alt=""
-                                                        />
-                                                    </a>
-                                                    <div>
+                                                    <div className="user__left">
                                                         <a href={'/' + user?.username}>
-                                                            <p className="modal__username">{user?.username}</p>
+                                                            <Avatar
+                                                                className="modal__avatar"
+                                                                src={user?.avatar}
+                                                                alt=""
+                                                            />
                                                         </a>
-                                                        <p className="modal__name">{user?.name}</p>
+                                                        <div>
+                                                            <a href={'/' + user?.username}>
+                                                                <p className="modal__username">{user?.username}</p>
+                                                            </a>
+                                                            <p className="modal__name">{user?.name}</p>
+                                                        </div>
                                                     </div>
+                                                    <button className="modal__followBtn">Follow</button>
                                                 </div>
                                     })}
                             </div>

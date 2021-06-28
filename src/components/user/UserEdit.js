@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Modal } from "@material-ui/core";
 import { storage, db, auth } from '../../firebase/config';
 import './UserEdit.css';
 import Skeleton from 'react-loading-skeleton';
 import imageCompression from 'browser-image-compression';
+import UserContext from '../../userContext';
 
 function getModalStyle() {
     const top = 50;
@@ -31,10 +32,12 @@ function getModalStyle() {
     }
   }));
 
-export default function UserEdit({ user }) {
+export default function UserEdit() {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
+
+    const { user } = useContext(UserContext)
 
     const [userData, setUserData] = useState([])
 
@@ -66,7 +69,7 @@ export default function UserEdit({ user }) {
 
                 (async () => {
 
-                    await db.collection('users').doc(user.uid).update({
+                    await db.collection('users').doc(user?.uid).update({
                         username,
                         name,
                         website,
@@ -82,7 +85,8 @@ export default function UserEdit({ user }) {
                             setError('There was a problem updating your profile. ' + err)
                         })
                     )
-        
+                    
+                    console.log("Profile updated successfully")
                     setError(null)
 
                 })()
@@ -93,9 +97,9 @@ export default function UserEdit({ user }) {
 
     }
 
-    const updatePosts = username => {
+    const updatePosts = async (username) => {
 
-        db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
+        await db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
 
             let batch = db.batch()
 
@@ -108,7 +112,7 @@ export default function UserEdit({ user }) {
             
         )
 
-        db
+        await db
             .collection('posts')
             .doc()
             .collection('likes')

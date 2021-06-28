@@ -24,6 +24,8 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
 
+  const [postsAreLoading, setPostsAreLoading] = useState(true);
+
 
   // get current user data
   useEffect(() => {
@@ -51,6 +53,8 @@ function App() {
 
       if (user && following) {
 
+              setPostsAreLoading(true)
+
               await db
                   .collection('posts')
                   .limit(20)
@@ -72,6 +76,7 @@ function App() {
                       })
                     
                     setPosts(newPosts)
+                    setPostsAreLoading(false)
                     
                   })
                 }
@@ -123,11 +128,11 @@ function App() {
 
           <ProtectedRoute user={user} path="/" exact>
             <div>
-              <Header user={user} userData={userData} history={history} />
+              <Header history={history} />
               <div className="app__globalWrapper">
-                <Sidebar user={user} following={following} />
+                <Sidebar following={following} />
                 <div className="app__contentWrapper">
-                  <Posts user={user} posts={posts} />
+                  <Posts posts={posts} loading={postsAreLoading} />
                 </div> 
               </div>
             </div>
@@ -135,22 +140,22 @@ function App() {
 
           <ProtectedRoute user={user} path="/suggestions">
             <div>
-              <Header user={user} userData={userData} history={history} />
-              <SuggestionsPage user={user} following={following} />
+              <Header history={history} />
+              <SuggestionsPage following={following} />
             </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/p/:postId">
             <div>
-              <Header user={user} userData={userData} history={history} />
-              <PostPage user={user} />
+              <Header history={history} />
+              <PostPage />
             </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/:username/edit">
             <div>
-              <Header user={user} userData={userData} history={history} />
-              <UserEdit user={user} />
+              <Header history={history} />
+              <UserEdit />
             </div>
           </ProtectedRoute>
           
@@ -161,8 +166,8 @@ function App() {
 
           <ProtectedRoute user={user} path="/:username">
             <div>
-              <Header user={user} userData={userData} history={history} />
-              <User user={user} />
+              <Header history={history} />
+              <User />
             </div>
           </ProtectedRoute>
           

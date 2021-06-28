@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Post.css';
 import { db } from '../../firebase/config';
 import firebase from 'firebase/app';
 import { Avatar, Modal } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import UserContext from '../../userContext';
 import Skeleton from 'react-loading-skeleton';
-//import Hammer from 'hammerjs';
+import Hammer from 'hammerjs';
 
 function getModalStyle() {
     const top = 50;
@@ -32,10 +33,12 @@ paper: {
 }
 }));
 
-export default function Post({ postId, user }) {
+export default function Post({ postId }) {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
+
+    const { user } = useContext(UserContext)
 
     const [post, setPost] = useState([]);
 
@@ -268,21 +271,26 @@ export default function Post({ postId, user }) {
         
     }
 
-    // let image = document.querySelector('.post__imageContainer');
-    // let manager = new Hammer.Manager(image)
-    // let DoubleTap = new Hammer.Tap({
-    //     event: 'doubletap',
-    //     taps: 2
-    // });
+    if (document.querySelector('.post__imageContainer')) {
+        let image = document.querySelector('.post__imageContainer');
+        let manager = new Hammer.Manager(image)
+        let DoubleTap = new Hammer.Tap({
+            event: 'doubletap',
+            taps: 2
+        });
 
-    // manager.add(DoubleTap);
+        manager.add(DoubleTap);
 
-    // if (post) {
-    //     manager.on('doubletap', (e) => {
-    //         e.target.showHeart();
-    //         e.target.likePost();
-    //     });
-    // }
+        if (post) {
+            manager.on('doubletap', (e) => {
+                e.target.className.showHeart();
+                e.target.className.likePost();
+            });
+        }
+    }
+    
+
+    
 
     
     return (
@@ -300,19 +308,22 @@ export default function Post({ postId, user }) {
 
                         {likes.map(like => {
                             return <div className="modal__user" key={like?.username}>
-                                        <a href={'/' + like?.username}>
-                                            <Avatar
-                                                className="modal__avatar"
-                                                src={like?.avatar}
-                                                alt=""
-                                            />
-                                        </a>
-                                        <div>
+                                        <div className="user__left">
                                             <a href={'/' + like?.username}>
-                                                <p className="modal__username">{like?.username}</p>
+                                                <Avatar
+                                                    className="modal__avatar"
+                                                    src={like?.avatar}
+                                                    alt=""
+                                                />
                                             </a>
-                                            <p className="modal__name">{like?.name}</p>
+                                            <div>
+                                                <a href={'/' + like?.username}>
+                                                    <p className="modal__username">{like?.username}</p>
+                                                </a>
+                                                <p className="modal__name">{like?.name}</p>
+                                            </div>
                                         </div>
+                                        <button className="modal__followBtn">Follow</button>
                                     </div>
                         })}
 

@@ -12,6 +12,7 @@ export default function LoginPage() {
     const [error, setError] = useState('');
 
     const login = async (event) => {
+
         event.preventDefault();
 
         try {
@@ -20,8 +21,6 @@ export default function LoginPage() {
                 .then(authUser => {
                     if (authUser) {
                         history.push('/')
-                    } else {
-                        history.push('/login')
                     }
                 })
 

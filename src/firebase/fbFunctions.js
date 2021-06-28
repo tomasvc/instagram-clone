@@ -1,5 +1,5 @@
-import firebase from 'firebase';
 import { db } from './config';
+import firebase from 'firebase';
 
 export async function getSuggestions(user, followingArray, number) {
 
@@ -41,5 +41,67 @@ export async function getSuggestions(user, followingArray, number) {
                     
                     return users
     
+
+}
+
+export const toggleFollow = async (currentUser, selectedUser) => {
+
+    await db
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('following')
+            .doc(selectedUser.userId)
+            .set({ 
+                id: selectedUser.userId,
+                username: selectedUser.username,
+                avatar: selectedUser.avatarUrl
+            })
+
+    await db
+            .collection('users')
+            .doc(selectedUser.userId)
+            .collection('followers')
+            .doc(currentUser.uid)
+            .set({
+                id: currentUser.uid,
+                username: currentUser.displayName,
+                avatar: currentUser.photoURL
+            })   
+
+    await db.collection("users").doc(currentUser.uid).update({
+        following: firebase.firestore.FieldValue.increment(1)
+    })
+
+    await db.collection("users").doc(selectedUser.userId).update({
+        followers: firebase.firestore.FieldValue.increment(1)
+    }) 
+    
+}
+
+// gets triggered when the user unfollows another user
+// same as above but deletes the data in both collections
+export const toggleUnfollow = async (currentUser, selectedUser) => {
+
+await db
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('following')
+        .doc(selectedUser.userId)
+        .delete();
+
+await db
+        .collection('users')
+        .doc(selectedUser.userId)
+        .collection('followers')
+        .doc(currentUser.uid)
+        .delete();
+
+await db.collection("users").doc(currentUser.uid).update({
+    following: firebase.firestore.FieldValue.increment(-1)
+})
+
+await db.collection("users").doc(selectedUser.userId).update({
+    followers: firebase.firestore.FieldValue.increment(-1)
+})
 
 }

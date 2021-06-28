@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal, Avatar } from '@material-ui/core';
 import { storage, db } from '../../firebase/config';
 import firebase from 'firebase/app';
 import imageCompression from 'browser-image-compression';
+import UserContext from '../../userContext';
 import '../../App.css';
 import './AddPost.css';
 
@@ -33,13 +34,14 @@ function getModalStyle() {
     }
   }));
 
-export default function AddPost({ openAdd, onClose, user }) {
+export default function AddPost({ openAdd, onClose }) {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
 
+    const { user } = useContext(UserContext)
+
     const [caption, setCaption] = useState('')
-    const [progress, setProgress] = useState(0)
     const [image, setImage] = useState(null)
     const [imageURL, setImageURL] = useState(null)
     const [error, setError] = useState('')
@@ -73,16 +75,6 @@ export default function AddPost({ openAdd, onClose, user }) {
           
         uploadTask.on(
             "state_changed",
-            (snapshot) => {
-                // progress function...
-                const progress = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                );
-                setProgress(progress)
-            },
-            (error) => {
-                alert(error.message);
-            },
             async () => {
                 await storage
                     .ref("images")
@@ -90,7 +82,6 @@ export default function AddPost({ openAdd, onClose, user }) {
                     .getDownloadURL()
                     .then(url => {
                         setImage(url)
-                        //document.getElementById('imageUpload__btn').style.background = 'url(' + url + ')'
 
                         const ref = db.collection('posts').doc();
 
@@ -105,10 +96,12 @@ export default function AddPost({ openAdd, onClose, user }) {
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         })
                     })
+                    .catch (error => {
+                      setError(error.message)
+                    })
 
                     onClose()
 
-                    setProgress(0)
                     setCaption('')
                     setImage(null)
             }
@@ -130,7 +123,6 @@ export default function AddPost({ openAdd, onClose, user }) {
                   <h4 className="app__modalLabel">Upload Image</h4>
 
                   <div className="imageUpload">
-                      {/* <LinearProgress className="imageUpload__progressBar" variant="determinate" value={progress} max="100" /> */}
                       
                           <div id="imageUpload__btn" onClick={handleUploadClick}>
                             { imageURL ? <img className="btn__image" src={imageURL} alt='' /> : 'Select Image'}
@@ -144,6 +136,8 @@ export default function AddPost({ openAdd, onClose, user }) {
                               />
                     
                       <div className="imageUpload__caption">
+
+                          { error && error }
                         
                           <Avatar src={user?.photoURL}></Avatar>
                           <textarea className="caption__input" type="text" placeholder="Enter a caption..." value={caption} onChange={(e) => setCaption(e.target.value)}></textarea>

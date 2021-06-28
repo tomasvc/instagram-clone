@@ -39,11 +39,17 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     width: 300px;
     text-align: left;
     margin-bottom: 10px;
     margin-top: 5px;
     position: relative;
+}
+
+.user__left {
+    display: flex;
+    flex-direction: row;
 }
 
 .unfollowModal__header {
@@ -75,12 +81,32 @@ body {
     font-weight: 400;
 }
 
-.modal__btn:hover {
+.modal__btn:hover,
+.modal__followBtn:hover,
+.modal__unfollowBtn:hover {
     cursor: pointer;
 }
 
 .modal__btn:active {
     background-color: rgb(233, 233, 233);
+}
+
+.modal__followBtn {
+    background-color: #0095F6;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 10px;
+}
+
+.modal__unfollowBtn {
+    background-color: white;
+    color: #262626;
+    border: 1px solid #dbdbdb;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 7px 10px;
 }
 
 .unfollowModal__unfollow-btn {

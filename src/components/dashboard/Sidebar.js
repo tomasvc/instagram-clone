@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DisplayUser from './DisplayUser';
 import Suggestions from './Suggestions';
+import UserContext from '../../userContext';
 import './Sidebar.css';
 
-export default function Sidebar({ user, following }) {
+export default function Sidebar({ following }) {
+
+  const { user } = useContext(UserContext)
+
     return (
         <div className="app__sidebar">
 

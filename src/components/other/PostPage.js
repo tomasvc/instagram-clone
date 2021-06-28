@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
 import { db } from '../../firebase/config';
 import firebase from 'firebase/app';
 import { makeStyles } from '@material-ui/core/styles';
+import UserContext from '../../userContext';
 import './PostPage.css';
 
 function getModalStyle() {
@@ -31,10 +32,12 @@ paper: {
 }
 }));
 
-export default function PostPage({ user }) {
+export default function PostPage() {
 
     const classes = useStyles();
     const [modalStyle] = useState(getModalStyle);
+
+    const { user } = useContext(UserContext)
 
     const { postId } = useParams();
     const [post, setPost] = useState(null);
@@ -236,18 +239,20 @@ export default function PostPage({ user }) {
 
                         {likes.map(like => {
                             return <div className="modal__user">
-                                        <a href={'/' + like?.username}>
-                                            <Avatar
-                                                className="modal__avatar"
-                                                src={like?.avatar}
-                                                alt=""
-                                            />
-                                        </a>
-                                        <div>
+                                        <div classname="user__left">
                                             <a href={'/' + like?.username}>
-                                                <p className="modal__username">{like?.username}</p>
+                                                <Avatar
+                                                    className="modal__avatar"
+                                                    src={like?.avatar}
+                                                    alt=""
+                                                />
                                             </a>
-                                            <p className="modal__name">{like?.name}</p>
+                                            <div>
+                                                <a href={'/' + like?.username}>
+                                                    <p className="modal__username">{like?.username}</p>
+                                                </a>
+                                                <p className="modal__name">{like?.name}</p>
+                                            </div>
                                         </div>
                                     </div>
                         })}
