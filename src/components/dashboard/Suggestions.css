@@ -61,7 +61,16 @@
     font-size: 0.75rem;
 }
 
-.user__followBtn:hover {
+.user__unfollowBtn {
+    background: none;
+    border: none;
+    color: #8e8e8e;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.user__followBtn:hover,
+.user__unfollowBtn:hover {
     cursor: pointer;
 }
 

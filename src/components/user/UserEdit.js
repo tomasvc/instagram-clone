@@ -69,13 +69,14 @@ export default function UserEdit() {
 
                 (async () => {
 
-                    await db.collection('users').doc(user?.uid).update({
+                    await db.collection('users').doc(user.uid).update({
                         username,
                         name,
                         website,
                         bio
                     })
-                    .then((updatePosts(username)))
+                    .catch(error => console.log(error))
+                    .then(updatePosts(username))
                     .then(
                         auth.currentUser.updateProfile({
                             displayName: username
@@ -99,16 +100,21 @@ export default function UserEdit() {
 
     const updatePosts = async (username) => {
 
-        await db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
+        await db
+            .collection('posts')
+            .where('username', '==', user?.displayName)
+            .get()
+            .then(res => {
 
-            let batch = db.batch()
+                let batch = db.batch()
 
-            res.docs.forEach(doc => {
-                const docRef = db.collection('posts').doc(doc.id)
-                batch.update(docRef, { username: username })
-            })
-            batch.commit()
-        }
+                res.docs.forEach(doc => {
+                    const docRef = db.collection('posts').doc(doc.id)
+                    batch.update(docRef, { username: username })
+                })
+                batch.commit()
+
+            }
             
         )
 
@@ -129,6 +135,7 @@ export default function UserEdit() {
                 batch.commit()
 
             })
+
     }
 
     // get user data
@@ -226,6 +233,7 @@ export default function UserEdit() {
     
     }, [user, avatarFile])
 
+
     const uploadAvatar = (e) => {
         e.preventDefault();
 
@@ -236,7 +244,8 @@ export default function UserEdit() {
         setAvatarModal(false)
     }
 
-    const deleteAvatar = (e) => {
+
+    const deleteAvatar = () => {
         db.collection('users').doc(user.uid).update({
             avatarUrl: ''
         })
@@ -247,6 +256,7 @@ export default function UserEdit() {
 
         setAvatarModal(false)
     }
+
 
     return (
         <div className="userEdit">
@@ -261,7 +271,7 @@ export default function UserEdit() {
                 <div style={modalStyle} className={classes.paper} >
                     <center>
                         <h4 className="app__modalLabel">Change Profile Photo</h4>
-                        <label for="uploadAvatar">
+                        <label htmlFor="uploadAvatar">
                             <h5 className="editModal__uploadBtn">Upload Photo</h5>
                             <input type="file" id="uploadAvatar" style={{display: 'none'}} onChange={uploadAvatar} />
                         </label>
@@ -289,9 +299,9 @@ export default function UserEdit() {
                 </div>
                 <div className="userEdit__right">
                     <div className="right__top">
-                        <div><Avatar className="top__avatar" src={user?.photoURL} onClick={() => setAvatarModal(true)}></Avatar></div>
+                        <div><Avatar className="top__avatar" src={user.photoURL} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
-                            { user ? <p className="right__username">{user.displayName}</p> : <Skeleton width={150} height={30} /> }
+                            { user ? <p className="right__username">{userData.username}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>
@@ -300,7 +310,7 @@ export default function UserEdit() {
                     { error && <p className="form__error">{error}</p>}
                         <div className="form__item form__name">
                             <aside className="item__aside">
-                                <label for="name">Name</label>
+                                <label htmlFor="name">Name</label>
                             </aside>
                             <div className="item__input">
                                 <input id="name" className="item__inputField" placeholder="Name" onChange={(e) => setName(e.target.value)} />
@@ -309,7 +319,7 @@ export default function UserEdit() {
                         </div>
                         <div className="form__item form__username">
                             <aside className="item__aside">
-                                <label for="username">Username*</label>
+                                <label htmlFor="username">Username*</label>
                             </aside>
                             <div className="item__input">
                                 <input id="username" className="item__inputField" placeholder="Username" onChange={(e) => setUsername(e.target.value)} required />
@@ -317,7 +327,7 @@ export default function UserEdit() {
                         </div>
                         <div className="form__item form__website">
                             <aside className="item__aside">
-                                <label for="website">Website</label>
+                                <label htmlFor="website">Website</label>
                             </aside>
                             <div className="item__input">
                                 <input id="website" className="item__inputField" placeholder="Website" onChange={(e) => setWebsite(e.target.value)} />
@@ -325,7 +335,7 @@ export default function UserEdit() {
                         </div>
                         <div className="form__item form__bio">
                             <aside className="item__aside">
-                                <label for="bio">Bio</label>
+                                <label htmlFor="bio">Bio</label>
                             </aside>
                             <div className="item__input">
                                 <textarea id="bio" className="item__inputField" style={{resize: 'vertical', minHeight: '50px'}} onChange={(e) => setBio(e.target.value)} />

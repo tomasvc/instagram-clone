@@ -5,7 +5,7 @@
   .header {
     position: fixed;
     top: 0;
-    width: 100vw;
+    width: 100%;
     background-color: white;
     object-fit: contain;
     height: 53px;

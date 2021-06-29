@@ -32,7 +32,6 @@ paper: {
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 2, 3),
     paddingBottom: 0,
-    overflowY: 'auto',
     overflowX: 'hidden'
 }
 }));
@@ -522,7 +521,6 @@ export default function Profile() {
             { userData &&
                 <nav className="content__nav">
                     <a id="active" href={'/' + userData?.username}>Posts</a>
-                    <a href={'/' + userData?.username}>IGTV</a>
                     <a href={'/' + userData?.username}>Saved</a>
                     <a href={'/' + userData?.username}>Tagged</a>
                 </nav>

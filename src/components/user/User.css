@@ -68,6 +68,7 @@ body {
 
 .modal__container {
     padding: 5px 0;
+    overflow-Y: auto;
 }
 
 .modal__btn {
@@ -373,16 +374,21 @@ body {
 
 .gallery__galleryItem {
     position: relative;
-    max-width: 293px;
-    max-height: 293px;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+    width: 100%;
+    height: 0;
+    padding-top: 100%;
 }
 
 .galleryItem__image {
-    object-fit: cover;
+    display: block;
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #galleryItem__shade {
@@ -391,7 +397,7 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 98.7%;
+    height: 100%;
     margin: 0;
     top: 0;
     opacity: 0;
@@ -444,8 +450,7 @@ body {
 }
 
 @media only screen 
-    and (max-width: 600px)
-    and (-webkit-min-device-pixel-ratio: 2) {
+    and (max-width: 600px) {
 
     body {
         background-color: white !important;
@@ -553,7 +558,7 @@ body {
     }
 
     .gallery__galleryItem {
-        margin-bottom: -4px ;
+        margin-bottom: 0.5px;
     }
 
     #galleryItem__shade {

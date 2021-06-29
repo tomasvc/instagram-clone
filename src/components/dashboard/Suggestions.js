@@ -3,13 +3,35 @@ import { Avatar } from "@material-ui/core";
 import { getSuggestions } from '../../firebase/fbFunctions';
 import UserContext from '../../userContext';
 import './Suggestions.css';
-import { toggleFollow } from '../../firebase/fbFunctions';
+import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
 
 export default function Suggestions({ following }) {
 
     const { user } = useContext(UserContext)
 
     const [suggestions, setSuggestions] = useState([])
+
+    const handleFollow = (event, user, selectedUser) => {
+
+        if (event.target.classList.contains('user__followBtn')) {
+
+            toggleFollow(user, selectedUser)
+            
+            event.target.classList.add('user__unfollowBtn')
+            event.target.classList.remove('user__followBtn')
+            event.target.innerHTML = 'Following'
+
+        } else {
+
+            toggleUnfollow(user, selectedUser)
+            
+            event.target.classList.add('user__followBtn')
+            event.target.classList.remove('user__unfollowBtn')
+            event.target.innerHTML = 'Follow'
+
+        }
+
+    }
 
     useEffect(() => {
         
@@ -46,7 +68,7 @@ export default function Suggestions({ following }) {
                                         <p className="info__suggestion">New to Photogram</p>
                                     </div>
                                 </div>
-                                <button className="user__followBtn" onClick={() => toggleFollow(user, suggestion)}>Follow</button>
+                                <button className="user__followBtn" onClick={(e) => handleFollow(e, user, suggestion)}>Follow</button>
                             </div>
                 })}
             

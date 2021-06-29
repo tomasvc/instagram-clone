@@ -271,25 +271,25 @@ export default function Post({ postId }) {
         
     }
 
-    if (document.querySelector('.post__imageContainer')) {
-        let image = document.querySelector('.post__imageContainer');
-        let manager = new Hammer.Manager(image)
-        let DoubleTap = new Hammer.Tap({
-            event: 'doubletap',
-            taps: 2
-        });
 
-        manager.add(DoubleTap);
-
-        if (post) {
-            manager.on('doubletap', (e) => {
-                e.target.className.showHeart();
-                e.target.className.likePost();
-            });
-        }
-    }
     
+    // if (document.querySelector('.post__imageContainer')) {
+    //     let image = document.querySelector('.post__imageContainer');
+    //     let manager = new Hammer.Manager(image)
+    //     let DoubleTap = new Hammer.Tap({
+    //         event: 'doubletap',
+    //         taps: 2
+    //     });
 
+    //     manager.add(DoubleTap);
+
+    //     if (post) {
+    //         manager.on('doubletap', (e) => {
+    //             e.target.className.showHeart();
+    //             e.target.className.likePost();
+    //         });
+    //     }
+    // }
     
 
     

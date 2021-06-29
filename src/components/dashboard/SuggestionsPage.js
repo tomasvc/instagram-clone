@@ -13,7 +13,7 @@ export default function SuggestionsPage({ following }) {
 
     const handleFollow = (event, selectedUser) => {
 
-        if (document.querySelector('.item__followBtn')) {
+        if (event.target.classList.contains('item__followBtn')) {
 
             toggleFollow(user, selectedUser)
             
