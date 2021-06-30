@@ -128,7 +128,7 @@ function App() {
 
           <ProtectedRoute user={user} path="/" exact>
             <div>
-              <Header history={history} />
+              <Header history={history} userData={userData} />
               <div className="app__globalWrapper">
                 <Sidebar following={following} />
                 <div className="app__contentWrapper">
@@ -140,21 +140,21 @@ function App() {
 
           <ProtectedRoute user={user} path="/suggestions">
             <div>
-              <Header history={history} />
+              <Header history={history} userData={userData} />
               <SuggestionsPage following={following} />
             </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/p/:postId">
             <div>
-              <Header history={history} />
+              <Header history={history} userData={userData} />
               <PostPage />
             </div>
           </ProtectedRoute>
           
           <ProtectedRoute user={user} path="/:username/edit">
             <div>
-              <Header history={history} />
+              <Header history={history} userData={userData} />
               <UserEdit />
             </div>
           </ProtectedRoute>
@@ -166,7 +166,7 @@ function App() {
 
           <ProtectedRoute user={user} path="/:username">
             <div>
-              <Header history={history} />
+              <Header history={history} userData={userData} />
               <User />
             </div>
           </ProtectedRoute>

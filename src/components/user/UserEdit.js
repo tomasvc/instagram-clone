@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Modal } from "@material-ui/core";
-import { storage, db, auth } from '../../firebase/config';
-import './UserEdit.css';
-import Skeleton from 'react-loading-skeleton';
-import imageCompression from 'browser-image-compression';
-import UserContext from '../../userContext';
+import React, { useState, useEffect, useContext } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { Avatar, Modal } from "@material-ui/core"
+import { storage, db, auth } from '../../firebase/config'
+import './UserEdit.css'
+import Skeleton from 'react-loading-skeleton'
+import imageCompression from 'browser-image-compression'
+import UserContext from '../../userContext'
 
 function getModalStyle() {
-    const top = 50;
-    const left = 50;
+    const top = 50
+    const left = 50
   
     return {
       top: `${top}%`,
       left: `${left}%`,
       transform: `translate(-${top}%, -${left}%)`,
-    };
+    }
   }
   
   const useStyles = makeStyles((theme) => ({
@@ -30,12 +30,12 @@ function getModalStyle() {
       padding: theme.spacing(2, 4, 3),
       paddingBottom: 0
     }
-  }));
+  }))
 
 export default function UserEdit() {
 
-    const classes = useStyles();
-    const [modalStyle] = useState(getModalStyle);
+    const classes = useStyles()
+    const [modalStyle] = useState(getModalStyle)
 
     const { user } = useContext(UserContext)
 
@@ -53,7 +53,7 @@ export default function UserEdit() {
 
     const handleSubmit = async (e) => {
 
-        e.preventDefault();
+        e.preventDefault()
 
         await db.collection('users').where('username', '==', username).get().then(user => {
 
@@ -67,30 +67,7 @@ export default function UserEdit() {
 
             } else {
 
-                (async () => {
-
-                    await db.collection('users').doc(user.uid).update({
-                        username,
-                        name,
-                        website,
-                        bio
-                    })
-                    .catch(error => console.log(error))
-                    .then(updatePosts(username))
-                    .then(
-                        auth.currentUser.updateProfile({
-                            displayName: username
-                        }).then(() => {
-                            setError('Profile updated successfully')
-                        }).catch((err) => {
-                            setError('There was a problem updating your profile. ' + err)
-                        })
-                    )
-                    
-                    console.log("Profile updated successfully")
-                    setError(null)
-
-                })()
+                updateUserData()
 
             }
 
@@ -98,11 +75,45 @@ export default function UserEdit() {
 
     }
 
+    const updateUserData = async () => {
+
+        await db.collection('users').doc(user?.uid).update({
+            username,
+            name,
+            website,
+            bio
+        })
+
+        .catch(error => console.log(error))
+
+        .then(await updatePosts(username))
+
+        .then(
+
+            await auth.currentUser.updateProfile({
+                displayName: username
+            })
+            
+            .catch((err) => {
+                setError('There was a problem updating your profile. ' + err)
+            })
+
+        )
+
+        .then(
+
+            setError(null),
+            document.location.reload()
+
+        )
+
+    }
+
     const updatePosts = async (username) => {
 
         await db
             .collection('posts')
-            .where('username', '==', user?.displayName)
+            .where('username', '==', user.displayName)
             .get()
             .then(res => {
 
@@ -110,31 +121,38 @@ export default function UserEdit() {
 
                 res.docs.forEach(doc => {
                     const docRef = db.collection('posts').doc(doc.id)
-                    batch.update(docRef, { username: username })
+                    batch.update(docRef, { username })
                 })
+
                 batch.commit()
 
             }
             
-        )
+        ).then(
 
-        await db
-            .collection('posts')
-            .doc()
-            .collection('likes')
-            .where('username', '==', user?.displayName)
-            .get()
-            .then(res => {
+            await db
+                .collection('posts')
+                .doc()
+                .collection('likes')
+                .where('username', '==', user.displayName)
+                .get()
+                .then(res => {
 
-                let batch = db.batch()
+                            let batch = db.batch()
 
-                res.docs.forEach(doc => {
-                    const docRef = db.collection('posts').collection('likes').doc(doc.id)
-                    batch.update(docRef, { username: username, avatar: user?.photoURL })
+                            res.docs.forEach(doc => {
+                                const docRef = db.collection('posts').doc(doc.id).collection('likes').doc()
+                                batch.update(docRef, { username, avatar: user.photoURL })
+                            })
+
+                            batch.commit()
+
+                        
                 })
-                batch.commit()
 
-            })
+        ).catch((error) => {
+            console.log(error.message)
+        })
 
     }
 
@@ -142,6 +160,7 @@ export default function UserEdit() {
     useEffect(() => {
 
         async function getUser() {
+
             db
                 .collection('users')
                 .doc(user?.uid)
@@ -159,16 +178,20 @@ export default function UserEdit() {
 
         async function setAvatarToNull() {
             if (user) {
-                await db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
+                await db
+                        .collection('posts')
+                        .where('username', '==', user.displayName)
+                        .get()
+                        .then(res => {
 
-                    let batch = db.batch()
-    
-                    res.docs.forEach(doc => {
-                        const docRef = db.collection('posts').doc(doc.id)
-                        batch.update(docRef, { avatar: user?.photoURL })
-                    })
-                    
-                    batch.commit()
+                            let batch = db.batch()
+            
+                            res.docs.forEach(doc => {
+                                const docRef = db.collection('posts').doc(doc.id)
+                                batch.update(docRef, { avatar: user.photoURL })
+                            })
+                            
+                            batch.commit()
 
                 })
 
@@ -180,7 +203,7 @@ export default function UserEdit() {
 
             async function uploadCompressedAvatarImage() {
 
-                let uploadAvatar = null;
+                let uploadAvatar = null
 
                 const options = {
                     maxSizeMB: 0.5,
@@ -188,21 +211,25 @@ export default function UserEdit() {
                 }
 
                 await imageCompression(avatarFile, options).then(compressedFile => {
-                    uploadAvatar = storage.ref(`images/${avatarFile.name}`).put(compressedFile);
+                    uploadAvatar = storage.ref(`images/${avatarFile.name}`).put(compressedFile)
                 })
     
                 uploadAvatar.on("state_changed", () => {
+
                     storage
                     .ref("images")
                     .child(avatarFile.name)
                     .getDownloadURL()
                     .then(url => {
+
                         db.collection('users').doc(user?.uid).update({
                             avatarUrl: url
                         })
+
                         user.updateProfile({
                             photoURL: url
                         })
+
                     })
                     
                     db.collection('posts').where('username', '==', user?.displayName).get().then(res => {
@@ -213,7 +240,9 @@ export default function UserEdit() {
                             const docRef = db.collection('posts').doc(doc.id)
                             batch.update(docRef, { avatar: user?.photoURL })
                         })
+                        
                         batch.commit()
+
                     }
                         
                     )
@@ -225,17 +254,16 @@ export default function UserEdit() {
             uploadCompressedAvatarImage()
                 
         } else {
+
             setAvatarToNull()
+
         }
 
-        
-            
-    
     }, [user, avatarFile])
 
 
     const uploadAvatar = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
         if (e.target.files[0]) {
             setAvatarFile(e.target.files[0])
@@ -301,7 +329,7 @@ export default function UserEdit() {
                     <div className="right__top">
                         <div><Avatar className="top__avatar" src={user.photoURL} onClick={() => setAvatarModal(true)}></Avatar></div>
                         <div>
-                            { user ? <p className="right__username">{userData.username}</p> : <Skeleton width={150} height={30} /> }
+                            { user ? <p className="right__username">{user.displayName}</p> : <Skeleton width={150} height={30} /> }
                             <p className="right__changeProfileBtn" onClick={() => setAvatarModal(true)}>Change Profile Photo</p>
                         </div>
                     </div>

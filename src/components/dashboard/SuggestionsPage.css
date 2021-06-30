@@ -21,6 +21,7 @@
     flex-direction: column;
     background-color: white;
     padding: 10px;
+    margin-bottom: 80px;
     min-width: 37%;
 }
 
@@ -108,6 +109,7 @@
     .suggestionsPage {
         min-width: 100%;
         padding: 7px;
+        margin: 0;
     }
 
     .suggestionsPage__item {

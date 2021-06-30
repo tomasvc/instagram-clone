@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import { Avatar, Modal } from "@material-ui/core";
-import { db } from '../../firebase/config';
-import firebase from 'firebase/app';
-import './User.css';
-import { makeStyles } from '@material-ui/core/styles';
-import Skeleton from 'react-loading-skeleton';
-import UserContext from '../../userContext';
-import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import { Avatar, Modal } from "@material-ui/core"
+import { db } from '../../firebase/config'
+import firebase from 'firebase/app'
+import './User.css'
+import { makeStyles } from '@material-ui/core/styles'
+import Skeleton from 'react-loading-skeleton'
+import UserContext from '../../userContext'
+import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions'
 
 function getModalStyle() {
-    const top = 50;
-    const left = 50;
+    const top = 50
+    const left = 50
   
     return {
       top: `${top}%`,
       left: `${left}%`,
       transform: `translate(-${top}%, -${left}%)`,
-    };
+    }
   }
   
 const useStyles = makeStyles((theme) => ({
@@ -34,28 +34,28 @@ paper: {
     paddingBottom: 0,
     overflowX: 'hidden'
 }
-}));
+}))
 
 export default function Profile() {
 
-    const classes = useStyles();
-    const [modalStyle] = useState(getModalStyle);
+    const classes = useStyles()
+    const [modalStyle] = useState(getModalStyle)
 
     const { user } = useContext(UserContext)
     
-    const [userData, setUserData] = useState(null);
-    const [posts, setPosts] = useState(null);
-    const { username } = useParams();
+    const [userData, setUserData] = useState(null)
+    const [posts, setPosts] = useState(null)
+    const { username } = useParams()
 
-    const [unfollowModal, setUnfollowModal] = useState(false);
+    const [unfollowModal, setUnfollowModal] = useState(false)
 
-    const [following, setFollowing] = useState([]);
-    const [followers, setFollowers] = useState([]);
+    const [following, setFollowing] = useState([])
+    const [followers, setFollowers] = useState([])
 
-    const [followingModal, setFollowingModal] = useState(false);
-    const [followersModal, setFollowersModal] = useState(false);
+    const [followingModal, setFollowingModal] = useState(false)
+    const [followersModal, setFollowersModal] = useState(false)
 
-    const [isFollowingProfile, setIsFollowingProfile] = useState(null);
+    const [isFollowingProfile, setIsFollowingProfile] = useState(null)
 
     useEffect(() => {
         
@@ -94,13 +94,13 @@ export default function Profile() {
                                     .collection('posts')
                                     .where('username', '==', username)
                                     .orderBy('timestamp', 'desc')
-                                    .get();
+                                    .get()
     
             const posts = snapshot.docs.map(item => ({ 
                 ...item.data()
-            }));
+            }))
     
-            setPosts(posts);
+            setPosts(posts)
 
             // render posts
             if (document.querySelector('.user__gallery') != null) {
@@ -185,7 +185,7 @@ export default function Profile() {
                                         .doc(user?.uid)
                                         .collection('following')
                                         .where('username', '==', userData.username)
-                                        .get();
+                                        .get()
     
                 const [response = {}] = result.docs.map(item => ({ 
                     ...item?.data()
@@ -208,7 +208,7 @@ export default function Profile() {
         if (isFollowingProfile) {
 
             if (document.querySelector('.right__buttons') !== null && document.querySelector('#follow-btn') !== null ) {
-                document.querySelector('#follow-btn').style.display = 'none';
+                document.querySelector('#follow-btn').style.display = 'none'
                 document.querySelector('.right__buttons').innerHTML = `
                 <button id="message-btn" className="buttons__message-btn" value="Message">Message</button>
                 <button id="unfollow-btn" className="buttons__unfollow-btn"><span id="unfollow-icon"></span></button>
@@ -231,7 +231,7 @@ export default function Profile() {
 
             document.querySelector('.right__buttons').innerHTML  = `
                 <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick="toggleFollow()">Follow</button>
-            `;
+            `
 
             document.getElementById('follow-btn').addEventListener('click', () => toggleFollow())
             
@@ -283,22 +283,22 @@ export default function Profile() {
     // same as above but deletes the data in both collections
     const toggleUnfollow = async () => {
 
-        setIsFollowingProfile(false);
-        setUnfollowModal(false);
+        setIsFollowingProfile(false)
+        setUnfollowModal(false)
 
         await db
                 .collection('users')
                 .doc(user?.uid)
                 .collection('following')
                 .doc(userData?.userId)
-                .delete();
+                .delete()
 
         await db
                 .collection('users')
                 .doc(userData?.userId)
                 .collection('followers')
                 .doc(user?.uid)
-                .delete();
+                .delete()
 
         await db.collection("users").doc(user?.uid).update({
             following: firebase.firestore.FieldValue.increment(-1)

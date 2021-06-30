@@ -6,7 +6,7 @@ import './Header.css';
 import Skeleton from 'react-loading-skeleton';
 import UserContext from '../../userContext';
 
-export default function Header({ history }) {
+export default function Header({ history, userData }) {
 
     const { user } = useContext(UserContext)
 
@@ -36,24 +36,6 @@ export default function Header({ history }) {
     const logout = () => {
       auth.signOut().then(history.push('/login'))
     }
-    
-
-    if (document.getElementById('searchInput') !== null) {
-      if (document.activeElement.id === 'searchInput') {
-        document.querySelector('.search-container__icon').style.left = '7px'
-      } else {
-        document.querySelector('.search-container__icon').style.left = '70px'
-      }
-    }
-      
-
-    document.getElementById('searchInput')?.addEventListener('click', () => {
-      if (document.activeElement.id === 'searchInput') {
-        document.querySelector('.search-container__icon').style.left = '7px'
-      } else {
-        document.querySelector('.search-container__icon').style.left = '70px'
-      }
-    })
     
 
     return (
@@ -98,7 +80,7 @@ export default function Header({ history }) {
                 <div className="column__arrow"></div>
                   {
                     ( <div className="column__dropdown">
-                        <a href={'/' + user?.displayName}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                        <a href={'/' + userData.username}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
                         <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                         <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                       </div> )
@@ -117,10 +99,6 @@ export default function Header({ history }) {
             onClick={topFunction}
           /></a>
 
-          <div className="wrapper__search-container">
-            <span className="search-container__icon"></span>
-            <input id="searchInput" className="search-container__input" placeholder="Search"></input>
-          </div>
           
           <nav className="wrapper__nav">
 
@@ -151,7 +129,7 @@ export default function Header({ history }) {
             <div className="column__arrow"></div>
               {  
                 ( <div className="column__dropdown">
-                    <a href={'/' + user?.displayName}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
+                    <a href={'/' + user.displayName}><button id="nav-btn" className="dropdown__profile">Profile</button></a>
                     <a href="/suggestions"><button id="nav-btn" className="dropdown__profile">Suggestions</button></a>
                     <button id="nav-btn" className="dropdown__logout" onClick={logout}>Logout</button> 
                   </div> )
