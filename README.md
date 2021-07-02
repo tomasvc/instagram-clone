@@ -11,7 +11,7 @@ Things left to do and/or fix:
 
 <ul>
   <li>Login page refreshes on first login attempt but not the second</li>
-  <li>Username doesn't get updated in post likes collection after user edits profile</li>
+  <li>Username doesn't get updated in post likes and comments collections after user edits profile</li>
   <li>Add double tap to like functionality on touchscreen devices</li>
   <li>Infinite load posts</li>
   <li>Too much repetitive code (DRY)</li>
