@@ -14,6 +14,5 @@ Things left to do and/or fix:
   <li>Username doesn't get updated in post likes and comments collections after user edits profile</li>
   <li>Add double tap to like functionality on touchscreen devices</li>
   <li>Infinite load posts</li>
-  <li>Too much repetitive code (DRY)</li>
   <li>Performance - make it load faster</li>
 </ul>
