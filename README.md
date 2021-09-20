@@ -1,4 +1,5 @@
-<img src="https://i.imgur.com/qpjr7Q1.jpg" alt="Photogram image" width="1000">
+<img src="https://i.imgur.com/qpjr7Q1.jpg" alt="Photogram image">
+
 # Photogram
 
 Instagram clone that includes user authentication, auto-compressed image uploads, likes, comments, followers and suggestions
