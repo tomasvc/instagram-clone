@@ -16,6 +16,7 @@ import { ProtectedRoute } from './protected-route';
 import { useAuthListener } from './useAuth';
 import UserContext from './userContext';
 
+
 function App() {
 
   const { user } = useAuthListener();
@@ -45,6 +46,7 @@ function App() {
     }
 
   }, [user])
+
 
   // update posts on start
   useEffect(() => { 
@@ -89,7 +91,8 @@ function App() {
       console.log(error)
     }
 
-  }, [user, following]);
+  }, [user, following])
+
 
   useEffect(() => {
 
@@ -121,8 +124,6 @@ function App() {
     <UserContext.Provider value={{user}}>
 
       <Router history={history}>
-
-        
 
         <Switch>
 

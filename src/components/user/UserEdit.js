@@ -59,8 +59,13 @@ export default function UserEdit() {
 
             if (user.docs.length !== 0) {
 
-                setError('An account with this username already exists')
+                if (username === document.querySelector('.right__username').textContent) {
+                    updateUserData()
+                } else {
+                    setError('An account with this username already exists')
+                }
 
+                
             } else if (username === '') {
 
                 setError("Please enter a valid username")

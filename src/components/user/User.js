@@ -407,59 +407,6 @@ export default function Profile() {
 
             </Modal>
 
-            { window.innerWidth < 600 ? 
-            
-                    <div className="user__header">
-
-                        <div className="header__left">
-                            { userData ? <Avatar src={ userData?.avatarUrl } className="left__avatar"></Avatar> :
-                            <Skeleton className="skeleton-row" circle width={77} height={77} />}
-                        </div>
-
-                        <div className="header__right">
-                        
-                            { userData && isFollowingProfile !== null ?   
-
-                            // if the user page is showing the currently logged in user, render edit button, else, render follow/unfollow button
-
-                            <div className="right__name">
-
-                                <span className="right__username">{ username }</span>
-                                { userData?.userId === user?.uid ?
-                                    <div className="name__config">
-                                        <a href={user?.displayName + '/edit'} id="edit-btn" className="config__editBtn">Edit Profile</a>
-                                    </div>
-                                :
-                                    <div className="right__buttons">
-                                        <button id="follow-btn" className="buttons__follow-btn" value="Follow" onClick={() => toggleFollow()}>Follow</button>
-                                    </div>
-                                }
-                                
-                            </div>
-                            :
-                            <Skeleton className="skeleton-row" width={200} height={40} /> }
-                                
-                        </div>
-
-                        <div className="header__details">
-                            { userData ? <p className="header__name">{ userData?.name }</p> : <Skeleton width={200} height={20} /> }
-                            <p className="header__bio">{ userData?.bio }</p>
-                            <a href={ userData?.website } className="header__website">{ userData?.website }</a>
-                        </div>
-
-                        { userData ? 
-                            
-                            <div className="header__top-info">
-                                <p className="top-info__info-item"><span className="info-item__info-num">{ posts?.length }</span><span className="info-item__word">posts</span></p>
-                                <p className="top-info__info-item" onClick={followers?.length > 0 ? () => setFollowersModal(true) : () => setFollowersModal(false)}><span className="info-item__info-num">{ userData?.followers }</span><span className="info-item__word">followers</span></p>
-                                <p className="top-info__info-item" onClick={following?.length > 0 ? () => setFollowingModal(true) : () => setFollowingModal(false)}><span className="info-item__info-num">{ userData?.following }</span><span className="info-item__word">following</span></p>
-                            </div>
-
-                        : <Skeleton className="skeleton-row" width={200} height={20} /> }
-
-                    </div>
-        
-            :
 
             <div className="user__header">
 
@@ -516,7 +463,6 @@ export default function Profile() {
                 </div>
             </div>
 
-            }   
 
             { userData &&
                 <nav className="content__nav">

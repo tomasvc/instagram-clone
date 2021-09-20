@@ -50,7 +50,7 @@ export default function SuggestionsPage({ following }) {
         <div className="suggestionsWrapper">
             <h4 className="suggestionsWrapper__heading">Suggestions For You</h4>
             <div className="suggestionsPage">
-                { suggestions && suggestions.map(suggestion => {
+                { suggestions.length > 0 ? suggestions.map(suggestion => {
                     return <div className="suggestionsPage__item" key={suggestion.userId}>
                                 <div className="item__left">
                                     <a href={'/' + suggestion.username}><Avatar className="item__avatar" src={suggestion.avatarUrl}></Avatar></a>
@@ -61,7 +61,9 @@ export default function SuggestionsPage({ following }) {
                                 </div>
                                 <button className="item__followBtn" onClick={(e) => handleFollow(e, suggestion)}>Follow</button>
                             </div>
-                }) }
+                })
+                : <p style={{'marginLeft': '0.4rem'}}>You don't have any suggestions</p>
+             }
             </div>
         </div>
         

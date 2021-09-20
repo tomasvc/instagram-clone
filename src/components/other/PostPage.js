@@ -19,17 +19,19 @@ function getModalStyle() {
   }
   
 const useStyles = makeStyles((theme) => ({
-paper: {
-    position: 'absolute',
-    maxWidth: '80%',
-    minHeight: '200px',
-    backgroundColor: theme.palette.background.paper,
-    border: 'none',
-    borderRadius: '12px',
-    outline: 0,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 2, 3),
-}
+
+    paper: {
+        position: 'absolute',
+        maxWidth: '80%',
+        minHeight: '200px',
+        backgroundColor: theme.palette.background.paper,
+        border: 'none',
+        borderRadius: '12px',
+        outline: 0,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 2, 3),
+    }
+
 }));
 
 export default function PostPage() {
@@ -47,6 +49,7 @@ export default function PostPage() {
     const [openLikes, setOpenLikes] = useState(false);
 
     useEffect(() => {
+
         let unsubscribe;
         if (postId) {
             unsubscribe = db
@@ -62,9 +65,12 @@ export default function PostPage() {
         return () => {
             unsubscribe();
         };
+
     }, [postId]);
 
+
     useEffect(() => {
+
         let unsubscribe;
         if (postId) {
             unsubscribe = db
@@ -80,7 +86,9 @@ export default function PostPage() {
         return () => {
             unsubscribe();
         }
+
     }, [postId]);
+
 
     useEffect(() => {
 
@@ -90,7 +98,9 @@ export default function PostPage() {
 
     })
 
+
     useEffect(() => {
+
         let unsubscribe;
         if (postId) {
             unsubscribe = db
@@ -106,7 +116,9 @@ export default function PostPage() {
         return () => {
             unsubscribe();
         }
+
     }, [postId]);
+
 
     async function getPost() {
 
@@ -116,12 +128,14 @@ export default function PostPage() {
 
     }
 
+
     const showHeart = () => {
         document.getElementById('image-heart').classList.add('showHeart')  
         setTimeout(() => {
             document.getElementById('image-heart').classList.remove('showHeart')
         }, 1000)  
     }
+
 
     const likePost = async () => {    
 

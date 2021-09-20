@@ -135,16 +135,15 @@ body {
     max-width: 935px;
     color: #262626;
     margin: auto;
-    margin-top: 85px;
+    margin-top: 80px;
     padding: 0 20px;
 }
 
 .header__left {
-    margin-left: 70px;
+    margin: 0 6.5rem 0 3rem;
 }
 
 .header__right {
-    margin-left: 100px;
     width: 100%;
 }
 
@@ -450,7 +449,7 @@ body {
 }
 
 @media only screen 
-    and (max-width: 600px) {
+    and (max-width: 730px) {
 
     body {
         background-color: white !important;
@@ -463,7 +462,7 @@ body {
 
     .user__header {
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         margin-top: 70px;
         width: 100vw;
         padding: 0;
@@ -473,7 +472,7 @@ body {
         width: 77px;
         height: 77px;
         margin: 0;
-        margin-left: 20px;
+        padding-left: 1rem;
     }
 
     .left__avatar {
@@ -483,8 +482,14 @@ body {
 
     .header__right {
         margin: 0;
-        margin-left: 8%;
-        width: auto;
+        padding-left: 1rem;
+        width: 100%;
+    }
+
+    .header__name,
+    .header__bio,
+    .header__website {
+        margin-left: -5.7rem;
     }
 
     .right__username {
@@ -493,6 +498,7 @@ body {
 
     .right__name {
         flex-direction: column;
+        padding-left: 1rem;
     }
 
     .name__config {
@@ -520,7 +526,7 @@ body {
 
     .header__top-info {
         width: 100vw;
-        display: flex;
+        display: none;
         justify-content: space-around;
         border-top: 1px solid lightgrey;
         position: relative;
@@ -541,10 +547,10 @@ body {
     }
 
     .content__nav {
-        justify-content: space-between;
+        justify-content: space-around;
         width: 100vw;
         margin: 0;
-        margin-top: 20px;
+        margin-top: 1rem;
     }
 
     .content__nav a {

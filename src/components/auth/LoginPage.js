@@ -78,7 +78,7 @@ export default function LoginPage() {
                 </nav>
 
                 <div className="copyright">
-                    <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="http://github.com/tomasvc">tomasvc</a></p>
+                    <p>&copy; 2021 Instagram clone not from Facebook | Created by <a href="https://github.com/tomasvc">tomasvc</a></p>
                 </div>
             </footer>
 

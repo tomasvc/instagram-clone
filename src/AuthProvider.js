@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        
         auth.onAuthStateChanged(user => {
             if (user) {
                 setUser(user)
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
                 setUser(null)
             }
         })
+
     }, [])
 
     return (

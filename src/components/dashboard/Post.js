@@ -159,6 +159,15 @@ export default function Post({ postId }) {
         
     }, [user, postId])
 
+    useEffect(() => {
+
+        if (localStorage.getItem(postId) !== undefined && localStorage.getItem(postId) === user?.displayName) {
+            document.getElementById(postId).childNodes[2].firstChild.classList.add("like")
+            document.getElementById(postId).childNodes[2].firstChild.firstChild.setAttribute("d", "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z")
+        }
+
+    }, [user, postId])
+
 
     const postComment = (event) => {
         event.preventDefault();
@@ -207,6 +216,9 @@ export default function Post({ postId }) {
                             // remove user from collection, or unlike post
                             doc.ref.delete()
 
+                            // remove post id from local storage
+                            localStorage.removeItem(postId)
+
                             setTimeout(async () => {
                                 await db.collection("posts").doc(postId).update({
                                     likes: firebase.firestore.FieldValue.increment(-1)
@@ -231,6 +243,9 @@ export default function Post({ postId }) {
                                     avatar: user?.photoURL,
                                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                                 }); 
+
+                                // add post id to local storage
+                                localStorage.setItem(postId, user?.displayName)
 
                                 setTimeout(async () => {
                                     await db.collection("posts").doc(postId).update({
@@ -387,6 +402,7 @@ export default function Post({ postId }) {
                 </svg>
             </div>
 
+
             <div className="post__likesCount" onClick={() => setOpenLikes(true)}>{
                 likes.length === 1 ? `Liked by ${likes[0].username}` :
                 likes.length === 2 ? `Liked by ${likes[0].username} and ${likes[1].username}` :
@@ -394,7 +410,6 @@ export default function Post({ postId }) {
             }</div>
             
             <h4 className="post__text"><a href={'/' + post.username}><span className="post__username">{post.username}</span></a> {post.caption}</h4>
-
 
 
             <div className="post__comments">
@@ -408,7 +423,6 @@ export default function Post({ postId }) {
                     )
                 })}
             </div>
-
 
 
             <p className="post__date">Today</p>
