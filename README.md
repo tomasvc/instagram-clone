@@ -1,3 +1,4 @@
+[Photogram image](https://imgur.com/a/dnAXIp5)
 # Photogram
 
 Instagram clone that includes user authentication, auto-compressed image uploads, likes, comments, followers and suggestions
