@@ -468,6 +468,10 @@ body {
         padding: 0;
     }
 
+    .user__header {
+        position: relative;
+    }
+
     .header__left {
         width: 77px;
         height: 77px;
@@ -494,11 +498,17 @@ body {
 
     .right__username {
         margin-bottom: 5px;
+        font-size: 0.9rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .right__name {
+        max-width: 200px;
         flex-direction: column;
         padding-left: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .name__config {
@@ -526,11 +536,12 @@ body {
 
     .header__top-info {
         width: 100vw;
-        display: none;
+        display: flex;
         justify-content: space-around;
         border-top: 1px solid lightgrey;
-        position: relative;
-        top: 10px;
+        position: absolute;
+        bottom: -70px;
+        left: 0;
     }
 
     .top-info__info-item {
@@ -542,7 +553,7 @@ body {
         font-size: 14px;
     }
 
-    .info-item__info-word {
+    .info-item__word {
         color: #8e8e8e;
     }
 
@@ -550,7 +561,7 @@ body {
         justify-content: space-around;
         width: 100vw;
         margin: 0;
-        margin-top: 1rem;
+        margin-top: 5rem;
     }
 
     .content__nav a {
