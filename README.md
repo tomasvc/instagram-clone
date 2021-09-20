@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/qpjr7Q1.jpg" alt="Photogram image">
+<img src="https://i.imgur.com/BzbntWg.jpg" alt="Photogram image">
 
 # Photogram
 
