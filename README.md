@@ -1,7 +1,6 @@
-# Photogram (kinda like Instagram)
-I made an Instagram clone so I could post memes and stalk myself!
+# Photogram
 
-Includes user authentication, auto-compressed image uploads, likes, comments, followers and suggestions
+Instagram clone that includes user authentication, auto-compressed image uploads, likes, comments, followers and suggestions
 
 [Demo](https://suspicious-meitner-4803ad.netlify.app/)
 
