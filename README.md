@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/BzbntWg.jpg" alt="Photogram image" center>
+<img src="https://i.imgur.com/BzbntWg.jpg" alt="Photogram image" align="center">
 
 # Photogram
 
