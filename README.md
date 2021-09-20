@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/BzbntWg.jpg" alt="Photogram image" style={{'textAlign', 'center'}}>
+<img src="https://i.imgur.com/BzbntWg.jpg" alt="Photogram image" center>
 
 # Photogram
 
