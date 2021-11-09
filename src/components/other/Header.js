@@ -6,6 +6,8 @@ import './Header.css';
 import Skeleton from 'react-loading-skeleton';
 import UserContext from '../../userContext';
 
+// The Header component controls the display and functionality of the header at the top of the page
+
 export default function Header({ history, userData }) {
 
     const { user } = useContext(UserContext)

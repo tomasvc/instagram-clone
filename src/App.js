@@ -27,7 +27,6 @@ function App() {
 
   const [postsAreLoading, setPostsAreLoading] = useState(true);
 
-
   // get current user data
   useEffect(() => {
 
@@ -53,6 +52,7 @@ function App() {
 
     const getPosts = async () => {
 
+      // only run if user is logged in and is following at least one other user
       if (user && following) {
 
               setPostsAreLoading(true)
@@ -62,10 +62,12 @@ function App() {
                   .limit(20)
                   .get()
                   .then(querySnapshot => {
+
                     const newPosts = []
                       
                       querySnapshot.docs.forEach(doc => {
 
+                        // check if snapshot contains posts of the users that the current user is following
                         if (following.includes(doc.data().username)) {
 
                           newPosts.push({
@@ -94,6 +96,7 @@ function App() {
   }, [user, following])
 
 
+  // get an array of all the users the current user is following
   useEffect(() => {
 
     const getFollowingUsers = async () => {

@@ -2,6 +2,8 @@ import React from 'react';
 import Post from './Post';
 import './Posts.css';
 
+// Returns a div will all the posts
+
 export default function Posts({ posts, loading }) {
 
     return (

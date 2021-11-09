@@ -34,6 +34,11 @@ function getModalStyle() {
     }
   }));
 
+
+// The AddPost component handles the image upload functionality.
+// It provides a modal where the user can upload an image and provide a caption.
+// The image is automatically compressed to a smaller size before being uploaded.
+
 export default function AddPost({ openAdd, onClose }) {
 
     const classes = useStyles();
@@ -54,6 +59,7 @@ export default function AddPost({ openAdd, onClose }) {
         }
     }
 
+    // simulate a button click
     const handleUploadClick = () => {
       document.getElementById('file__input').click()
     }
@@ -69,6 +75,7 @@ export default function AddPost({ openAdd, onClose }) {
           maxWidthOrHeight: 1000
         }
 
+        // custom library that comppresses an image which is then stored in firebase storage
         await imageCompression(image, options).then(compressedFile => {
           uploadTask = storage.ref(`images/${image.name}`).put(compressedFile);
         })

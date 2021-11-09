@@ -32,6 +32,8 @@ function getModalStyle() {
     }
   }))
 
+// The UserEdit component controls the form in the edit page
+
 export default function UserEdit() {
 
     const classes = useStyles()
@@ -179,6 +181,8 @@ export default function UserEdit() {
 
     }, [user])
 
+
+    // this code updates the avatar image
     useEffect(() => {  
 
         async function setAvatarToNull() {

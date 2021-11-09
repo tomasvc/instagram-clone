@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import './Post.css';
 import { db } from '../../firebase/config';
 import firebase from 'firebase/app';
 import { Avatar, Modal } from "@material-ui/core";
@@ -7,7 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import UserContext from '../../userContext';
 import Skeleton from 'react-loading-skeleton';
 import Hammer from 'hammerjs';
+import './Post.css';
 
+// modal styles for Material-UI modal
 function getModalStyle() {
     const top = 50;
     const left = 50;
@@ -33,6 +34,9 @@ paper: {
 }
 }));
 
+
+// The Post component controls the display and functionality of an individual post. 
+
 export default function Post({ postId }) {
 
     const classes = useStyles();
@@ -47,6 +51,8 @@ export default function Post({ postId }) {
     const [likes, setLikes] = useState([]);
     const [openLikes, setOpenLikes] = useState(false);
 
+
+    // gets a single post using its ID
     useEffect(() => {
 
         async function getPost() {
@@ -61,8 +67,10 @@ export default function Post({ postId }) {
 
     }, [postId, user])
 
+
     // add comments to post
     useEffect(() => {
+
         let unsubscribe;
         if (postId) {
             unsubscribe = db
@@ -78,10 +86,13 @@ export default function Post({ postId }) {
         return () => {
             unsubscribe();
         };
+
     }, [postId, user]);
+
 
     // add likes to post
     useEffect(() => {
+        
         let unsubscribe;
         if (postId) {
             unsubscribe = db
@@ -97,8 +108,12 @@ export default function Post({ postId }) {
         return () => {
             unsubscribe();
         }
+
     }, [postId, user]);
 
+
+    // This code updates the avatar and profile image of the user inside the modals if either are changed in the edit page.
+    // Not an ideal way to do it but couldn't figure out how to access the data any other way.
     useEffect(() => {
 
         const getLikesAndComments = async () => {
@@ -159,6 +174,8 @@ export default function Post({ postId }) {
         
     }, [user, postId])
 
+
+    // Changes heart icon based on whether user has already liked the post
     useEffect(() => {
 
         if (localStorage.getItem(postId) !== undefined && localStorage.getItem(postId) === user?.displayName) {
@@ -169,7 +186,9 @@ export default function Post({ postId }) {
     }, [user, postId])
 
 
+    // Post comment and store in database
     const postComment = (event) => {
+
         event.preventDefault();
 
         db.collection("posts").doc(postId).collection("comments").add({
@@ -184,11 +203,13 @@ export default function Post({ postId }) {
         })
 
         setComment('');
+
     } 
 
 
-
+    // Show an animated heart on top of image when user likes a post
     const showHeart = () => {
+
         document.getElementById(postId).childNodes[1].childNodes[1].classList.add('showHeart')  
         setTimeout(() => {
             document.getElementById(postId).childNodes[1].childNodes[1].classList.remove('showHeart')
@@ -286,7 +307,9 @@ export default function Post({ postId }) {
         
     }
 
-
+    // Below is a custom library called Hammer that would enable the user to double tap to like an image.
+    // The JS double tap event handler works fine on web browsers but it's not supported on touchscreen devices, 
+    // so I've had to use a custom library. Can't get it to work though :(
     
     // if (document.querySelector('.post__imageContainer')) {
     //     let image = document.querySelector('.post__imageContainer');
@@ -312,6 +335,7 @@ export default function Post({ postId }) {
         
         <div className="post" id={postId}>
 
+            {/* Create a modal to show likes */}
             <Modal 
                 className="post__modal"
                 open={openLikes}
@@ -346,9 +370,7 @@ export default function Post({ postId }) {
                 </div>
             </Modal>
 
-
-
-
+            {/* Post header */}
             <div className="post__header">
                 
                     <a href={'/' + post?.username}>
@@ -365,11 +387,13 @@ export default function Post({ postId }) {
 
             </div>
 
-                <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}}>
-                { post?.imageUrl ? <img className="post__image" src={post?.imageUrl} alt="" /> : <Skeleton maxWidth={550} height={750} /> }
-                    <div className="post__imageHeart" ></div>
-                </div>
+            {/* The image */}
+            <div className="post__imageContainer" onDoubleClick={() => {showHeart(); likePost()}}>
+            { post?.imageUrl ? <img className="post__image" src={post?.imageUrl} alt="" /> : <Skeleton maxWidth={550} height={750} /> }
+                <div className="post__imageHeart" ></div>
+            </div>
 
+            {/* Buttons */}
             <div className="post__buttons">
                 <svg className="post__like" fill="#262626" aria-label="like" height="24" viewBox="0 0 48 48" width="24" onClick={() => {showHeart(); likePost()}}>
                     <path id="button__likePath" d="M34.6 6.1c5.7 0 10.4 5.2 10.4 11.5 0 6.8-5.9 11-11.5 16S25 
@@ -402,16 +426,17 @@ export default function Post({ postId }) {
                 </svg>
             </div>
 
-
+            {/* Likes */}
             <div className="post__likesCount" onClick={() => setOpenLikes(true)}>{
                 likes.length === 1 ? `Liked by ${likes[0].username}` :
                 likes.length === 2 ? `Liked by ${likes[0].username} and ${likes[1].username}` :
-                likes.length > 1 ? `${likes.length} likes` : ''
+                likes.length > 2 ? `${likes.length} likes` : ''
             }</div>
             
+            {/* Username and caption */}
             <h4 className="post__text"><a href={'/' + post.username}><span className="post__username">{post.username}</span></a> {post.caption}</h4>
 
-
+            {/* Comments */}
             <div className="post__comments">
                 { comments.length > 2 ? <a href={'/p/' + postId} className="post__allCommentsLink">View all {comments.length} comments</a> :
                 
@@ -424,9 +449,10 @@ export default function Post({ postId }) {
                 })}
             </div>
 
-
+            {/* Date */}
             <p className="post__date">Today</p>
 
+            {/* Renders comment box if screen width is at least 600px */}
             {user && window.innerWidth > 600 ? (
                 <form className="post__commentBox" >
                 <svg fill="#262626" height="24" width="24" viewBox="0 0 48 48">
@@ -453,7 +479,6 @@ export default function Post({ postId }) {
             </form>
             ) : ''}
 
-            
             
         </div>
     )

@@ -5,6 +5,8 @@ import UserContext from '../../userContext';
 import './SuggestionsPage.css';
 import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
 
+// Similar to the Suggestions component, except this component renders 10 or less users on a different page.
+
 export default function SuggestionsPage({ following }) {
 
     const { user } = useContext(UserContext)

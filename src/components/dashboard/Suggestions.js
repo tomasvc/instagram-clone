@@ -5,6 +5,9 @@ import UserContext from '../../userContext';
 import './Suggestions.css';
 import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
 
+// The Suggestions component displays the top 5 suggested users using the getSuggestions function.
+// It also allows the user to follow or unfollow the user using the toggleFollow/toggleUnfollow functions.
+
 export default function Suggestions({ following }) {
 
     const { user } = useContext(UserContext)
@@ -65,7 +68,7 @@ export default function Suggestions({ following }) {
                                         <a href={'/' + suggestion.username}>
                                             <p className="info__username">{suggestion.username}</p>
                                         </a>
-                                        <p className="info__suggestion">New to Photogram</p>
+                                        <p className="info__suggestion">Suggested for you</p>
                                     </div>
                                 </div>
                                 <button className="user__followBtn" onClick={(e) => handleFollow(e, user, suggestion)}>Follow</button>

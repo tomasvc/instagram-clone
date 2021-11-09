@@ -4,6 +4,9 @@ import Suggestions from './Suggestions';
 import UserContext from '../../userContext';
 import './Sidebar.css';
 
+// The Sidebar component displays the information about the currently logged in user.
+// It includes the top display portion with the avatar, and a list of top suggestions.
+
 export default function Sidebar({ following }) {
 
   const { user } = useContext(UserContext)

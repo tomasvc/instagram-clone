@@ -3,11 +3,11 @@ import { useParams } from 'react-router-dom'
 import { Avatar, Modal } from "@material-ui/core"
 import { db } from '../../firebase/config'
 import firebase from 'firebase/app'
-import './User.css'
 import { makeStyles } from '@material-ui/core/styles'
 import Skeleton from 'react-loading-skeleton'
 import UserContext from '../../userContext'
 import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions'
+import './User.css'
 
 function getModalStyle() {
     const top = 50
@@ -36,7 +36,7 @@ paper: {
 }
 }))
 
-export default function Profile() {
+export default function User() {
 
     const classes = useStyles()
     const [modalStyle] = useState(getModalStyle)
@@ -56,6 +56,7 @@ export default function Profile() {
     const [followersModal, setFollowersModal] = useState(false)
 
     const [isFollowingProfile, setIsFollowingProfile] = useState(null)
+
 
     useEffect(() => {
         
@@ -84,6 +85,7 @@ export default function Profile() {
         }
 
     }, [user])
+
 
     useEffect(() => {
 
@@ -137,6 +139,7 @@ export default function Profile() {
 
     }, [username])
 
+
     useEffect(() => {
 
         async function getFollowingAndFollowers() {
@@ -173,6 +176,7 @@ export default function Profile() {
 
     }, [userData])
  
+
     useEffect(() => {
 
         // check if currently logged in user is following the user that's being viewed
@@ -200,6 +204,7 @@ export default function Profile() {
         isUserFollowingProfile()
 
     }, [user, userData])
+
 
     useEffect(() => {
 

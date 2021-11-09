@@ -21,6 +21,7 @@ export default function SignUpPage() {
 
         try {
 
+          // check if the username already exists in the database
           await db.collection('users').where('username', '==', username).get().then(user => {
 
             if (user.docs.length !== 0) {

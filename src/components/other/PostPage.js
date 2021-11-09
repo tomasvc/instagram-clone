@@ -34,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+// The PostPage component is responsible for displaying displaying all the information about the post on a separate page
+
 export default function PostPage() {
 
     const classes = useStyles();
@@ -48,6 +50,8 @@ export default function PostPage() {
     const [likes, setLikes] = useState([]);
     const [openLikes, setOpenLikes] = useState(false);
 
+
+    // get post comments
     useEffect(() => {
 
         let unsubscribe;
@@ -69,27 +73,7 @@ export default function PostPage() {
     }, [postId]);
 
 
-    useEffect(() => {
-
-        let unsubscribe;
-        if (postId) {
-            unsubscribe = db
-                .collection("posts")
-                .doc(postId)
-                .collection("likes")
-                .orderBy('timestamp', 'desc')
-                .onSnapshot((snapshot) => {
-                    setLikes(snapshot.docs.map(doc => doc.data()));
-                })
-        }
-
-        return () => {
-            unsubscribe();
-        }
-
-    }, [postId]);
-
-
+    // get post data
     useEffect(() => {
 
         if (user) {
@@ -99,6 +83,7 @@ export default function PostPage() {
     })
 
 
+    // get post likes
     useEffect(() => {
 
         let unsubscribe;
