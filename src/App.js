@@ -7,8 +7,10 @@ import Posts from './components/dashboard/Posts';
 import UserEdit from './components/user/UserEdit';
 import User from './components/user/User';
 import LoginPage from './components/auth/LoginPage';
-import SignUpPage from './components/auth/SignUpPage';
+import SignUpPage from './components/auth/SignupPage';
 import PostPage from './components/other/PostPage';
+import StoryPage from './components/other/StoryPage';
+import Stories from './components/dashboard/Stories';
 import SuggestionsPage from './components/dashboard/SuggestionsPage';
 import { db } from './firebase/config';
 import history from './history';
@@ -22,10 +24,12 @@ function App() {
   const { user } = useAuthListener();
 
   const [userData, setUserData] = useState([]);
+  const [stories, setStories] = useState([]);
   const [posts, setPosts] = useState([]);
   const [following, setFollowing] = useState([]);
 
   const [postsAreLoading, setPostsAreLoading] = useState(true);
+  const [storiesAreLoading, setStoriesAreLoading] = useState(true);
 
   // get current user data
   useEffect(() => {
@@ -96,6 +100,57 @@ function App() {
   }, [user, following])
 
 
+  useEffect(() => {
+
+    const getStories = async () => {
+
+      // only run if user is logged in and is following at least one other user
+      if (user && following) {
+
+              setStoriesAreLoading(true)
+
+              await db
+                  .collection('stories')
+                  .limit(20)
+                  .get()
+                  .then(querySnapshot => {
+                    const newStories = []
+                      
+                      querySnapshot.docs.forEach(doc => {
+                        // check if snapshot contains posts of the users that the current user is following
+                        // if (following.includes(doc.data().username)) {
+
+                        //   newStories.push({
+                        //     id: doc.id,
+                        //     ...doc.data()
+                        //   })
+
+                        // }   
+
+                        newStories.push({
+                          id: doc.id,
+                          ...doc.data()
+                        })
+                        
+                      })
+                    
+                    setStories(newStories)
+                    setStoriesAreLoading(false)
+                    
+                  })
+                }
+              
+            }
+
+    try {
+      getStories()
+    } catch (error) {
+      console.log(error)
+    }
+
+  }, [user, following])
+
+
   // get an array of all the users the current user is following
   useEffect(() => {
 
@@ -136,6 +191,7 @@ function App() {
               <div className="app__globalWrapper">
                 <Sidebar following={following} />
                 <div className="app__contentWrapper">
+                  <Stories stories={stories} loading={storiesAreLoading} />
                   <Posts posts={posts} loading={postsAreLoading} />
                 </div> 
               </div>
@@ -153,6 +209,13 @@ function App() {
             <div>
               <Header history={history} userData={userData} />
               <PostPage />
+            </div>
+          </ProtectedRoute>
+
+          <ProtectedRoute user={user} path="/stories/:username/:storyId">
+            <div>
+              {/* <Header history={history} userData={userData} /> */}
+              <StoryPage />
             </div>
           </ProtectedRoute>
           

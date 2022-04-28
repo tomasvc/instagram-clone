@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import DisplayUser from './DisplayUser';
-import Suggestions from './Suggestions';
-import UserContext from '../../userContext';
-import './Sidebar.css';
+import DisplayUser from '../DisplayUser';
+import Suggestions from '../Suggestions';
+import UserContext from '../../../userContext';
+import './styles.css';
 
 // The Sidebar component displays the information about the currently logged in user.
 // It includes the top display portion with the avatar, and a list of top suggestions.

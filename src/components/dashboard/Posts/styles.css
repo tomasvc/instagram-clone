@@ -10,7 +10,7 @@
 }
 
 .noPosts__image {
-    background-image: url('../../img/images-sprite-2.png');
+    background-image: url('../../../img/images-sprite-2.png');
     background-position: 895px 382px;
     width: 194px;
     height: 194px;

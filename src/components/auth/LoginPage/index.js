@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { auth } from '../../firebase/config';
-import './LoginPage.css';
+import { auth } from '../../../firebase/config';
+import './styles.css';
 
 export default function LoginPage() {
 

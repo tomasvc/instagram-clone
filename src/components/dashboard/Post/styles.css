@@ -2,7 +2,7 @@
     position: relative;
     background-color: white;
     max-width: 100%;
-    border: 1px solid lightgrey;
+    border: 1px solid rgb(219, 219, 219);
     margin-bottom: 45px;
     margin-left: auto;
     margin-right: auto;
@@ -81,7 +81,7 @@ a:hover {
 }
 
 .post__imageHeart {
-    background-image: url("../../img/images-sprite.png");
+    background-image: url("../../../img/images-sprite.png");
     background-position: 0 0;
     width: 128px;
     height: 128px;

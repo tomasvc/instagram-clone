@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { db } from '../../firebase/config';
+import { db } from '../../../firebase/config';
 import Avatar from "@material-ui/core/Avatar";
-import './DisplayUser.css';
+import './styles.css';
 import Skeleton from 'react-loading-skeleton';
-import UserContext from '../../userContext';
+import UserContext from '../../../userContext';
 
 export default function DisplayUser() {
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Avatar, Modal } from "@material-ui/core"
-import { storage, db, auth } from '../../firebase/config'
-import './UserEdit.css'
+import { storage, db, auth } from '../../../firebase/config'
+import './styles.css'
 import Skeleton from 'react-loading-skeleton'
 import imageCompression from 'browser-image-compression'
-import UserContext from '../../userContext'
+import UserContext from '../../../userContext'
 
 function getModalStyle() {
     const top = 50
@@ -330,7 +330,7 @@ export default function UserEdit() {
                         <li className="left__navItem">Manage Contacts</li>
                         <li className="left__navItem">Privacy and Security</li>
                         <li className="left__navItem">Login Activity</li>
-                        <li className="left__navItem">Emails from Instagram</li>
+                        <li className="left__navItem">Emails from Photogram</li>
                         <li className="left__navItem">Switch to Professional Account</li>
                     </ul>
                 </div>

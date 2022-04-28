@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Avatar } from "@material-ui/core";
-import { getSuggestions } from '../../firebase/fbFunctions';
-import UserContext from '../../userContext';
-import './Suggestions.css';
-import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
+import { getSuggestions } from '../../../firebase/fbFunctions';
+import UserContext from '../../../userContext';
+import './styles.css';
+import { toggleFollow, toggleUnfollow } from '../../../firebase/fbFunctions';
 
 // The Suggestions component displays the top 5 suggested users using the getSuggestions function.
 // It also allows the user to follow or unfollow the user using the toggleFollow/toggleUnfollow functions.

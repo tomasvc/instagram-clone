@@ -1,0 +1,187 @@
+.app {
+    min-height: 100vh;
+    position: relative;
+}
+
+.wrapper {
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: space-around;
+    flex-grow: 1;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
+}
+
+.login {
+    max-width: 350px;
+    background-color: white;
+    margin-top: 5%;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login__logo {
+    background-image: url('../../../img/photogram.png');
+    background-repeat: no-repeat;
+    width: 175px;
+    height: 51px;
+    margin: auto;
+    margin-top: 11.5%;
+}
+
+.login__form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 11.5%;
+    padding-top: 10px;
+}
+
+.login__error {
+    font-size: 0.8rem;
+    margin: 0 40px;
+    margin-top: 10px;
+    text-align: center;
+    color: rgb(219, 19, 59);
+}
+
+.form__input {
+    width: 93.2%;
+    background: #fafafa;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    outline: none;
+    padding: 9px 8px 7px 8px;
+    color: #262626;
+    margin-top: 7px;
+    -webkit-appearance: none;
+}
+
+.form__input::placeholder {
+    font-size: 12px;
+}
+
+.form__input:focus {
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.form__btn {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    background: #0095f6;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    padding: 2% 0;
+}
+
+.form__btn:hover {
+    cursor: pointer;
+}
+
+.form__btn:active {
+    opacity: 0.6;
+}
+
+.signup-link {
+    color: #262626;
+    background: white;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+    padding: 20px 71px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: center;
+}
+
+.signup-link a {
+    margin-left: 5px;
+    font-weight: 600;
+    color: #0095f6;
+}
+
+.signup-link a:hover {
+    cursor: pointer;
+}
+
+.signup-link a:active {
+    opacity: 0.6;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 2.5%;
+    background-color: rgb(241, 241, 241);
+}
+
+.nav a,
+.copyright {
+    color: #8e8e8e;
+    font-size: 0.75rem;
+    margin: 0 10px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    opacity: 0.6;
+}
+
+.nav, .copyright {
+    margin-top: 1.5%;
+}
+
+@media screen and (max-width: 500px) {
+    .app, .wrapper {
+        background-color: white;
+    }
+
+    .login, .signup-link {
+        background: none;
+        border: none;
+    }
+
+    .signup-link {
+        margin: 0;
+    }
+
+    footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        
+        margin-bottom: 5%;
+    }
+
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 3%;
+    }
+
+    .nav a {
+        margin-top: 1.5%;
+    }
+
+}

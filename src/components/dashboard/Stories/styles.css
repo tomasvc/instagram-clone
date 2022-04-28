@@ -1,0 +1,16 @@
+.app__storiesWrapper {
+    box-sizing: border-box;
+    width: 100%;
+    max-height: 115px;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid rgb(219, 219, 219);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: flex-start;
+    align-items: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

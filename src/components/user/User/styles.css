@@ -255,7 +255,7 @@ body {
 }
 
 #unfollow-icon {
-    background-image: url("../../img/images-sprite-2.png");
+    background-image: url("../../../img/images-sprite-2.png");
     background-position: -492px -207px;
     background-size: 544px 520px;
     width: 24px;
@@ -427,7 +427,7 @@ body {
 }
 
 #likes__likeIcon {
-    background-image: url('../../img/images-sprite-2.png');
+    background-image: url('../../../img/images-sprite-2.png');
     background-position: -484px -375px;
     background-size: 544px 520px;
     width: 16px;
@@ -435,7 +435,7 @@ body {
 }
 
 #comments__commentIcon {
-    background-image: url('../../img/images-sprite-2.png');
+    background-image: url('../../../img/images-sprite-2.png');
     background-position: -500px -107px;
     background-size: 544px 520px;
     width: 16px;

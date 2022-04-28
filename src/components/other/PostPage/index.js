@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Avatar, Modal } from "@material-ui/core";
-import { db } from '../../firebase/config';
+import { db } from '../../../firebase/config';
 import firebase from 'firebase/app';
 import { makeStyles } from '@material-ui/core/styles';
-import UserContext from '../../userContext';
-import './PostPage.css';
+import UserContext from '../../../userContext';
+import './styles.css';
 
 function getModalStyle() {
     const top = 50;

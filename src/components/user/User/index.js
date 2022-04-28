@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Avatar, Modal } from "@material-ui/core"
-import { db } from '../../firebase/config'
+import { db } from '../../../firebase/config'
 import firebase from 'firebase/app'
 import { makeStyles } from '@material-ui/core/styles'
 import Skeleton from 'react-loading-skeleton'
-import UserContext from '../../userContext'
-import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions'
-import './User.css'
+import UserContext from '../../../userContext'
+import { toggleFollow, toggleUnfollow } from '../../../firebase/fbFunctions'
+import './styles.css'
 
 function getModalStyle() {
     const top = 50

@@ -1,0 +1,127 @@
+.storyPage__wrapper {
+    background-color: #1a1a1a;
+    width: 100vw;
+    height: 100vh;
+    overflow: none;
+}
+
+.wrapper__container {
+    width: 30vw;
+    height: 95vh;
+    border-radius: 10px;
+    margin: auto;
+    overflow: none;
+}
+
+.container__content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 21px;
+    position: relative;
+}
+
+.container__controls {
+    box-sizing: border-box;
+    position: absolute;
+    top: 21px;
+    width: inherit;
+    height: 90px;
+    z-index: 10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background: linear-gradient(rgba(0, 0, 0, 0.647), rgba(0, 0, 0, 0));
+}
+
+.controls__user {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+}
+
+.user__user {
+    display: flex;
+    align-items: center;
+}
+
+.user__right {
+    width: 80px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user__right svg:hover {
+    cursor: pointer;
+}
+
+.user__avatar {
+    width: 32px;
+    height: 32px;
+}
+
+.user__name {
+    color: #fff;
+    margin-bottom: 2px;
+    margin-left: -3px;
+}
+
+.user__right {
+    display: flex;
+    align-items: center;
+}
+
+.controls__timeline {
+    width: 94%; 
+    height: 22px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.timeline__line {
+    position: relative;
+    width: 100%;
+    height: 2px;
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+.line__progress {
+    position: absolute;
+    height: 2px;
+    background-color: lightgrey;
+    animation-name: progress;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    transition: none !important;
+}
+
+@keyframes progress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wrapper__container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .container__content {
+        border-radius: 0;
+        margin: 0;
+    }
+
+    .container__controls {
+        border-radius: 0;
+        top: 0;
+    }
+}

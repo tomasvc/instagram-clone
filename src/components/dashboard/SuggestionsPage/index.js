@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Avatar } from "@material-ui/core";
-import { getSuggestions } from '../../firebase/fbFunctions';
-import UserContext from '../../userContext';
-import './SuggestionsPage.css';
-import { toggleFollow, toggleUnfollow } from '../../firebase/fbFunctions';
+import { getSuggestions } from '../../../firebase/fbFunctions';
+import UserContext from '../../../userContext';
+import './styles.css';
+import { toggleFollow, toggleUnfollow } from '../../../firebase/fbFunctions';
 
 // Similar to the Suggestions component, except this component renders 10 or less users on a different page.
 

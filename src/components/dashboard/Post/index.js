@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { db } from '../../firebase/config';
+import { db } from '../../../firebase/config';
 import firebase from 'firebase/app';
 import { Avatar, Modal } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import UserContext from '../../userContext';
+import UserContext from '../../../userContext';
 import Skeleton from 'react-loading-skeleton';
 import Hammer from 'hammerjs';
-import './Post.css';
+import './styles.css';
 
 // modal styles for Material-UI modal
 function getModalStyle() {
